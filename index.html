@@ -232,6 +232,7 @@ function App(){
   var cq=qs[ci];
 
   useEffect(function(){
+    // Load questions
     sbGet("questions?active=eq.true&select=id,text,text_en,difficulty,explanation,explanation_en,image_url,categories(slug),answers(text,text_en,is_correct)")
       .then(function(qRows){
         if(qRows&&qRows.length>0){
@@ -242,6 +243,47 @@ function App(){
         } else { sAllQ(FALLBACK_QS); }
         sLd(false);
       }).catch(function(e){console.log("Fallback",e);sAllQ(FALLBACK_QS);sLd(false);});
+
+    // Check URL hash for magic link token
+    function parseHash(){
+      var h=window.location.hash;
+      if(!h||h.length<2)return null;
+      var params={};
+      h.substring(1).split("&").forEach(function(p){var kv=p.split("=");if(kv.length===2)params[kv[0]]=decodeURIComponent(kv[1]);});
+      return params;
+    }
+    var hp=parseHash();
+    if(hp&&hp.access_token){
+      window.location.hash="";
+      var token=hp.access_token;
+      if(hp.refresh_token){try{window._hqSession=JSON.stringify({refresh_token:hp.refresh_token});}catch(e){}}
+      sTok(token);
+      // Get user info from token
+      fetch(SB_URL+"/auth/v1/user",{headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}})
+        .then(function(r){return r.json();})
+        .then(function(user){
+          if(user&&user.id){
+            loadProfile(user,token);
+          }
+        }).catch(function(){});
+    } else {
+      // Try to restore session from saved refresh token
+      var saved=null;
+      try{saved=JSON.parse(window._hqSession||"null");}catch(e){}
+      if(saved&&saved.refresh_token){
+        fetch(SB_URL+"/auth/v1/token?grant_type=refresh_token",{
+          method:"POST",
+          headers:{"apikey":SB_KEY,"Content-Type":"application/json"},
+          body:JSON.stringify({refresh_token:saved.refresh_token})
+        }).then(function(r){return r.json();}).then(function(res){
+          if(res.access_token&&res.user){
+            sTok(res.access_token);
+            try{window._hqSession=JSON.stringify({refresh_token:res.refresh_token});}catch(e){}
+            loadProfile(res.user,res.access_token);
+          }
+        }).catch(function(){});
+      }
+    }
   },[]);
 
   useEffect(function(){
@@ -296,35 +338,45 @@ function App(){
 
   function magicLink(){
     if(!em.trim())return;sAl(true);sAe(null);
-    sbAuth("magiclink",{email:em.trim()}).then(function(res){
-      if(res.error){sAe(res.error.message||"Erreur");sAl(false);return;}
+    sbAuth("otp",{email:em.trim()}).then(function(res){
+      if(res.error){sAe(res.error.message||"Error");sAl(false);return;}
       sAl(false);sAm("sent");
     }).catch(function(e){sAe("Network error");sAl(false);});
   }
 
   function signupDo(){
     if(!em.trim()||!un.trim())return;sAl(true);sAe(null);
-    sbAuth("signup",{email:em.trim(),password:"demo12345",data:{username:un.trim()}}).then(function(res){
-      if(res.error){sAe(res.error.message||"Erreur");sAl(false);return;}
-      if(res.access_token){
-        sTok(res.access_token);
-        sbPost("profiles",{id:res.user.id,username:un.trim()},res.access_token).catch(function(){});
-        sUsr({id:res.user.id,u:un.trim(),e:em.trim()});
-        sAl(false);go("home");
-      } else {sAl(false);sAm("sent");}
+    // Save username temporarily so we can use it after magic link redirect
+    try{window._hqPendingUsername=un.trim();}catch(e){}
+    sbAuth("otp",{email:em.trim(),data:{username:un.trim()}}).then(function(res){
+      if(res.error){sAe(res.error.message||"Error");sAl(false);return;}
+      sAl(false);sAm("sent");
     }).catch(function(e){sAe("Network error");sAl(false);});
   }
 
   function loadProfile(user,token){
+    sTok(token);
+    // Save refresh token for session persistence
     sbGet("profiles?id=eq."+user.id,token).then(function(p){
       if(p&&p.length>0){
         var prof=p[0];sUsr({id:user.id,u:prof.username,e:user.email});
         sXp(prof.xp||0);sLv(prof.level||1);sTg(prof.total_games||0);sBs(prof.best_score||0);sDs(prof.current_streak||0);sPr(prof.perfect_runs||0);
-      } else {sUsr({id:user.id,u:user.email.split("@")[0],e:user.email});}
-    }).catch(function(){sUsr({id:user.id,u:user.email.split("@")[0],e:user.email});});
+      } else {
+        // No profile yet — create one
+        var uname=user.user_metadata&&user.user_metadata.username?user.user_metadata.username:null;
+        if(!uname){try{uname=window._hqPendingUsername;}catch(e){}}
+        if(!uname)uname=user.email?user.email.split("@")[0]:"Player";
+        sbPost("profiles",{id:user.id,username:uname},token).then(function(){
+          sUsr({id:user.id,u:uname,e:user.email});
+        }).catch(function(){
+          sUsr({id:user.id,u:uname,e:user.email});
+        });
+      }
+    }).catch(function(){sUsr({id:user.id,u:user.email?user.email.split("@")[0]:"Player",e:user.email||""});});
+    go("home");
   }
 
-  function logout(){sUsr(null);sTok(null);sXp(0);sLv(1);sTg(0);sBs(0);sDs(0);sMst({calibre:{g:0,c:0},manufacture:{g:0,c:0},haute:{g:0,c:0}});sEb([]);sPr(0);}
+  function logout(){sUsr(null);sTok(null);sXp(0);sLv(1);sTg(0);sBs(0);sDs(0);sMst({calibre:{g:0,c:0},manufacture:{g:0,c:0},haute:{g:0,c:0}});sEb([]);sPr(0);try{window._hqSession=null;}catch(e){}}
 
   function loadLeaderboard(){
     sbGet("scores?select=score,mode,profiles(username)&order=score.desc&limit=20").then(function(rows){
