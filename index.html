@@ -30,6 +30,8 @@ function sbGet(path,token){return fetch(SB_URL+"/rest/v1/"+path,{headers:sbH(tok
 function sbPost(path,body,token){return fetch(SB_URL+"/rest/v1/"+path,{method:"POST",headers:Object.assign(sbH(token),{"Prefer":"return=representation"}),body:JSON.stringify(body)}).then(function(r){return r.json();});}
 function sbPatch(path,body,token){return fetch(SB_URL+"/rest/v1/"+path,{method:"PATCH",headers:Object.assign(sbH(token),{"Prefer":"return=representation"}),body:JSON.stringify(body)}).then(function(r){return r.json();});}
 function sbAuth(endpoint,body){return fetch(SB_URL+"/auth/v1/"+endpoint,{method:"POST",headers:{"apikey":SB_KEY,"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json();});}
+function sbSignup(email,pw,meta){return fetch(SB_URL+"/auth/v1/signup",{method:"POST",headers:{"apikey":SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:email,password:pw,data:meta||{}})}).then(function(r){return r.json();});}
+function sbLoginPw(email,pw){return fetch(SB_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{"apikey":SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:email,password:pw})}).then(function(r){return r.json();});}
 
 var FALLBACK_QS=[
   {id:"q1",text:"Premi\u00e8re montre port\u00e9e sur la Lune.",diff:1,cat:"histoire",expl:"Omega Speedmaster Professional \u2014 Apollo 11, 1969.",answers:[{t:"Omega Speedmaster",ok:true},{t:"Rolex Daytona",ok:false},{t:"Breitling Navitimer",ok:false},{t:"Seiko 6139",ok:false}]},
@@ -206,6 +208,7 @@ function App(){
   var _tok=_(null),tok=_tok[0],sTok=_tok[1];
   var _am=_("login"),am=_am[0],sAm=_am[1];
   var _em=_(""),em=_em[0],sEm=_em[1];
+  var _pw=_(""),pw=_pw[0],sPw=_pw[1];
   var _un=_(""),un=_un[0],sUn=_un[1];
   var _al=_(false),al=_al[0],sAl=_al[1];
   var _ae=_(null),authErr=_ae[0],sAe=_ae[1];
@@ -245,47 +248,6 @@ function App(){
         } else { sAllQ(FALLBACK_QS); }
         sLd(false);
       }).catch(function(e){console.log("Fallback",e);sAllQ(FALLBACK_QS);sLd(false);});
-
-    // Check URL hash for magic link token
-    function parseHash(){
-      var h=window.location.hash;
-      if(!h||h.length<2)return null;
-      var params={};
-      h.substring(1).split("&").forEach(function(p){var kv=p.split("=");if(kv.length===2)params[kv[0]]=decodeURIComponent(kv[1]);});
-      return params;
-    }
-    var hp=parseHash();
-    if(hp&&hp.access_token){
-      window.location.hash="";
-      var token=hp.access_token;
-      if(hp.refresh_token){try{window._hqSession=JSON.stringify({refresh_token:hp.refresh_token});}catch(e){}}
-      sTok(token);
-      // Get user info from token
-      fetch(SB_URL+"/auth/v1/user",{headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}})
-        .then(function(r){return r.json();})
-        .then(function(user){
-          if(user&&user.id){
-            loadProfile(user,token);
-          }
-        }).catch(function(){});
-    } else {
-      // Try to restore session from saved refresh token
-      var saved=null;
-      try{saved=JSON.parse(window._hqSession||"null");}catch(e){}
-      if(saved&&saved.refresh_token){
-        fetch(SB_URL+"/auth/v1/token?grant_type=refresh_token",{
-          method:"POST",
-          headers:{"apikey":SB_KEY,"Content-Type":"application/json"},
-          body:JSON.stringify({refresh_token:saved.refresh_token})
-        }).then(function(r){return r.json();}).then(function(res){
-          if(res.access_token&&res.user){
-            sTok(res.access_token);
-            try{window._hqSession=JSON.stringify({refresh_token:res.refresh_token});}catch(e){}
-            loadProfile(res.user,res.access_token);
-          }
-        }).catch(function(){});
-      }
-    }
   },[]);
 
   useEffect(function(){
@@ -338,17 +300,30 @@ function App(){
   function unlocked(mid){var m=MODES.find(function(x){return x.id===mid;});if(!m||!m.req)return true;var s=mst[m.req.mode]||{g:0,c:0};if(s.g<m.req.games)return false;return s.g>0?Math.round((s.c/(s.g*10))*100)>=m.req.acc:false;}
   function lvlT(l){return t.lvls[Math.min(l-1,6)];}
 
-  function magicLink(){
-    if(!em.trim())return;sAl(true);sAe(null);
-    sbAuth("otp",{email:em.trim()}).then(function(res){
-      if(res.error){sAe(res.error.message||"Error");sAl(false);return;}
-      sAl(false);sAm("sent");
+  function doLogin(){
+    if(!em.trim()||!pw.trim())return;sAl(true);sAe(null);
+    sbLoginPw(em.trim(),pw.trim()).then(function(res){
+      if(res.error){sAe(res.error_description||res.error.message||"Error");sAl(false);return;}
+      if(res.access_token&&res.user){
+        loadProfile(res.user,res.access_token);
+      } else {sAe("Error");sAl(false);}
     }).catch(function(e){sAe("Network error");sAl(false);});
   }
 
   function signupDo(){
-    // Same as magic link — username is asked after login
-    magicLink();
+    if(!em.trim()||!pw.trim()||!un.trim())return;sAl(true);sAe(null);
+    sbSignup(em.trim(),pw.trim(),{username:un.trim()}).then(function(res){
+      if(res.error){sAe(res.error.message||"Error");sAl(false);return;}
+      if(res.access_token&&res.user){
+        loadProfile(res.user,res.access_token);
+      } else if(res.user){
+        // Auto-login after signup
+        sbLoginPw(em.trim(),pw.trim()).then(function(lr){
+          if(lr.access_token&&lr.user){loadProfile(lr.user,lr.access_token);}
+          else{sAe("Compte cr\u00e9\u00e9. Connectez-vous.");sAl(false);sAm("login");}
+        });
+      } else {sAe("Error");sAl(false);}
+    }).catch(function(e){sAe("Network error");sAl(false);});
   }
 
   function loadProfile(user,token){
@@ -414,22 +389,30 @@ function App(){
 
   /* AUTH */
   if(scr==="auth"){
+    var inpStyle={width:"100%",padding:"14px 0",background:"transparent",border:"none",borderBottom:"1px solid "+C.lt,color:C.fg,fontSize:15,fontFamily:font,marginBottom:20};
     var content=null;
-    if(am==="sent") content=h("div",{style:{animation:"reveal 0.3s"}},
-      h("div",{style:{fontSize:24,fontWeight:300,marginBottom:24}},t.checkEmail),
-      h("div",{style:{fontSize:13,color:C.mid,marginBottom:8}},t.sentTo),
-      h("div",{style:{fontSize:15,fontWeight:500,marginBottom:32}},em),
-      btnSec(t.otherEmail,function(){sAm("login");}));
-    else content=h("div",{style:{animation:"reveal 0.3s"}},
+    if(am==="login") content=h("div",{style:{animation:"reveal 0.3s"}},
       h("div",{style:{fontSize:24,fontWeight:300,marginBottom:32}},t.loginTitle),
-      h("div",{style:{fontSize:12,color:C.mid,marginBottom:24,lineHeight:1.5}},lang==="en"?"Enter your email. We'll send you a link to sign in instantly — no password needed.":"Entrez votre email. On vous envoie un lien pour vous connecter instantan\u00e9ment — pas besoin de mot de passe."),
       h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.08em",marginBottom:6}},t.email),
-      h("input",{type:"email",value:em,onChange:function(e){sEm(e.target.value);},onKeyDown:function(e){if(e.key==="Enter")magicLink();},placeholder:"you@example.com",autoFocus:true,style:{width:"100%",padding:"14px 0",background:"transparent",border:"none",borderBottom:"1px solid "+C.lt,color:C.fg,fontSize:15,fontFamily:font}}),
-      authErr&&h("div",{style:{fontSize:12,color:C.acc,marginTop:8}},authErr),
-      h("div",{style:{height:20}}),
-      btn(t.sendMagic,magicLink,{opacity:al||!em.trim()?0.4:1}));
+      h("input",{type:"email",value:em,onChange:function(e){sEm(e.target.value);},placeholder:"you@example.com",autoFocus:true,style:inpStyle}),
+      h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.08em",marginBottom:6}},t.password),
+      h("input",{type:"password",value:pw,onChange:function(e){sPw(e.target.value);},onKeyDown:function(e){if(e.key==="Enter")doLogin();},placeholder:"\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",style:inpStyle}),
+      authErr&&h("div",{style:{fontSize:12,color:C.acc,marginTop:-12,marginBottom:12}},authErr),
+      btn(t.login,doLogin,{opacity:al||!em.trim()||!pw.trim()?0.4:1}),
+      h("div",{style:{marginTop:20,fontSize:12,color:C.mid}},t.noAccount,h("button",{onClick:function(){sAm("signup");sAe(null);sPw("");},style:{background:"none",border:"none",color:C.fg,fontWeight:500,cursor:"pointer",fontFamily:font,fontSize:12,textDecoration:"underline"}},t.createAccount)));
+    else content=h("div",{style:{animation:"reveal 0.3s"}},
+      h("div",{style:{fontSize:24,fontWeight:300,marginBottom:32}},t.createTitle),
+      h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.08em",marginBottom:6}},t.pseudo),
+      h("input",{type:"text",value:un,onChange:function(e){sUn(e.target.value);},placeholder:"WatchMaster42",maxLength:20,autoFocus:true,style:inpStyle}),
+      h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.08em",marginBottom:6}},t.email),
+      h("input",{type:"email",value:em,onChange:function(e){sEm(e.target.value);},placeholder:"you@example.com",style:inpStyle}),
+      h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.08em",marginBottom:6}},t.password),
+      h("input",{type:"password",value:pw,onChange:function(e){sPw(e.target.value);},onKeyDown:function(e){if(e.key==="Enter")signupDo();},placeholder:"\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",style:inpStyle}),
+      authErr&&h("div",{style:{fontSize:12,color:C.acc,marginTop:-12,marginBottom:12}},authErr),
+      btn(t.createBtn,signupDo,{opacity:al||!em.trim()||!pw.trim()||!un.trim()?0.4:1}),
+      h("div",{style:{marginTop:20,fontSize:12,color:C.mid}},t.haveAccount,h("button",{onClick:function(){sAm("login");sAe(null);sPw("");},style:{background:"none",border:"none",color:C.fg,fontWeight:500,cursor:"pointer",fontFamily:font,fontSize:12,textDecoration:"underline"}},t.login)));
     return wrap(h("div",{style:{width:"100%",maxWidth:400,padding:"0 24px",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"100vh"}},
-      h("button",{onClick:function(){go("home");sAm("login");sAe(null);},style:{background:"none",border:"none",color:C.mid,cursor:"pointer",fontSize:12,fontFamily:font,textAlign:"left",marginBottom:32}},t.back),content));
+      h("button",{onClick:function(){go("home");sAm("login");sAe(null);sPw("");},style:{background:"none",border:"none",color:C.mid,cursor:"pointer",fontSize:12,fontFamily:font,textAlign:"left",marginBottom:32}},t.back),content));
   }
 
   /* LEADERBOARD */
