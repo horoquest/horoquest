@@ -223,6 +223,8 @@ function App(){
   var _lt=_("all"),lt=_lt[0],sLt=_lt[1];
   var _ld=_(true),loading=_ld[0],sLd=_ld[1];
   var _lang=_("fr"),lang=_lang[0],sLang=_lang[1];
+  var _nu=_(false),needsUn=_nu[0],sNu=_nu[1];
+  var _pu=_(null),pendingUser=_pu[0],sPu=_pu[1];
   var _lbs=_([]),lbs=_lbs[0],sLbs=_lbs[1];
   var tmr=useRef(null);
   var t=I18N[lang]||I18N.fr;
@@ -345,35 +347,39 @@ function App(){
   }
 
   function signupDo(){
-    if(!em.trim()||!un.trim())return;sAl(true);sAe(null);
-    // Save username temporarily so we can use it after magic link redirect
-    try{window._hqPendingUsername=un.trim();}catch(e){}
-    sbAuth("otp",{email:em.trim(),data:{username:un.trim()}}).then(function(res){
-      if(res.error){sAe(res.error.message||"Error");sAl(false);return;}
-      sAl(false);sAm("sent");
-    }).catch(function(e){sAe("Network error");sAl(false);});
+    // Same as magic link — username is asked after login
+    magicLink();
   }
 
   function loadProfile(user,token){
     sTok(token);
-    // Save refresh token for session persistence
     sbGet("profiles?id=eq."+user.id,token).then(function(p){
       if(p&&p.length>0){
         var prof=p[0];sUsr({id:user.id,u:prof.username,e:user.email});
         sXp(prof.xp||0);sLv(prof.level||1);sTg(prof.total_games||0);sBs(prof.best_score||0);sDs(prof.current_streak||0);sPr(prof.perfect_runs||0);
+        go("home");
       } else {
-        // No profile yet — create one
-        var uname=user.user_metadata&&user.user_metadata.username?user.user_metadata.username:null;
-        if(!uname){try{uname=window._hqPendingUsername;}catch(e){}}
-        if(!uname)uname=user.email?user.email.split("@")[0]:"Player";
-        sbPost("profiles",{id:user.id,username:uname},token).then(function(){
-          sUsr({id:user.id,u:uname,e:user.email});
-        }).catch(function(){
-          sUsr({id:user.id,u:uname,e:user.email});
-        });
+        // No profile — ask for username
+        sPu({id:user.id,e:user.email,token:token});
+        sNu(true);
+        go("home");
       }
-    }).catch(function(){sUsr({id:user.id,u:user.email?user.email.split("@")[0]:"Player",e:user.email||""});});
-    go("home");
+    }).catch(function(){
+      sUsr({id:user.id,u:user.email?user.email.split("@")[0]:"Player",e:user.email||""});
+      go("home");
+    });
+  }
+
+  function saveUsername(){
+    if(!un.trim()||!pendingUser)return;
+    sAl(true);
+    sbPost("profiles",{id:pendingUser.id,username:un.trim()},pendingUser.token).then(function(){
+      sUsr({id:pendingUser.id,u:un.trim(),e:pendingUser.e});
+      sNu(false);sPu(null);sAl(false);
+    }).catch(function(){
+      sUsr({id:pendingUser.id,u:un.trim(),e:pendingUser.e});
+      sNu(false);sPu(null);sAl(false);
+    });
   }
 
   function logout(){sUsr(null);sTok(null);sXp(0);sLv(1);sTg(0);sBs(0);sDs(0);sMst({calibre:{g:0,c:0},manufacture:{g:0,c:0},haute:{g:0,c:0}});sEb([]);sPr(0);try{window._hqSession=null;}catch(e){}}
@@ -394,7 +400,15 @@ function App(){
   var toast=nb?h("div",{style:{position:"fixed",top:20,left:"50%",transform:"translateX(-50%)",zIndex:200,background:C.card,border:"1px solid "+C.lt,padding:"12px 24px",display:"flex",alignItems:"center",gap:12,animation:"reveal 0.3s",fontSize:13,maxWidth:"90%"}},
     h("span",{style:{fontWeight:700}},nb.name),h("span",{style:{color:C.mid}},"\u2014 "+nb.desc)):null;
 
-  function wrap(children){return h("div",{style:{minHeight:"100vh",background:C.bg,color:C.fg,fontFamily:font,display:"flex",justifyContent:"center"}},children);}
+  var usernameModal=needsUn?h("div",{style:{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",animation:"fadeIn 0.2s"}},
+    h("div",{style:{position:"absolute",inset:0,background:"rgba(0,0,0,0.5)"}}),
+    h("div",{style:{position:"relative",width:"90%",maxWidth:360,background:C.bg,padding:"32px 24px"}},
+      h("div",{style:{fontSize:20,fontWeight:300,marginBottom:8}},lang==="en"?"Choose your username":"Choisissez votre pseudo"),
+      h("div",{style:{fontSize:12,color:C.mid,marginBottom:24}},lang==="en"?"Visible on the leaderboard":"Visible dans le classement"),
+      h("input",{type:"text",value:un,onChange:function(e){sUn(e.target.value);},onKeyDown:function(e){if(e.key==="Enter"&&un.trim())saveUsername();},placeholder:lang==="en"?"WatchMaster42":"HorlogerFou",maxLength:20,autoFocus:true,style:{width:"100%",padding:"14px 0",background:"transparent",border:"none",borderBottom:"2px solid "+C.fg,color:C.fg,fontSize:18,fontFamily:font,textAlign:"center",marginBottom:24}}),
+      btn(lang==="en"?"Let's go!":"C'est parti !",saveUsername,{opacity:al||!un.trim()?0.4:1}))):null;
+
+  function wrap(children){return h("div",{style:{minHeight:"100vh",background:C.bg,color:C.fg,fontFamily:font,display:"flex",justifyContent:"center"}},children,usernameModal);}
 
   if(loading) return wrap(h("div",{style:{width:"100%",maxWidth:400,display:"flex",alignItems:"center",justifyContent:"center",minHeight:"100vh"}},loader()));
 
@@ -406,24 +420,14 @@ function App(){
       h("div",{style:{fontSize:13,color:C.mid,marginBottom:8}},t.sentTo),
       h("div",{style:{fontSize:15,fontWeight:500,marginBottom:32}},em),
       btnSec(t.otherEmail,function(){sAm("login");}));
-    else if(am==="login") content=h("div",{style:{animation:"reveal 0.3s"}},
-      h("div",{style:{fontSize:24,fontWeight:300,marginBottom:32}},t.loginTitle),
-      h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.08em",marginBottom:6}},t.email),
-      h("input",{type:"email",value:em,onChange:function(e){sEm(e.target.value);},onKeyDown:function(e){if(e.key==="Enter")magicLink();},placeholder:"you@example.com",style:{width:"100%",padding:"14px 0",background:"transparent",border:"none",borderBottom:"1px solid "+C.lt,color:C.fg,fontSize:15,fontFamily:font}}),
-      authErr&&h("div",{style:{fontSize:12,color:C.acc,marginTop:8}},authErr),
-      h("div",{style:{height:20}}),
-      btn(t.sendMagic,magicLink,{opacity:al||!em.trim()?0.4:1}),
-      h("div",{style:{marginTop:20,fontSize:12,color:C.mid}},t.noAccount,h("button",{onClick:function(){sAm("signup");sAe(null);},style:{background:"none",border:"none",color:C.fg,fontWeight:500,cursor:"pointer",fontFamily:font,fontSize:12,textDecoration:"underline"}},t.createAccount)));
     else content=h("div",{style:{animation:"reveal 0.3s"}},
-      h("div",{style:{fontSize:24,fontWeight:300,marginBottom:32}},t.createTitle),
-      h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.08em",marginBottom:6}},t.pseudo),
-      h("input",{type:"text",value:un,onChange:function(e){sUn(e.target.value);},placeholder:"WatchMaster42",maxLength:20,style:{width:"100%",padding:"14px 0",background:"transparent",border:"none",borderBottom:"1px solid "+C.lt,color:C.fg,fontSize:15,fontFamily:font,marginBottom:20}}),
+      h("div",{style:{fontSize:24,fontWeight:300,marginBottom:32}},t.loginTitle),
+      h("div",{style:{fontSize:12,color:C.mid,marginBottom:24,lineHeight:1.5}},lang==="en"?"Enter your email. We'll send you a link to sign in instantly — no password needed.":"Entrez votre email. On vous envoie un lien pour vous connecter instantan\u00e9ment — pas besoin de mot de passe."),
       h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.08em",marginBottom:6}},t.email),
-      h("input",{type:"email",value:em,onChange:function(e){sEm(e.target.value);},placeholder:"you@example.com",style:{width:"100%",padding:"14px 0",background:"transparent",border:"none",borderBottom:"1px solid "+C.lt,color:C.fg,fontSize:15,fontFamily:font}}),
+      h("input",{type:"email",value:em,onChange:function(e){sEm(e.target.value);},onKeyDown:function(e){if(e.key==="Enter")magicLink();},placeholder:"you@example.com",autoFocus:true,style:{width:"100%",padding:"14px 0",background:"transparent",border:"none",borderBottom:"1px solid "+C.lt,color:C.fg,fontSize:15,fontFamily:font}}),
       authErr&&h("div",{style:{fontSize:12,color:C.acc,marginTop:8}},authErr),
       h("div",{style:{height:20}}),
-      btn(t.createBtn,signupDo,{opacity:al||!em.trim()||!un.trim()?0.4:1}),
-      h("div",{style:{marginTop:20,fontSize:12,color:C.mid}},t.haveAccount,h("button",{onClick:function(){sAm("login");sAe(null);},style:{background:"none",border:"none",color:C.fg,fontWeight:500,cursor:"pointer",fontFamily:font,fontSize:12,textDecoration:"underline"}},t.login)));
+      btn(t.sendMagic,magicLink,{opacity:al||!em.trim()?0.4:1}));
     return wrap(h("div",{style:{width:"100%",maxWidth:400,padding:"0 24px",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"100vh"}},
       h("button",{onClick:function(){go("home");sAm("login");sAe(null);},style:{background:"none",border:"none",color:C.mid,cursor:"pointer",fontSize:12,fontFamily:font,textAlign:"left",marginBottom:32}},t.back),content));
   }
@@ -488,7 +492,7 @@ function App(){
         h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.08em",marginBottom:8}},t.badges),
         h("div",{style:{display:"flex",gap:8,flexWrap:"wrap"}},
           eb.map(function(bid){var b=BADGES.find(function(x){return x.id===bid;});return b?h("div",{key:bid,style:{padding:"4px 10px",border:"1px solid "+C.lt,fontSize:11,fontWeight:500}},b.name):null;}))),
-      !usr&&btnSec(t.create,function(){go("auth");})
+      !usr&&btnSec(t.login,function(){go("auth");})
     ));
   }
 
