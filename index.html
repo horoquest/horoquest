@@ -619,8 +619,9 @@ function App(){
             // Dieter Rams-style icons: pure geometry, monochrome
             var themeIcon={
               technique:h("svg",{width:"20",height:"20",viewBox:"0 0 20 20"},
-                h("path",{d:"M10,10 C10,9.2 10.6,8.5 11.2,8.5 C12,8.5 12.6,9.4 12.6,10.2 C12.6,11.2 11.8,12 10.8,12 C9.6,12 8.8,11 8.8,10 C8.8,8.8 9.8,7.8 11,7.8 C12.4,7.8 13.4,9 13.4,10.2 C13.4,11.8 12.2,13 10.6,13 C8.8,13 7.6,11.6 7.6,10 C7.6,8 9,6.8 10.8,6.8 C13,6.8 14.4,8.4 14.4,10.4 C14.4,12.6 12.8,14 10.4,14 C8,14 6.4,12.2 6.4,10 C6.4,7.4 8.2,5.8 10.6,5.8 C13.4,5.8 15.2,7.8 15.2,10.4",fill:"none",stroke:col,strokeWidth:"1.2",strokeLinecap:"round"}),
-                h("circle",{cx:"10",cy:"10",r:"1.2",fill:col})),
+                h("circle",{cx:"10",cy:"10",r:"5",fill:"none",stroke:col,strokeWidth:"1.2"}),
+                h("circle",{cx:"10",cy:"10",r:"2",fill:"none",stroke:col,strokeWidth:"1.2"}),
+                [0,45,90,135,180,225,270,315].map(function(a){var rad=a*Math.PI/180;var x1=(10+6.5*Math.cos(rad)).toFixed(1);var y1=(10+6.5*Math.sin(rad)).toFixed(1);var x2=(10+8.2*Math.cos(rad)).toFixed(1);var y2=(10+8.2*Math.sin(rad)).toFixed(1);return h("line",{key:a,x1:x1,y1:y1,x2:x2,y2:y2,stroke:col,strokeWidth:"1.8",strokeLinecap:"round"});})),
               histoire:h("svg",{width:"20",height:"20",viewBox:"0 0 20 20"},
                 h("line",{x1:"5",y1:"2",x2:"15",y2:"2",stroke:col,strokeWidth:"1.2"}),
                 h("line",{x1:"5",y1:"18",x2:"15",y2:"18",stroke:col,strokeWidth:"1.2"}),
