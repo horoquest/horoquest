@@ -615,11 +615,39 @@ function App(){
             var thName=lang==="en"&&th.name_en?th.name_en:th.name;
             var thDesc=lang==="en"&&th.description_en?th.description_en:th.description;
             var qCount=th.filter_type==="category"?allQ.filter(function(q){return q.cat===th.filter_value;}).length:allQ.length;
+            var col=th.is_sponsored?C.bg:C.fg;
+            // Dieter Rams-style icons: pure geometry, monochrome
+            var themeIcon={
+              technique:h("svg",{width:"20",height:"20",viewBox:"0 0 20 20"},
+                h("circle",{cx:"10",cy:"10",r:"8",fill:"none",stroke:col,strokeWidth:"1.2"}),
+                h("circle",{cx:"10",cy:"10",r:"3",fill:"none",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"10",y1:"2",x2:"10",y2:"5",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"10",y1:"15",x2:"10",y2:"18",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"2",y1:"10",x2:"5",y2:"10",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"15",y1:"10",x2:"18",y2:"10",stroke:col,strokeWidth:"1.2"})),
+              histoire:h("svg",{width:"20",height:"20",viewBox:"0 0 20 20"},
+                h("line",{x1:"4",y1:"3",x2:"4",y2:"17",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"4",y1:"4",x2:"8",y2:"4",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"4",y1:"8",x2:"7",y2:"8",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"4",y1:"12",x2:"8",y2:"12",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"4",y1:"16",x2:"7",y2:"16",stroke:col,strokeWidth:"1.2"}),
+                h("circle",{cx:"13",cy:"10",r:"5",fill:"none",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"13",y1:"10",x2:"13",y2:"7",stroke:col,strokeWidth:"1.2"})),
+              culture:h("svg",{width:"20",height:"20",viewBox:"0 0 20 20"},
+                h("line",{x1:"3",y1:"4",x2:"17",y2:"4",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"5",y1:"4",x2:"5",y2:"16",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"10",y1:"4",x2:"10",y2:"16",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"15",y1:"4",x2:"15",y2:"16",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"3",y1:"16",x2:"17",y2:"16",stroke:col,strokeWidth:"1.2"})),
+              identification:h("svg",{width:"20",height:"20",viewBox:"0 0 20 20"},
+                h("circle",{cx:"9",cy:"9",r:"5.5",fill:"none",stroke:col,strokeWidth:"1.2"}),
+                h("line",{x1:"13",y1:"13",x2:"17",y2:"17",stroke:col,strokeWidth:"1.2",strokeLinecap:"round"}))
+            }[th.slug]||null;
             return h("button",{key:th.slug,onClick:function(){start("calibre",false,th);},style:{padding:"20px",background:th.is_sponsored?C.fg:C.card,color:th.is_sponsored?C.bg:C.fg,border:th.is_sponsored?"none":"1px solid "+C.lt,borderRadius:0,cursor:"pointer",fontFamily:font,textAlign:"left",animation:"reveal 0.2s ease "+(i*0.04)+"s both",transition:"all 0.15s"}},
-              h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}},
-                h("div",{style:{fontSize:24}},th.icon||""),
+              h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}},
+                themeIcon,
                 h("div",{style:{fontSize:10,color:th.is_sponsored?C.lt:C.mid}},qCount+"q")),
-              h("div",{style:{fontSize:15,fontWeight:500,marginBottom:4}},thName),
+              h("div",{style:{fontSize:14,fontWeight:500,letterSpacing:"0.02em",marginBottom:4}},thName),
               h("div",{style:{fontSize:11,color:th.is_sponsored?C.lt:C.mid,lineHeight:1.4}},thDesc),
               th.is_sponsored&&h("div",{style:{fontSize:9,letterSpacing:"0.1em",textTransform:"uppercase",color:C.lt,marginTop:8}},th.sponsor_name));
           }))),
