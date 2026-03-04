@@ -90,8 +90,8 @@ var font="'Helvetica Neue','Helvetica','Arial',sans-serif";
 var TIMER=10;
 
 var I18N={
-  fr:{hero:"Testez votre\nculture\nhorlog\u00e8re.",daily:"D\u00e9fi du jour",dailyDone:"D\u00e9fi du jour \u2713",mode:"Mode",level:"Niveau",best:"Meilleur",badges:"Badges",ranking:"Classement",login:"Connexion",logout:"D\u00e9connexion",create:"Cr\u00e9er un compte",points:"points",precision:"Pr\u00e9cision",streak:"Streak",detail:"D\u00e9tail",replay:"Rejouer ",share:"Partager",home:"Accueil",back:"\u2190 Retour",consec:" cons\u00e9cutif",days:" jour",loginTo:"Connexion pour appara\u00eetre",alltime:"All-time",week:"Semaine",questions:" questions",games:" parties",email:"EMAIL",password:"MOT DE PASSE",sendMagic:"Envoyer un magic link",noAccount:"Pas de compte ? ",createAccount:"Cr\u00e9er",haveAccount:"D\u00e9j\u00e0 un compte ? ",createTitle:"Cr\u00e9er un compte.",loginTitle:"Connexion.",checkEmail:"V\u00e9rifiez votre email.",sentTo:"Lien envoy\u00e9 \u00e0",otherEmail:"Autre email",pseudo:"PSEUDO",createBtn:"Cr\u00e9er mon compte",copied:"Copi\u00e9 \u2713",copy:"Copier",close:"Fermer",xp:"XP",pts:"pts",shareTxt:"Partager",lvls:["Novice","Apprenti","Connaisseur","Expert","Ma\u00eetre","Grand Ma\u00eetre","L\u00e9gende"]},
-  en:{hero:"Test your\nwatch\nknowledge.",daily:"Daily Challenge",dailyDone:"Daily Done \u2713",mode:"Mode",level:"Level",best:"Best",badges:"Badges",ranking:"Leaderboard",login:"Log in",logout:"Log out",create:"Create account",points:"points",precision:"Accuracy",streak:"Streak",detail:"Detail",replay:"Replay ",share:"Share",home:"Home",back:"\u2190 Back",consec:" consecutive",days:" day",loginTo:"Log in to appear",alltime:"All-time",week:"Week",questions:" questions",games:" games",email:"EMAIL",password:"PASSWORD",sendMagic:"Send magic link",noAccount:"No account? ",createAccount:"Create",haveAccount:"Already have an account? ",createTitle:"Create account.",loginTitle:"Log in.",checkEmail:"Check your email.",sentTo:"Link sent to",otherEmail:"Other email",pseudo:"USERNAME",createBtn:"Create my account",copied:"Copied \u2713",copy:"Copy",close:"Close",xp:"XP",pts:"pts",shareTxt:"Share",lvls:["Novice","Apprentice","Connoisseur","Expert","Master","Grand Master","Legend"]}
+  fr:{hero:"Testez votre\nculture\nhorlog\u00e8re.",daily:"D\u00e9fi du jour",dailyDone:"D\u00e9fi du jour \u2713",mode:"Mode",level:"Niveau",best:"Meilleur",badges:"Badges",ranking:"Classement",login:"Connexion",logout:"D\u00e9connexion",create:"Cr\u00e9er un compte",points:"points",precision:"Pr\u00e9cision",streak:"Streak",detail:"D\u00e9tail",replay:"Rejouer ",share:"Partager",home:"Accueil",back:"\u2190 Retour",consec:" cons\u00e9cutif",days:" jour",loginTo:"Connexion pour appara\u00eetre",alltime:"All-time",week:"Semaine",questions:" questions",games:" parties",email:"EMAIL",password:"MOT DE PASSE",sendMagic:"Envoyer un magic link",noAccount:"Pas de compte ? ",createAccount:"Cr\u00e9er",haveAccount:"D\u00e9j\u00e0 un compte ? ",createTitle:"Cr\u00e9er un compte.",loginTitle:"Connexion.",checkEmail:"V\u00e9rifiez votre email.",sentTo:"Lien envoy\u00e9 \u00e0",otherEmail:"Autre email",pseudo:"PSEUDO",createBtn:"Cr\u00e9er mon compte",copied:"Copi\u00e9 \u2713",copy:"Copier",close:"Fermer",xp:"XP",pts:"pts",shareTxt:"Partager",byTheme:"Par th\u00e8me",sponsored:"Sponsoris\u00e9",lvls:["Novice","Apprenti","Connaisseur","Expert","Ma\u00eetre","Grand Ma\u00eetre","L\u00e9gende"]},
+  en:{hero:"Test your\nwatch\nknowledge.",daily:"Daily Challenge",dailyDone:"Daily Done \u2713",mode:"Mode",level:"Level",best:"Best",badges:"Badges",ranking:"Leaderboard",login:"Log in",logout:"Log out",create:"Create account",points:"points",precision:"Accuracy",streak:"Streak",detail:"Detail",replay:"Replay ",share:"Share",home:"Home",back:"\u2190 Back",consec:" consecutive",days:" day",loginTo:"Log in to appear",alltime:"All-time",week:"Week",questions:" questions",games:" games",email:"EMAIL",password:"PASSWORD",sendMagic:"Send magic link",noAccount:"No account? ",createAccount:"Create",haveAccount:"Already have an account? ",createTitle:"Create account.",loginTitle:"Log in.",checkEmail:"Check your email.",sentTo:"Link sent to",otherEmail:"Other email",pseudo:"USERNAME",createBtn:"Create my account",copied:"Copied \u2713",copy:"Copy",close:"Close",xp:"XP",pts:"pts",shareTxt:"Share",byTheme:"By theme",sponsored:"Sponsored",lvls:["Novice","Apprentice","Connoisseur","Expert","Master","Grand Master","Legend"]}
 };
 
 function btn(label,onClick,style){return h("button",{onClick:onClick,style:Object.assign({width:"100%",padding:"16px 0",background:C.fg,color:C.bg,border:"none",borderRadius:0,fontSize:13,fontWeight:500,letterSpacing:"0.15em",textTransform:"uppercase",cursor:"pointer",fontFamily:font,transition:"opacity 0.2s"},style||{})},label);}
@@ -235,6 +235,8 @@ function App(){
   var _nu=_(false),needsUn=_nu[0],sNu=_nu[1];
   var _pu=_(null),pendingUser=_pu[0],sPu=_pu[1];
   var _lbs=_([]),lbs=_lbs[0],sLbs=_lbs[1];
+  var _ths=_([]),themes=_ths[0],sThs=_ths[1];
+  var _cth=_(null),curTheme=_cth[0],sCth=_cth[1];
   var tmr=useRef(null);
   var t=I18N[lang]||I18N.fr;
   function qText(q){return lang==="en"&&q.text_en?q.text_en:q.text;}
@@ -254,6 +256,10 @@ function App(){
         } else { sAllQ(FALLBACK_QS); }
         sLd(false);
       }).catch(function(e){console.log("Fallback",e);sAllQ(FALLBACK_QS);sLd(false);});
+    // Load themes
+    sbGet("themes?is_active=eq.true&order=sort_order").then(function(rows){
+      if(rows&&Array.isArray(rows)&&rows.length>0)sThs(rows);
+    }).catch(function(){});
   },[]);
 
   useEffect(function(){
@@ -264,15 +270,29 @@ function App(){
 
   function doTo(){sRv(true);sSt(0);sRs(function(p){return p.concat([{ok:false,to:true,pts:0}]);});setTimeout(adv,2500);}
 
-  function getQs(mode,dy){
-    var m=MODES.find(function(x){return x.id===mode;});
-    var f=allQ.filter(function(q){return q.diff>=m.range[0]&&q.diff<=m.range[1];});
-    if(f.length===0)f=allQ;
+  function getQs(mode,dy,themeObj){
+    var f;
+    if(themeObj){
+      // Theme mode: filter by category or brand
+      if(themeObj.filter_type==="category"){
+        f=allQ.filter(function(q){return q.cat===themeObj.filter_value;});
+      } else if(themeObj.filter_type==="brand"){
+        var brand=themeObj.filter_value.toLowerCase();
+        f=allQ.filter(function(q){return q.text.toLowerCase().indexOf(brand)!==-1||q.expl.toLowerCase().indexOf(brand)!==-1;});
+      } else {
+        f=allQ;
+      }
+      if(f.length<5)f=allQ; // fallback si pas assez de questions
+    } else {
+      var m=MODES.find(function(x){return x.id===mode;});
+      f=allQ.filter(function(q){return q.diff>=m.range[0]&&q.diff<=m.range[1];});
+      if(f.length===0)f=allQ;
+    }
     if(dy){var seed=todaySeed();return seededShuffle(f,seed).slice(0,10).map(function(q){return Object.assign({},q,{answers:seededShuffle(q.answers,seed+q.id.charCodeAt(0))});});}
     return shuffle(f).slice(0,10).map(function(q){return Object.assign({},q,{answers:shuffle(q.answers)});});
   }
 
-  function start(mode,dy){sGm(mode);sDy(!!dy);var q=getQs(mode,dy);sQs(q);sCi(0);sTl(TIMER);sSc(0);sSt(0);sMs(0);sCc(0);sSa(null);sRv(false);sRs([]);sPt(0);sSh(false);go("play");track("game_start",{mode:mode,daily:!!dy},usr?usr.id:null);}
+  function start(mode,dy,themeObj){sGm(mode);sDy(!!dy);sCth(themeObj||null);var q=getQs(mode,dy,themeObj);sQs(q);sCi(0);sTl(TIMER);sSc(0);sSt(0);sMs(0);sCc(0);sSa(null);sRv(false);sRs([]);sPt(0);sSh(false);go("play");track("game_start",{mode:mode,daily:!!dy,theme:themeObj?themeObj.slug:null},usr?usr.id:null);}
 
   function ans(a,evt){
     if(rv||sa)return;clearInterval(tmr.current);sSa(a.t);sRv(true);
@@ -295,9 +315,11 @@ function App(){
     sMst(function(p){var m=Object.assign({},p);var s=Object.assign({},m[gm]||{g:0,c:0});s.g+=1;s.c+=cc;m[gm]=s;return m;});
     var stats={tg:tg+1,ds:ds,pr:pr+(isPf?1:0)};
     BADGES.forEach(function(b){if(eb.indexOf(b.id)===-1&&b.check(stats)){sEb(function(prev){return prev.concat([b.id]);});sNb(b);setTimeout(function(){sNb(null);},3000);}});
-    track("game_end",{mode:gm,score:sc,correct:cc,total:qs.length,daily:daily,streak:ms,perfect:isPf},usr?usr.id:null);
+    track("game_end",{mode:gm,score:sc,correct:cc,total:qs.length,daily:daily,streak:ms,perfect:isPf,theme:curTheme?curTheme.slug:null},usr?usr.id:null);
     if(usr&&tok){
-      sbPost("scores",{user_id:usr.id,score:sc,mode:gm,correct_count:cc,total_questions:qs.length,is_daily:daily},tok)
+      var scoreData={user_id:usr.id,score:sc,mode:gm,correct_count:cc,total_questions:qs.length,is_daily:daily};
+      if(curTheme)scoreData.theme_slug=curTheme.slug;
+      sbPost("scores",scoreData,tok)
         .then(function(){return sbPatch("profiles?id=eq."+usr.id,{xp:xp+xpE,level:Math.floor((xp+xpE)/500)+1,total_games:tg+1,best_score:Math.max(best,sc),current_streak:ds,last_played_date:new Date().toISOString().split("T")[0],perfect_runs:pr+(isPf?1:0)},tok);})
         .catch(function(e){console.log("Save failed",e);});
     }
@@ -378,7 +400,7 @@ function App(){
     }).catch(function(e){console.log("LB failed",e);});
   }
 
-  function shareTxt(){var acc=qs.length>0?Math.round((cc/qs.length)*100):0;var mn=(MODES.find(function(m){return m.id===gm;})||{}).name||"";return"HOROQUEST "+mn+" \u2014 "+sc+" pts | "+cc+"/"+qs.length+" ("+acc+"%) | "+t.streak+" "+ms+"x"+(daily?" | "+t.daily:"");}
+  function shareTxt(){var acc=qs.length>0?Math.round((cc/qs.length)*100):0;var mn=curTheme?(lang==="en"&&curTheme.name_en?curTheme.name_en:curTheme.name):(MODES.find(function(m){return m.id===gm;})||{}).name||"";return"HOROQUEST "+mn+" \u2014 "+sc+" pts | "+cc+"/"+qs.length+" ("+acc+"%) | "+t.streak+" "+ms+"x"+(daily?" | "+t.daily:"");}
   function doCopy(){navigator.clipboard.writeText(shareTxt()).then(function(){sCp(true);setTimeout(function(){sCp(false);},2000);track("share",{mode:gm,score:sc},usr?usr.id:null);}).catch(function(){});}
 
   var toast=nb?h("div",{style:{position:"fixed",top:20,left:"50%",transform:"translateX(-50%)",zIndex:200,background:C.card,border:"1px solid "+C.lt,padding:"12px 24px",display:"flex",alignItems:"center",gap:12,animation:"reveal 0.3s",fontSize:13,maxWidth:"90%"}},
@@ -528,6 +550,22 @@ function App(){
         h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}},t.mode),
         modeCards),
 
+      /* Themes */
+      themes.length>0&&h("div",{style:{marginBottom:32}},
+        h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}},t.byTheme),
+        h("div",{style:{display:"flex",gap:8,overflowX:"auto",paddingBottom:8,WebkitOverflowScrolling:"touch",scrollbarWidth:"none",msOverflowStyle:"none"}},
+          themes.map(function(th,i){
+            var thName=lang==="en"&&th.name_en?th.name_en:th.name;
+            var thDesc=lang==="en"&&th.description_en?th.description_en:th.description;
+            var qCount=th.filter_type==="category"?allQ.filter(function(q){return q.cat===th.filter_value;}).length:allQ.length;
+            return h("button",{key:th.slug,onClick:function(){start("calibre",false,th);},style:{minWidth:140,maxWidth:180,padding:"16px 20px",background:th.is_sponsored?C.fg:C.card,color:th.is_sponsored?C.bg:C.fg,border:th.is_sponsored?"none":"1px solid "+C.lt,borderRadius:0,cursor:"pointer",fontFamily:font,textAlign:"left",flexShrink:0,animation:"reveal 0.2s ease "+(i*0.06)+"s both",transition:"all 0.15s"}},
+              h("div",{style:{fontSize:20,marginBottom:8}},th.icon||""),
+              h("div",{style:{fontSize:14,fontWeight:500,marginBottom:4}},thName),
+              h("div",{style:{fontSize:11,color:th.is_sponsored?C.lt:C.mid,lineHeight:1.4,marginBottom:8}},thDesc),
+              h("div",{style:{fontSize:10,color:th.is_sponsored?C.lt:C.mid}},qCount+"q"),
+              th.is_sponsored&&h("div",{style:{fontSize:9,letterSpacing:"0.1em",textTransform:"uppercase",color:C.lt,marginTop:6}},th.sponsor_name));
+          }))),
+
       /* Leaderboard */
       h("div",{style:{marginBottom:24}},btnSec(t.ranking,function(){loadLeaderboard();go("lb");})),
 
@@ -547,13 +585,13 @@ function App(){
   /* PLAYING */
   if(scr==="play"&&cq){
     var pct=tl/TIMER;var low=tl<=2;
-    var modeName=(MODES.find(function(m){return m.id===gm;})||{}).name||"";
+    var modeName=curTheme?(lang==="en"&&curTheme.name_en?curTheme.name_en:curTheme.name):(MODES.find(function(m){return m.id===gm;})||{}).name||"";
     return wrap(h("div",{style:{width:"100%",maxWidth:400,padding:"0 24px",display:"flex",flexDirection:"column",minHeight:"100vh",paddingTop:24,paddingBottom:24}},
       cft.length>0&&cft.map(renderPiece),
       h("div",{style:{position:"fixed",left:0,top:0,width:3,height:"100vh",background:C.sub,zIndex:10}},
         h("div",{style:{width:"100%",height:(pct*100)+"%",background:low?C.acc:C.fg,transition:"height 0.1s linear"}})),
       h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:4}},
-        h("div",{style:{fontSize:11,color:C.mid}},modeName+(daily?" \u00b7 "+t.daily:"")),
+        h("div",{style:{fontSize:11,color:C.mid}},modeName+(daily?" \u00b7 "+t.daily:"")+(curTheme&&curTheme.is_sponsored?" \u00b7 "+t.sponsored:"")),
         st>=2&&h("div",{style:{fontSize:11,color:C.acc}},st+"x")),
       h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:24}},
         h("div",{style:{fontSize:12,color:C.mid}},(ci<9?"0":"")+(ci+1)+" / 10"),
@@ -583,7 +621,7 @@ function App(){
   /* RESULT */
   if(scr==="result"){
     var acc=qs.length>0?Math.round((cc/qs.length)*100):0;
-    var xpG=Math.round(sc*0.1);var modeName=(MODES.find(function(m){return m.id===gm;})||{}).name||"";
+    var xpG=Math.round(sc*0.1);var modeName=curTheme?(lang==="en"&&curTheme.name_en?curTheme.name_en:curTheme.name):(MODES.find(function(m){return m.id===gm;})||{}).name||"";
     var shareModal=shO?h("div",{style:{position:"fixed",inset:0,zIndex:100,display:"flex",alignItems:"flex-end",justifyContent:"center",animation:"fadeIn 0.2s"},onClick:function(){sSh(false);}},
       h("div",{style:{position:"absolute",inset:0,background:"rgba(0,0,0,0.3)"}}),
       h("div",{onClick:function(e){e.stopPropagation();},style:{position:"relative",width:"100%",maxWidth:400,background:C.bg,padding:"32px 24px",animation:"slideUp 0.3s",borderTop:"1px solid "+C.lt}},
