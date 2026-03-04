@@ -33,6 +33,11 @@ function sbAuth(endpoint,body){return fetch(SB_URL+"/auth/v1/"+endpoint,{method:
 function sbSignup(email,pw,meta){return fetch(SB_URL+"/auth/v1/signup",{method:"POST",headers:{"apikey":SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:email,password:pw,data:meta||{}})}).then(function(r){return r.json();});}
 function sbLoginPw(email,pw){return fetch(SB_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{"apikey":SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:email,password:pw})}).then(function(r){return r.json();});}
 
+// Analytics
+var _sid=(function(){var k="hq_sid";var s=sessionStorage.getItem(k);if(s)return s;s=crypto.randomUUID?crypto.randomUUID():"s_"+Date.now()+"_"+Math.random().toString(36).slice(2);sessionStorage.setItem(k,s);return s;})();
+function track(event,data,uid){fetch(SB_URL+"/rest/v1/events",{method:"POST",headers:{"apikey":SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({event:event,session_id:_sid,user_id:uid||null,data:data||{}})}).catch(function(){});}
+track("page_view",{referrer:document.referrer||null,lang:navigator.language||null});
+
 var FALLBACK_QS=[
   {id:"q1",text:"Premi\u00e8re montre port\u00e9e sur la Lune.",diff:1,cat:"histoire",expl:"Omega Speedmaster Professional \u2014 Apollo 11, 1969.",answers:[{t:"Omega Speedmaster",ok:true},{t:"Rolex Daytona",ok:false},{t:"Breitling Navitimer",ok:false},{t:"Seiko 6139",ok:false}]},
   {id:"q2",text:"Surnom de Jaeger-LeCoultre.",diff:1,cat:"culture",expl:"Jaeger-LeCoultre \u2014 \u00ab La Grande Maison \u00bb.",answers:[{t:"La Grande Maison",ok:true},{t:"La Manufacture",ok:false},{t:"La Maison M\u00e8re",ok:false},{t:"Le Grand Atelier",ok:false}]},
@@ -266,7 +271,7 @@ function App(){
     return shuffle(f).slice(0,10).map(function(q){return Object.assign({},q,{answers:shuffle(q.answers)});});
   }
 
-  function start(mode,dy){sGm(mode);sDy(!!dy);var q=getQs(mode,dy);sQs(q);sCi(0);sTl(TIMER);sSc(0);sSt(0);sMs(0);sCc(0);sSa(null);sRv(false);sRs([]);sPt(0);sSh(false);go("play");}
+  function start(mode,dy){sGm(mode);sDy(!!dy);var q=getQs(mode,dy);sQs(q);sCi(0);sTl(TIMER);sSc(0);sSt(0);sMs(0);sCc(0);sSa(null);sRv(false);sRs([]);sPt(0);sSh(false);go("play");track("game_start",{mode:mode,daily:!!dy},usr?usr.id:null);}
 
   function ans(a,evt){
     if(rv||sa)return;clearInterval(tmr.current);sSa(a.t);sRv(true);
@@ -289,6 +294,7 @@ function App(){
     sMst(function(p){var m=Object.assign({},p);var s=Object.assign({},m[gm]||{g:0,c:0});s.g+=1;s.c+=cc;m[gm]=s;return m;});
     var stats={tg:tg+1,ds:ds,pr:pr+(isPf?1:0)};
     BADGES.forEach(function(b){if(eb.indexOf(b.id)===-1&&b.check(stats)){sEb(function(prev){return prev.concat([b.id]);});sNb(b);setTimeout(function(){sNb(null);},3000);}});
+    track("game_end",{mode:gm,score:sc,correct:cc,total:qs.length,daily:daily,streak:ms,perfect:isPf},usr?usr.id:null);
     if(usr&&tok){
       sbPost("scores",{user_id:usr.id,score:sc,mode:gm,correct_count:cc,total_questions:qs.length,is_daily:daily},tok)
         .then(function(){return sbPatch("profiles?id=eq."+usr.id,{xp:xp+xpE,level:Math.floor((xp+xpE)/500)+1,total_games:tg+1,best_score:Math.max(best,sc),current_streak:ds,last_played_date:new Date().toISOString().split("T")[0],perfect_runs:pr+(isPf?1:0)},tok);})
@@ -305,6 +311,7 @@ function App(){
     sbLoginPw(em.trim(),pw.trim()).then(function(res){
       if(res.error){sAe(res.error_description||res.error.message||"Error");sAl(false);return;}
       if(res.access_token&&res.user){
+        track("login",{},res.user.id);
         loadProfile(res.user,res.access_token);
       } else {sAe("Error");sAl(false);}
     }).catch(function(e){sAe("Network error");sAl(false);});
@@ -315,6 +322,7 @@ function App(){
     sbSignup(em.trim(),pw.trim(),{username:un.trim()}).then(function(res){
       if(res.error){sAe(res.error.message||"Error");sAl(false);return;}
       if(res.access_token&&res.user){
+        track("signup",{},res.user.id);
         loadProfile(res.user,res.access_token);
       } else if(res.user){
         // Auto-login after signup
@@ -370,7 +378,7 @@ function App(){
   }
 
   function shareTxt(){var acc=qs.length>0?Math.round((cc/qs.length)*100):0;var mn=(MODES.find(function(m){return m.id===gm;})||{}).name||"";return"HOROQUEST "+mn+" \u2014 "+sc+" pts | "+cc+"/"+qs.length+" ("+acc+"%) | "+t.streak+" "+ms+"x"+(daily?" | "+t.daily:"");}
-  function doCopy(){navigator.clipboard.writeText(shareTxt()).then(function(){sCp(true);setTimeout(function(){sCp(false);},2000);}).catch(function(){});}
+  function doCopy(){navigator.clipboard.writeText(shareTxt()).then(function(){sCp(true);setTimeout(function(){sCp(false);},2000);track("share",{mode:gm,score:sc},usr?usr.id:null);}).catch(function(){});}
 
   var toast=nb?h("div",{style:{position:"fixed",top:20,left:"50%",transform:"translateX(-50%)",zIndex:200,background:C.card,border:"1px solid "+C.lt,padding:"12px 24px",display:"flex",alignItems:"center",gap:12,animation:"reveal 0.3s",fontSize:13,maxWidth:"90%"}},
     h("span",{style:{fontWeight:700}},nb.name),h("span",{style:{color:C.mid}},"\u2014 "+nb.desc)):null;
