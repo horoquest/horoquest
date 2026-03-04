@@ -575,13 +575,13 @@ function App(){
       /* Hero */
       h("div",{style:{marginBottom:48,position:"relative"}},
         /* Decorative balance wheel — top right */
-        h("svg",{width:"120",height:"120",viewBox:"0 0 100 100",style:{position:"absolute",right:-10,top:-20,opacity:0.07,animation:"tick 3s ease-in-out infinite"}},
-          h("circle",{cx:"50",cy:"50",r:"40",fill:"none",stroke:C.fg,strokeWidth:"2.5"}),
-          h("line",{x1:"50",y1:"50",x2:"50",y2:"12",stroke:C.fg,strokeWidth:"2.5",strokeLinecap:"round"}),
-          h("line",{x1:"50",y1:"50",x2:"83",y2:"69",stroke:C.fg,strokeWidth:"2.5",strokeLinecap:"round"}),
-          h("line",{x1:"50",y1:"50",x2:"17",y2:"69",stroke:C.fg,strokeWidth:"2.5",strokeLinecap:"round"}),
-          h("circle",{cx:"50",cy:"50",r:"5",fill:C.fg}),
-          [0,30,60,90,120,150,180,210,240,270,300,330].map(function(a){var r=43;var x=50+r*Math.cos(a*Math.PI/180);var y=50+r*Math.sin(a*Math.PI/180);return h("circle",{key:a,cx:x.toFixed(1),cy:y.toFixed(1),r:"2",fill:C.fg});})),
+        h("svg",{width:"120",height:"120",viewBox:"0 0 100 100",style:{position:"absolute",right:-10,top:-20,opacity:0.12,animation:"tick 3s ease-in-out infinite"}},
+          h("circle",{cx:"50",cy:"50",r:"40",fill:"none",stroke:C.acc,strokeWidth:"2.5"}),
+          h("line",{x1:"50",y1:"50",x2:"50",y2:"12",stroke:C.acc,strokeWidth:"2.5",strokeLinecap:"round"}),
+          h("line",{x1:"50",y1:"50",x2:"83",y2:"69",stroke:C.acc,strokeWidth:"2.5",strokeLinecap:"round"}),
+          h("line",{x1:"50",y1:"50",x2:"17",y2:"69",stroke:C.acc,strokeWidth:"2.5",strokeLinecap:"round"}),
+          h("circle",{cx:"50",cy:"50",r:"5",fill:C.acc}),
+          [0,30,60,90,120,150,180,210,240,270,300,330].map(function(a){var r=43;var x=50+r*Math.cos(a*Math.PI/180);var y=50+r*Math.sin(a*Math.PI/180);return h("circle",{key:a,cx:x.toFixed(1),cy:y.toFixed(1),r:"2",fill:C.acc});})),
         h("div",{style:{position:"relative"}},
           h("div",{style:{fontSize:11,fontWeight:500,letterSpacing:"0.35em",color:C.fg,textTransform:"uppercase",marginBottom:12}},"Horoquest"),
           h("div",{style:{fontSize:36,fontWeight:300,letterSpacing:"-0.02em",lineHeight:1.15}},t.hero.split("\n").reduce(function(acc,line,i){if(i>0)acc.push(h("br",{key:"br"+i}));acc.push(line);return acc;},[])))),
@@ -615,7 +615,7 @@ function App(){
             var thName=lang==="en"&&th.name_en?th.name_en:th.name;
             var thDesc=lang==="en"&&th.description_en?th.description_en:th.description;
             var qCount=th.filter_type==="category"?allQ.filter(function(q){return q.cat===th.filter_value;}).length:allQ.length;
-            var col=th.is_sponsored?C.bg:C.fg;
+            var col=th.is_sponsored?C.bg:C.acc;
             // Dieter Rams-style icons: pure geometry, monochrome
             var themeIcon={
               technique:h("svg",{width:"20",height:"20",viewBox:"0 0 100 100"},
