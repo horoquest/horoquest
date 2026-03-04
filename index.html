@@ -90,8 +90,8 @@ var font="'Helvetica Neue','Helvetica','Arial',sans-serif";
 var TIMER=10;
 
 var I18N={
-  fr:{hero:"Testez votre\nculture\nhorlog\u00e8re.",daily:"D\u00e9fi du jour",dailyDone:"D\u00e9fi du jour \u2713",mode:"Mode",level:"Niveau",best:"Meilleur",badges:"Badges",ranking:"Classement",login:"Connexion",logout:"D\u00e9connexion",create:"Cr\u00e9er un compte",points:"points",precision:"Pr\u00e9cision",streak:"Streak",detail:"D\u00e9tail",replay:"Rejouer ",share:"Partager",home:"Accueil",back:"\u2190 Retour",consec:" cons\u00e9cutif",days:" jour",loginTo:"Connexion pour appara\u00eetre",alltime:"All-time",week:"Semaine",questions:" questions",games:" parties",email:"EMAIL",password:"MOT DE PASSE",sendMagic:"Envoyer un magic link",noAccount:"Pas de compte ? ",createAccount:"Cr\u00e9er",haveAccount:"D\u00e9j\u00e0 un compte ? ",createTitle:"Cr\u00e9er un compte.",loginTitle:"Connexion.",checkEmail:"V\u00e9rifiez votre email.",sentTo:"Lien envoy\u00e9 \u00e0",otherEmail:"Autre email",pseudo:"PSEUDO",createBtn:"Cr\u00e9er mon compte",copied:"Copi\u00e9 \u2713",copy:"Copier",close:"Fermer",xp:"XP",pts:"pts",shareTxt:"Partager",byTheme:"Par th\u00e8me",sponsored:"Sponsoris\u00e9",lvls:["Novice","Apprenti","Connaisseur","Expert","Ma\u00eetre","Grand Ma\u00eetre","L\u00e9gende"]},
-  en:{hero:"Test your\nwatch\nknowledge.",daily:"Daily Challenge",dailyDone:"Daily Done \u2713",mode:"Mode",level:"Level",best:"Best",badges:"Badges",ranking:"Leaderboard",login:"Log in",logout:"Log out",create:"Create account",points:"points",precision:"Accuracy",streak:"Streak",detail:"Detail",replay:"Replay ",share:"Share",home:"Home",back:"\u2190 Back",consec:" consecutive",days:" day",loginTo:"Log in to appear",alltime:"All-time",week:"Week",questions:" questions",games:" games",email:"EMAIL",password:"PASSWORD",sendMagic:"Send magic link",noAccount:"No account? ",createAccount:"Create",haveAccount:"Already have an account? ",createTitle:"Create account.",loginTitle:"Log in.",checkEmail:"Check your email.",sentTo:"Link sent to",otherEmail:"Other email",pseudo:"USERNAME",createBtn:"Create my account",copied:"Copied \u2713",copy:"Copy",close:"Close",xp:"XP",pts:"pts",shareTxt:"Share",byTheme:"By theme",sponsored:"Sponsored",lvls:["Novice","Apprentice","Connoisseur","Expert","Master","Grand Master","Legend"]}
+  fr:{hero:"Testez votre\nculture\nhorlog\u00e8re.",daily:"D\u00e9fi du jour",dailyDone:"D\u00e9fi du jour \u2713",mode:"Mode",level:"Niveau",best:"Meilleur",badges:"Badges",ranking:"Classement",login:"Connexion",logout:"D\u00e9connexion",create:"Cr\u00e9er un compte",points:"points",precision:"Pr\u00e9cision",streak:"Streak",detail:"D\u00e9tail",replay:"Rejouer ",share:"Partager",home:"Accueil",back:"\u2190 Retour",consec:" cons\u00e9cutif",days:" jour",loginTo:"Connexion pour appara\u00eetre",alltime:"All-time",week:"Semaine",questions:" questions",games:" parties",email:"EMAIL",password:"MOT DE PASSE",sendMagic:"Envoyer un magic link",noAccount:"Pas de compte ? ",createAccount:"Cr\u00e9er",haveAccount:"D\u00e9j\u00e0 un compte ? ",createTitle:"Cr\u00e9er un compte.",loginTitle:"Connexion.",checkEmail:"V\u00e9rifiez votre email.",sentTo:"Lien envoy\u00e9 \u00e0",otherEmail:"Autre email",pseudo:"PSEUDO",createBtn:"Cr\u00e9er mon compte",copied:"Copi\u00e9 \u2713",copy:"Copier",close:"Fermer",xp:"XP",pts:"pts",shareTxt:"Partager",byTheme:"Par th\u00e8me",sponsored:"Sponsoris\u00e9",duel:"Duel",challenge:"D\u00e9fier un ami",duelCode:"Code duel",joinDuel:"Rejoindre un duel",enterCode:"Entrez le code",vs:"VS",you:"Vous",win:"Victoire !",lose:"D\u00e9faite",draw:"\u00c9galit\u00e9 !",waiting:"En attente d'un adversaire...",duelResult:"R\u00e9sultat du duel",lvls:["Novice","Apprenti","Connaisseur","Expert","Ma\u00eetre","Grand Ma\u00eetre","L\u00e9gende"]},
+  en:{hero:"Test your\nwatch\nknowledge.",daily:"Daily Challenge",dailyDone:"Daily Done \u2713",mode:"Mode",level:"Level",best:"Best",badges:"Badges",ranking:"Leaderboard",login:"Log in",logout:"Log out",create:"Create account",points:"points",precision:"Accuracy",streak:"Streak",detail:"Detail",replay:"Replay ",share:"Share",home:"Home",back:"\u2190 Back",consec:" consecutive",days:" day",loginTo:"Log in to appear",alltime:"All-time",week:"Week",questions:" questions",games:" games",email:"EMAIL",password:"PASSWORD",sendMagic:"Send magic link",noAccount:"No account? ",createAccount:"Create",haveAccount:"Already have an account? ",createTitle:"Create account.",loginTitle:"Log in.",checkEmail:"Check your email.",sentTo:"Link sent to",otherEmail:"Other email",pseudo:"USERNAME",createBtn:"Create my account",copied:"Copied \u2713",copy:"Copy",close:"Close",xp:"XP",pts:"pts",shareTxt:"Share",byTheme:"By theme",sponsored:"Sponsored",duel:"Duel",challenge:"Challenge a friend",duelCode:"Duel code",joinDuel:"Join a duel",enterCode:"Enter the code",vs:"VS",you:"You",win:"Victory!",lose:"Defeat",draw:"Draw!",waiting:"Waiting for an opponent...",duelResult:"Duel result",lvls:["Novice","Apprentice","Connoisseur","Expert","Master","Grand Master","Legend"]}
 };
 
 function btn(label,onClick,style){return h("button",{onClick:onClick,style:Object.assign({width:"100%",padding:"16px 0",background:C.fg,color:C.bg,border:"none",borderRadius:0,fontSize:13,fontWeight:500,letterSpacing:"0.15em",textTransform:"uppercase",cursor:"pointer",fontFamily:font,transition:"opacity 0.2s"},style||{})},label);}
@@ -237,6 +237,9 @@ function App(){
   var _lbs=_([]),lbs=_lbs[0],sLbs=_lbs[1];
   var _ths=_([]),themes=_ths[0],sThs=_ths[1];
   var _cth=_(null),curTheme=_cth[0],sCth=_cth[1];
+  var _duel=_(null),duelData=_duel[0],sDuel=_duel[1];
+  var _dc=_(null),duelCode=_dc[0],sDc=_dc[1];
+  var _dj=_(null),duelJoinCode=_dj[0],sDj=_dj[1];
   var tmr=useRef(null);
   var t=I18N[lang]||I18N.fr;
   function qText(q){return lang==="en"&&q.text_en?q.text_en:q.text;}
@@ -260,7 +263,18 @@ function App(){
     sbGet("themes?is_active=eq.true&order=sort_order").then(function(rows){
       if(rows&&Array.isArray(rows)&&rows.length>0)sThs(rows);
     }).catch(function(){});
+    // Check for duel code in URL
+    var params=new URLSearchParams(window.location.search);
+    var dc=params.get("duel");
+    if(dc)sDj(dc.toUpperCase());
   },[]);
+
+  // Auto-join duel from URL param
+  useEffect(function(){
+    if(duelJoinCode&&duelJoinCode.length===6&&allQ.length>0&&scr==="home"&&!loading){
+      joinDuel(duelJoinCode);
+    }
+  },[duelJoinCode,allQ.length,loading]);
 
   useEffect(function(){
     if(scr!=="play"||rv||!cq)return;
@@ -323,6 +337,8 @@ function App(){
         .then(function(){return sbPatch("profiles?id=eq."+usr.id,{xp:xp+xpE,level:Math.floor((xp+xpE)/500)+1,total_games:tg+1,best_score:Math.max(best,sc),current_streak:ds,last_played_date:new Date().toISOString().split("T")[0],perfect_runs:pr+(isPf?1:0)},tok);})
         .catch(function(e){console.log("Save failed",e);});
     }
+    // If this was a duel challenge, save challenger score
+    if(duelData&&duelData.creator_name){finishDuel();}
     go("result");
   }
 
@@ -398,6 +414,47 @@ function App(){
         sLbs(list);
       }
     }).catch(function(e){console.log("LB failed",e);});
+  }
+
+  function genCode(){var c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";var r="";for(var i=0;i<6;i++)r+=c[Math.floor(Math.random()*c.length)];return r;}
+
+  function createDuel(){
+    var code=genCode();
+    var name=usr?usr.u:(lang==="en"?"Anonymous":"Anonyme");
+    var snapshot=qs.map(function(q){return{id:q.id,text:q.text,text_en:q.text_en,diff:q.diff,cat:q.cat,expl:q.expl,expl_en:q.expl_en,img:q.img,answers:q.answers};});
+    var data={code:code,creator_name:name,creator_id:usr?usr.id:null,creator_score:sc,creator_correct:cc,questions_snapshot:snapshot,mode:gm,theme_slug:curTheme?curTheme.slug:null};
+    sbPost("duels",data,tok||undefined).then(function(res){
+      if(res&&!res.error){sDc(code);sDuel({creator_name:name,creator_score:sc,creator_correct:cc,code:code});}
+    }).catch(function(e){console.log("Duel create failed",e);});
+  }
+
+  function joinDuel(code){
+    sbGet("duels?code=eq."+code.toUpperCase()+"&status=eq.pending").then(function(rows){
+      if(rows&&rows.length>0){
+        var d=rows[0];
+        sDuel(d);sDc(d.code);
+        // Load questions from snapshot
+        var snap=d.questions_snapshot;
+        if(snap&&snap.length>0){
+          sQs(snap);sCi(0);sTl(TIMER);sSc(0);sSt(0);sMs(0);sCc(0);sSa(null);sRv(false);sRs([]);sPt(0);sSh(false);
+          sGm(d.mode||"calibre");sDy(false);sCth(null);
+          go("play");
+          track("duel_join",{code:d.code},usr?usr.id:null);
+        }
+      } else {sDj(null);}
+    }).catch(function(){sDj(null);});
+  }
+
+  function finishDuel(){
+    if(!duelData||!duelCode)return;
+    var name=usr?usr.u:(lang==="en"?"Anonymous":"Anonyme");
+    sbPatch("duels?code=eq."+duelCode,{challenger_name:name,challenger_id:usr?usr.id:null,challenger_score:sc,challenger_correct:cc,challenged_at:new Date().toISOString(),status:"complete"},tok||undefined).then(function(){
+      // Reload duel data with updated info
+      sbGet("duels?code=eq."+duelCode).then(function(rows){
+        if(rows&&rows.length>0)sDuel(rows[0]);
+      });
+    }).catch(function(e){console.log("Duel finish failed",e);});
+    track("duel_complete",{code:duelCode,score:sc,correct:cc},usr?usr.id:null);
   }
 
   function shareTxt(){var acc=qs.length>0?Math.round((cc/qs.length)*100):0;var mn=curTheme?(lang==="en"&&curTheme.name_en?curTheme.name_en:curTheme.name):(MODES.find(function(m){return m.id===gm;})||{}).name||"";return"HOROQUEST "+mn+" \u2014 "+sc+" pts | "+cc+"/"+qs.length+" ("+acc+"%) | "+t.streak+" "+ms+"x"+(daily?" | "+t.daily:"");}
@@ -566,6 +623,13 @@ function App(){
               th.is_sponsored&&h("div",{style:{fontSize:9,letterSpacing:"0.1em",textTransform:"uppercase",color:C.lt,marginTop:6}},th.sponsor_name));
           }))),
 
+      /* Duel */
+      h("div",{style:{marginBottom:32}},
+        h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}},t.duel),
+        h("div",{style:{display:"flex",gap:1}},
+          h("input",{type:"text",value:duelJoinCode||"",onChange:function(e){sDj(e.target.value.toUpperCase().slice(0,6));},onKeyDown:function(e){if(e.key==="Enter"&&duelJoinCode&&duelJoinCode.length===6)joinDuel(duelJoinCode);},placeholder:t.enterCode,maxLength:6,style:{flex:1,padding:"14px 16px",background:C.card,border:"1px solid "+C.lt,borderRadius:0,fontSize:14,fontFamily:"monospace",letterSpacing:"0.3em",textTransform:"uppercase",color:C.fg,fontWeight:500}}),
+          h("button",{onClick:function(){if(duelJoinCode&&duelJoinCode.length===6)joinDuel(duelJoinCode);},style:{padding:"14px 20px",background:duelJoinCode&&duelJoinCode.length===6?C.fg:C.lt,color:C.bg,border:"none",borderRadius:0,fontSize:12,fontWeight:500,letterSpacing:"0.1em",cursor:duelJoinCode&&duelJoinCode.length===6?"pointer":"default",fontFamily:font}},"\u2192"))),
+
       /* Leaderboard */
       h("div",{style:{marginBottom:24}},btnSec(t.ranking,function(){loadLeaderboard();go("lb");})),
 
@@ -654,14 +718,39 @@ function App(){
           h("div",{style:{width:6,height:6,borderRadius:r&&r.ok?"50%":0,background:r&&r.ok?C.fg:C.acc,transform:r&&!r.ok?"rotate(45deg)":"none",flexShrink:0}}),
           h("div",{style:{fontSize:13,color:r&&r.ok?C.fg:C.mid,flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},q.text),
           r&&r.pts>0&&h("div",{style:{fontSize:11,color:C.mid}},"+"+r.pts));})),
+      /* Duel result comparison */
+      duelData&&duelData.status==="complete"&&h("div",{style:{marginBottom:24,padding:"20px 24px",background:C.sub,animation:"reveal 0.4s ease 0.28s both"}},
+        h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:16}},t.duelResult),
+        h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"}},
+          h("div",{style:{textAlign:"center",flex:1}},
+            h("div",{style:{fontSize:13,fontWeight:500,marginBottom:4}},duelData.creator_name),
+            h("div",{style:{fontSize:28,fontWeight:300}},duelData.creator_score),
+            h("div",{style:{fontSize:11,color:C.mid}},duelData.creator_correct+"/"+qs.length)),
+          h("div",{style:{fontSize:14,color:C.mid,fontWeight:500,padding:"0 12px"}},t.vs),
+          h("div",{style:{textAlign:"center",flex:1}},
+            h("div",{style:{fontSize:13,fontWeight:500,marginBottom:4}},duelData.challenger_name||(usr?usr.u:t.you)),
+            h("div",{style:{fontSize:28,fontWeight:300}},duelData.challenger_score!==null&&duelData.challenger_score!==undefined?duelData.challenger_score:sc),
+            h("div",{style:{fontSize:11,color:C.mid}},(duelData.challenger_correct!==null&&duelData.challenger_correct!==undefined?duelData.challenger_correct:cc)+"/"+qs.length))),
+        h("div",{style:{textAlign:"center",marginTop:12,fontSize:14,fontWeight:500,color:C.acc}},
+          (function(){var cs=duelData.challenger_score!==null&&duelData.challenger_score!==undefined?duelData.challenger_score:sc;if(cs>duelData.creator_score)return t.win;if(cs<duelData.creator_score)return t.lose;return t.draw;})())),
+
+      /* Duel code display (after creating) */
+      duelCode&&!duelData.challenger_name&&h("div",{style:{marginBottom:24,padding:"20px 24px",background:C.sub,textAlign:"center",animation:"reveal 0.4s ease 0.28s both"}},
+        h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}},t.duelCode),
+        h("div",{style:{fontSize:32,fontFamily:"monospace",fontWeight:700,letterSpacing:"0.3em",marginBottom:12}},duelCode),
+        h("button",{onClick:function(){var url=window.location.origin+window.location.pathname+"?duel="+duelCode;navigator.clipboard.writeText(url).then(function(){sCp(true);setTimeout(function(){sCp(false);},2000);});},style:{background:"none",border:"1px solid "+C.lt,padding:"8px 20px",fontSize:11,color:C.mid,cursor:"pointer",fontFamily:font}},cpd?t.copied:t.copy+" URL"),
+        h("div",{style:{fontSize:11,color:C.mid,marginTop:8}},t.waiting)),
+
       h("div",{style:{display:"flex",flexDirection:"column",gap:1,animation:"reveal 0.4s ease 0.3s both"}},
-        btn(t.replay+modeName,function(){start(gm,false);}),
+        !duelCode&&btn(t.challenge,function(){createDuel();}),
+        !duelCode&&h("div",{style:{height:1}}),
+        btn(t.replay+modeName,function(){sDuel(null);sDc(null);start(gm,false);}),
         h("div",{style:{height:1}}),
         btnSec(t.share,function(){sSh(true);}),
         h("div",{style:{height:1}}),
         btnSec(t.ranking,function(){loadLeaderboard();go("lb");}),
         h("div",{style:{height:1}}),
-        btnSec(t.home,function(){go("home");})),
+        btnSec(t.home,function(){sDuel(null);sDc(null);go("home");})),
       shareModal));
   }
   return null;
