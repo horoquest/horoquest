@@ -406,13 +406,26 @@ function App(){
 
   function logout(){sUsr(null);sTok(null);sXp(0);sLv(1);sTg(0);sBs(0);sDs(0);sMst({calibre:{g:0,c:0},manufacture:{g:0,c:0},haute:{g:0,c:0}});sEb([]);sPr(0);try{window._hqSession=null;}catch(e){}}
 
-  function loadLeaderboard(){
-    sbGet("scores?select=score,mode,profiles(username)&order=score.desc&limit=20").then(function(rows){
-      if(rows&&rows.length>0){
-        var seen={};var list=[];
-        rows.forEach(function(r){var name=r.profiles?r.profiles.username:"Anonyme";if(!seen[name]){seen[name]=true;list.push({u:name,s:r.score,me:usr&&r.profiles&&r.profiles.username===usr.u});}});
-        sLbs(list);
-      }
+  function loadLeaderboard(period){
+    var query="scores?select=score,profiles(username)";
+    if(period==="week"){
+      var d=new Date();d.setDate(d.getDate()-7);
+      query+="&played_at=gte."+d.toISOString();
+    }
+    sbGet(query).then(function(rows){
+      if(rows&&Array.isArray(rows)&&rows.length>0){
+        // Aggregate: sum scores per player
+        var totals={};
+        rows.forEach(function(r){
+          var name=r.profiles?r.profiles.username:"Anonyme";
+          if(!name)return;
+          if(!totals[name])totals[name]={u:name,s:0,me:usr&&r.profiles&&r.profiles.username===usr.u};
+          totals[name].s+=r.score||0;
+        });
+        var list=Object.keys(totals).map(function(k){return totals[k];});
+        list.sort(function(a,b){return b.s-a.s;});
+        sLbs(list.slice(0,20));
+      } else {sLbs([]);}
     }).catch(function(e){console.log("LB failed",e);});
   }
 
@@ -505,13 +518,12 @@ function App(){
 
   /* LEADERBOARD */
   if(scr==="lb"){
-    var list=lbs.length>0?lbs.map(function(l,i){return Object.assign({},l,{r:i+1});}):[];
-    if(list.length===0)list=[{r:1,u:"HorlogerFou",s:12450},{r:2,u:"GentaFan72",s:11200},{r:3,u:"CalibreHunter",s:9800},{r:4,u:"MoonwatchPro",s:8900},{r:5,u:"BalancierLibre",s:7600}];
+    var list=lbs.map(function(l,i){return Object.assign({},l,{r:i+1});});
     var lbChildren=[
       h("button",{key:"back",onClick:function(){go("home");},style:{background:"none",border:"none",color:C.mid,cursor:"pointer",fontSize:12,fontFamily:font,marginBottom:24}},t.back),
       h("div",{key:"title",style:{fontSize:24,fontWeight:300,marginBottom:24}},t.ranking),
       h("div",{key:"tabs",style:{display:"flex",gap:1,marginBottom:24}},
-        ["all","week"].map(function(tab){return h("button",{key:tab,onClick:function(){sLt(tab);},style:{flex:1,padding:"12px 0",background:lt===tab?C.fg:"transparent",color:lt===tab?C.bg:C.mid,border:"1px solid "+C.lt,borderRadius:0,fontSize:11,letterSpacing:"0.1em",textTransform:"uppercase",cursor:"pointer",fontFamily:font}},tab==="all"?t.alltime:t.week);}))
+        ["all","week"].map(function(tab){return h("button",{key:tab,onClick:function(){sLt(tab);loadLeaderboard(tab==="week"?"week":"all");},style:{flex:1,padding:"12px 0",background:lt===tab?C.fg:"transparent",color:lt===tab?C.bg:C.mid,border:"1px solid "+C.lt,borderRadius:0,fontSize:11,letterSpacing:"0.1em",textTransform:"uppercase",cursor:"pointer",fontFamily:font}},tab==="all"?t.alltime:t.week);}))
     ].concat(list.map(function(l,i){
       return h("div",{key:"l"+i,style:{display:"flex",alignItems:"center",gap:16,padding:"14px 0",borderBottom:"1px solid "+C.sub,background:l.me?C.sub:"transparent",animation:"reveal 0.2s ease "+(i*0.02)+"s both"}},
         h("div",{style:{width:28,fontSize:14,fontWeight:l.r<=3?700:400,color:l.r<=3?C.fg:C.mid,textAlign:"center"}},l.r),
@@ -661,7 +673,7 @@ function App(){
           h("button",{onClick:function(){if(duelJoinCode&&duelJoinCode.length===6)joinDuel(duelJoinCode);},style:{padding:"14px 20px",background:duelJoinCode&&duelJoinCode.length===6?C.fg:C.lt,color:C.bg,border:"none",borderRadius:0,fontSize:12,fontWeight:500,letterSpacing:"0.1em",cursor:duelJoinCode&&duelJoinCode.length===6?"pointer":"default",fontFamily:font}},"\u2192"))),
 
       /* Leaderboard */
-      h("div",{style:{marginBottom:24}},btnSec(t.ranking,function(){loadLeaderboard();go("lb");})),
+      h("div",{style:{marginBottom:24}},btnSec(t.ranking,function(){loadLeaderboard(lt);go("lb");})),
 
       /* Badges */
       eb.length>0&&h("div",{style:{marginBottom:32}},
@@ -778,7 +790,7 @@ function App(){
         h("div",{style:{height:1}}),
         btnSec(t.share,function(){sSh(true);}),
         h("div",{style:{height:1}}),
-        btnSec(t.ranking,function(){loadLeaderboard();go("lb");}),
+        btnSec(t.ranking,function(){loadLeaderboard(lt);go("lb");}),
         h("div",{style:{height:1}}),
         btnSec(t.home,function(){sDuel(null);sDc(null);go("home");})),
       shareModal));
