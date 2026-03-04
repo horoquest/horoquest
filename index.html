@@ -618,10 +618,15 @@ function App(){
             var col=th.is_sponsored?C.bg:C.fg;
             // Dieter Rams-style icons: pure geometry, monochrome
             var themeIcon={
-              technique:h("svg",{width:"20",height:"20",viewBox:"0 0 20 20"},
-                h("circle",{cx:"10",cy:"10",r:"5",fill:"none",stroke:col,strokeWidth:"1.2"}),
-                h("circle",{cx:"10",cy:"10",r:"2",fill:"none",stroke:col,strokeWidth:"1.2"}),
-                [0,45,90,135,180,225,270,315].map(function(a){var rad=a*Math.PI/180;var x1=(10+6.5*Math.cos(rad)).toFixed(1);var y1=(10+6.5*Math.sin(rad)).toFixed(1);var x2=(10+8.2*Math.cos(rad)).toFixed(1);var y2=(10+8.2*Math.sin(rad)).toFixed(1);return h("line",{key:a,x1:x1,y1:y1,x2:x2,y2:y2,stroke:col,strokeWidth:"1.8",strokeLinecap:"round"});})),
+              technique:h("svg",{width:"20",height:"20",viewBox:"0 0 100 100"},
+                h("circle",{cx:"50",cy:"50",r:"42",fill:"none",stroke:col,strokeWidth:"3"}),
+                h("circle",{cx:"50",cy:"50",r:"44.5",fill:"none",stroke:col,strokeWidth:"1.5",strokeDasharray:"2.5,1.5"}),
+                h("line",{x1:"50",y1:"50",x2:"50",y2:"10",stroke:col,strokeWidth:"3"}),
+                h("line",{x1:"50",y1:"50",x2:"88",y2:"30",stroke:col,strokeWidth:"3"}),
+                h("line",{x1:"50",y1:"50",x2:"78",y2:"82",stroke:col,strokeWidth:"3"}),
+                h("line",{x1:"50",y1:"50",x2:"22",y2:"82",stroke:col,strokeWidth:"3"}),
+                h("line",{x1:"50",y1:"50",x2:"12",y2:"30",stroke:col,strokeWidth:"3"}),
+                h("circle",{cx:"50",cy:"50",r:"10",fill:col})),
               histoire:h("svg",{width:"20",height:"20",viewBox:"0 0 20 20"},
                 h("line",{x1:"5",y1:"2",x2:"15",y2:"2",stroke:col,strokeWidth:"1.2"}),
                 h("line",{x1:"5",y1:"18",x2:"15",y2:"18",stroke:col,strokeWidth:"1.2"}),
