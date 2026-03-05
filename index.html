@@ -453,7 +453,7 @@ function App(){
         // Load questions from snapshot
         var snap=d.questions_snapshot;
         if(snap&&snap.length>0){
-          sQs(snap);sCi(0);sTl(TIMER);sSc(0);sSt(0);sMs(0);sCc(0);sSa(null);sRv(false);sRs([]);sPt(0);sSh(false);
+          sQs(snap);sCi(0);sTl(qTimer(snap[0]));sSc(0);sSt(0);sMs(0);sCc(0);sSa(null);sRv(false);sRs([]);sPt(0);sSh(false);
           sGm(d.mode||"calibre");sDy(false);sCth(null);
           go("play");
           track("duel_join",{code:d.code},usr?usr.id:null);
