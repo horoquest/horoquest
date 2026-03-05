@@ -278,6 +278,21 @@ function App(){
     var params=new URLSearchParams(window.location.search);
     var dc=params.get("duel");
     if(dc)sDj(dc.toUpperCase());
+    // Restore session from localStorage
+    try{
+      var rt=localStorage.getItem("hq_rt");
+      if(rt){
+        fetch(SB_URL+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{"apikey":SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:rt})})
+        .then(function(r){return r.json();})
+        .then(function(res){
+          if(res.access_token&&res.user){
+            loadProfile(res.user,res.access_token,res.refresh_token);
+          } else {
+            localStorage.removeItem("hq_rt");localStorage.removeItem("hq_at");localStorage.removeItem("hq_uid");localStorage.removeItem("hq_ue");
+          }
+        }).catch(function(){});
+      }
+    }catch(x){}
   },[]);
 
   // Auto-join duel from URL param
@@ -364,7 +379,7 @@ function App(){
       if(res.error){sAe(res.error_description||res.error.message||"Error");sAl(false);return;}
       if(res.access_token&&res.user){
         track("login",{},res.user.id);
-        loadProfile(res.user,res.access_token);
+        loadProfile(res.user,res.access_token,res.refresh_token);
       } else {sAe("Error");sAl(false);}
     }).catch(function(e){sAe("Network error");sAl(false);});
   }
@@ -375,26 +390,31 @@ function App(){
       if(res.error){sAe(res.error.message||"Error");sAl(false);return;}
       if(res.access_token&&res.user){
         track("signup",{},res.user.id);
-        loadProfile(res.user,res.access_token);
+        loadProfile(res.user,res.access_token,res.refresh_token);
       } else if(res.user){
         // Auto-login after signup
         sbLoginPw(em.trim(),pw.trim()).then(function(lr){
-          if(lr.access_token&&lr.user){loadProfile(lr.user,lr.access_token);}
+          if(lr.access_token&&lr.user){loadProfile(lr.user,lr.access_token,lr.refresh_token);}
           else{sAe(t.signupOk);sAl(false);sAm("login");}
         });
       } else {sAe("Error");sAl(false);}
     }).catch(function(e){sAe("Network error");sAl(false);});
   }
 
-  function loadProfile(user,token){
+  function loadProfile(user,token,refreshToken){
     sTok(token);
+    try{
+      if(refreshToken)localStorage.setItem("hq_rt",refreshToken);
+      localStorage.setItem("hq_at",token);
+      localStorage.setItem("hq_uid",user.id);
+      localStorage.setItem("hq_ue",user.email||"");
+    }catch(x){}
     sbGet("profiles?id=eq."+user.id,token).then(function(p){
       if(p&&p.length>0){
         var prof=p[0];sUsr({id:user.id,u:prof.username,e:user.email});
         sXp(prof.xp||0);sLv(prof.level||1);sTg(prof.total_games||0);sBs(prof.best_score||0);sDs(prof.current_streak||0);sPr(prof.perfect_runs||0);
         go("home");
       } else {
-        // No profile — ask for username
         sPu({id:user.id,e:user.email,token:token});
         sNu(true);
         go("home");
@@ -417,7 +437,7 @@ function App(){
     });
   }
 
-  function logout(){sUsr(null);sTok(null);sXp(0);sLv(1);sTg(0);sBs(0);sDs(0);sMst({calibre:{g:0,c:0},manufacture:{g:0,c:0},haute:{g:0,c:0}});sEb([]);sPr(0);try{window._hqSession=null;}catch(e){}}
+  function logout(){sUsr(null);sTok(null);sXp(0);sLv(1);sTg(0);sBs(0);sDs(0);sMst({calibre:{g:0,c:0},manufacture:{g:0,c:0},haute:{g:0,c:0}});sEb([]);sPr(0);try{window._hqSession=null;localStorage.removeItem("hq_rt");localStorage.removeItem("hq_at");localStorage.removeItem("hq_uid");localStorage.removeItem("hq_ue");}catch(e){}}
 
   function loadLeaderboard(period){
     var query="scores?select=score,profiles(username)";
