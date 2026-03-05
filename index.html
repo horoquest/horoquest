@@ -435,10 +435,14 @@ function App(){
   function createDuel(){
     var code=genCode();
     var name=usr?usr.u:(lang==="en"?"Anonymous":"Anonyme");
-    var snapshot=qs.map(function(q){return{id:q.id,text:q.text,text_en:q.text_en,diff:q.diff,cat:q.cat,expl:q.expl,expl_en:q.expl_en,img:q.img,answers:q.answers};});
-    var data={code:code,creator_name:name,creator_id:usr?usr.id:null,creator_score:sc,creator_correct:cc,questions_snapshot:snapshot,mode:gm,theme_slug:curTheme?curTheme.slug:null};
-    sbPost("duels",data,tok||undefined).then(function(res){
-      if(res&&!res.error){sDc(code);sDuel({creator_name:name,creator_score:sc,creator_correct:cc,code:code});}
+    var snapshot=qs.map(function(q){return{id:q.id,text:q.text,text_en:q.text_en||null,diff:q.diff,cat:q.cat,expl:q.expl||"",expl_en:q.expl_en||null,img:q.img||null,answers:q.answers};});
+    var body={code:code,creator_name:name,creator_score:sc,creator_correct:cc,questions_snapshot:JSON.stringify(snapshot),mode:gm};
+    if(usr)body.creator_id=usr.id;
+    if(curTheme)body.theme_slug=curTheme.slug;
+    fetch(SB_URL+"/rest/v1/duels",{method:"POST",headers:Object.assign({"apikey":SB_KEY,"Content-Type":"application/json","Prefer":"return=representation"},tok?{"Authorization":"Bearer "+tok}:{"Authorization":"Bearer "+SB_KEY}),body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(res){
+      if(res&&Array.isArray(res)&&res.length>0){sDc(code);sDuel({creator_name:name,creator_score:sc,creator_correct:cc,code:code});}
+      else if(res&&res.id){sDc(code);sDuel({creator_name:name,creator_score:sc,creator_correct:cc,code:code});}
+      else{console.log("Duel create response:",JSON.stringify(res));}
     }).catch(function(e){console.log("Duel create failed",e);});
   }
 
