@@ -91,8 +91,8 @@ var BASE_TIMER=8;
 function qTimer(q){if(!q)return BASE_TIMER;var len=q.text.length+(q.answers||[]).reduce(function(s,a){return s+a.t.length;},0);if(len<80)return BASE_TIMER;if(len<150)return 10;if(len<250)return 13;return 16;}
 
 var I18N={
-  fr:{hero:"Testez votre\nculture\nhorlog\u00e8re.",daily:"D\u00e9fi du jour",dailyDone:"D\u00e9fi du jour \u2713",mode:"Mode",level:"Niveau",best:"Meilleur",badges:"Badges",ranking:"Classement",login:"Connexion",logout:"D\u00e9connexion",create:"Cr\u00e9er un compte",points:"points",precision:"Pr\u00e9cision",streak:"Streak",detail:"D\u00e9tail",replay:"Rejouer ",share:"Partager",home:"Accueil",back:"\u2190 Retour",consec:" cons\u00e9cutif",days:" jour",loginTo:"Connexion pour appara\u00eetre",alltime:"All-time",week:"Semaine",questions:" questions",games:" parties",email:"EMAIL",password:"MOT DE PASSE",sendMagic:"Envoyer un magic link",noAccount:"Pas de compte ? ",createAccount:"Cr\u00e9er",haveAccount:"D\u00e9j\u00e0 un compte ? ",createTitle:"Cr\u00e9er un compte.",loginTitle:"Connexion.",checkEmail:"V\u00e9rifiez votre email.",sentTo:"Lien envoy\u00e9 \u00e0",otherEmail:"Autre email",pseudo:"PSEUDO",createBtn:"Cr\u00e9er mon compte",copied:"Copi\u00e9 \u2713",copy:"Copier",close:"Fermer",xp:"XP",pts:"pts",shareTxt:"Partager",byTheme:"Par th\u00e8me",sponsored:"Sponsoris\u00e9",duel:"Duel",challenge:"D\u00e9fier un ami",duelCode:"Code duel",joinDuel:"Rejoindre un duel",enterCode:"Entrez le code",vs:"VS",you:"Vous",win:"Victoire !",lose:"D\u00e9faite",draw:"\u00c9galit\u00e9 !",waiting:"En attente d'un adversaire...",duelResult:"R\u00e9sultat du duel",next:"Suivant \u2192",lvls:["Novice","Apprenti","Connaisseur","Expert","Ma\u00eetre","Grand Ma\u00eetre","L\u00e9gende"]},
-  en:{hero:"Test your\nwatch\nknowledge.",daily:"Daily Challenge",dailyDone:"Daily Done \u2713",mode:"Mode",level:"Level",best:"Best",badges:"Badges",ranking:"Leaderboard",login:"Log in",logout:"Log out",create:"Create account",points:"points",precision:"Accuracy",streak:"Streak",detail:"Detail",replay:"Replay ",share:"Share",home:"Home",back:"\u2190 Back",consec:" consecutive",days:" day",loginTo:"Log in to appear",alltime:"All-time",week:"Week",questions:" questions",games:" games",email:"EMAIL",password:"PASSWORD",sendMagic:"Send magic link",noAccount:"No account? ",createAccount:"Create",haveAccount:"Already have an account? ",createTitle:"Create account.",loginTitle:"Log in.",checkEmail:"Check your email.",sentTo:"Link sent to",otherEmail:"Other email",pseudo:"USERNAME",createBtn:"Create my account",copied:"Copied \u2713",copy:"Copy",close:"Close",xp:"XP",pts:"pts",shareTxt:"Share",byTheme:"By theme",sponsored:"Sponsored",duel:"Duel",challenge:"Challenge a friend",duelCode:"Duel code",joinDuel:"Join a duel",enterCode:"Enter the code",vs:"VS",you:"You",win:"Victory!",lose:"Defeat",draw:"Draw!",waiting:"Waiting for an opponent...",duelResult:"Duel result",next:"Next \u2192",lvls:["Novice","Apprentice","Connoisseur","Expert","Master","Grand Master","Legend"]}
+  fr:{hero:"Testez votre\nculture\nhorlog\u00e8re.",daily:"D\u00e9fi du jour",dailyDone:"D\u00e9fi du jour \u2713",mode:"Mode",level:"Niveau",best:"Meilleur",badges:"Badges",ranking:"Classement",login:"Connexion",logout:"D\u00e9connexion",create:"Cr\u00e9er un compte",points:"points",precision:"Pr\u00e9cision",streak:"Streak",detail:"D\u00e9tail",replay:"Rejouer ",share:"Partager",home:"Accueil",back:"\u2190 Retour",consec:" cons\u00e9cutif",days:" jour",loginTo:"Connexion pour appara\u00eetre",alltime:"All-time",week:"Semaine",questions:" questions",games:" parties",email:"EMAIL",password:"MOT DE PASSE",sendMagic:"Envoyer un magic link",noAccount:"Pas de compte ? ",createAccount:"Cr\u00e9er",haveAccount:"D\u00e9j\u00e0 un compte ? ",createTitle:"Cr\u00e9er un compte.",loginTitle:"Connexion.",checkEmail:"V\u00e9rifiez votre email.",sentTo:"Lien envoy\u00e9 \u00e0",otherEmail:"Autre email",pseudo:"PSEUDO",createBtn:"Cr\u00e9er mon compte",copied:"Copi\u00e9 \u2713",copy:"Copier",close:"Fermer",xp:"XP",pts:"pts",shareTxt:"Partager",byTheme:"Par th\u00e8me",sponsored:"Sponsoris\u00e9",duel:"Duel",challenge:"D\u00e9fier un ami",duelCode:"Code duel",joinDuel:"Rejoindre un duel",enterCode:"Entrez le code",vs:"VS",you:"Vous",win:"Victoire !",lose:"D\u00e9faite",draw:"\u00c9galit\u00e9 !",waiting:"En attente d'un adversaire...",duelResult:"R\u00e9sultat du duel",next:"Suivant \u2192",dailyRanking:"Classement du jour",yourRank:"Votre position",weeklyMode:"Mode de la semaine",weeklyBonus:"Bonus x",lvls:["Novice","Apprenti","Connaisseur","Expert","Ma\u00eetre","Grand Ma\u00eetre","L\u00e9gende"]},
+  en:{hero:"Test your\nwatch\nknowledge.",daily:"Daily Challenge",dailyDone:"Daily Done \u2713",mode:"Mode",level:"Level",best:"Best",badges:"Badges",ranking:"Leaderboard",login:"Log in",logout:"Log out",create:"Create account",points:"points",precision:"Accuracy",streak:"Streak",detail:"Detail",replay:"Replay ",share:"Share",home:"Home",back:"\u2190 Back",consec:" consecutive",days:" day",loginTo:"Log in to appear",alltime:"All-time",week:"Week",questions:" questions",games:" games",email:"EMAIL",password:"PASSWORD",sendMagic:"Send magic link",noAccount:"No account? ",createAccount:"Create",haveAccount:"Already have an account? ",createTitle:"Create account.",loginTitle:"Log in.",checkEmail:"Check your email.",sentTo:"Link sent to",otherEmail:"Other email",pseudo:"USERNAME",createBtn:"Create my account",copied:"Copied \u2713",copy:"Copy",close:"Close",xp:"XP",pts:"pts",shareTxt:"Share",byTheme:"By theme",sponsored:"Sponsored",duel:"Duel",challenge:"Challenge a friend",duelCode:"Duel code",joinDuel:"Join a duel",enterCode:"Enter the code",vs:"VS",you:"You",win:"Victory!",lose:"Defeat",draw:"Draw!",waiting:"Waiting for an opponent...",duelResult:"Duel result",next:"Next \u2192",dailyRanking:"Today\u2019s ranking",yourRank:"Your position",weeklyMode:"Mode of the week",weeklyBonus:"Bonus x",lvls:["Novice","Apprentice","Connoisseur","Expert","Master","Grand Master","Legend"]}
 };
 
 function btn(label,onClick,style){return h("button",{onClick:onClick,style:Object.assign({width:"100%",padding:"16px 0",background:C.fg,color:C.bg,border:"none",borderRadius:0,fontSize:13,fontWeight:500,letterSpacing:"0.15em",textTransform:"uppercase",cursor:"pointer",fontFamily:font,transition:"opacity 0.2s"},style||{})},label);}
@@ -241,6 +241,9 @@ function App(){
   var _duel=_(null),duelData=_duel[0],sDuel=_duel[1];
   var _dc=_(null),duelCode=_dc[0],sDc=_dc[1];
   var _dj=_(null),duelJoinCode=_dj[0],sDj=_dj[1];
+  var _dlb=_([]),dailyLb=_dlb[0],sDlb=_dlb[1];
+  var _dlr=_(null),dailyRank=_dlr[0],sDlr=_dlr[1];
+  var _wk=_(false),isWeekly=_wk[0],sWk=_wk[1];
   var tmr=useRef(null);
   var t=I18N[lang]||I18N.fr;
   function qText(q){return lang==="en"&&q.text_en?q.text_en:q.text;}
@@ -308,12 +311,12 @@ function App(){
     return shuffle(f).slice(0,10).map(function(q){return Object.assign({},q,{answers:shuffle(q.answers)});});
   }
 
-  function start(mode,dy,themeObj){sGm(mode);sDy(!!dy);sCth(themeObj||null);var q=getQs(mode,dy,themeObj);sQs(q);sCi(0);sTl(qTimer(q[0]));sSc(0);sSt(0);sMs(0);sCc(0);sSa(null);sRv(false);sRs([]);sPt(0);sSh(false);go("play");track("game_start",{mode:mode,daily:!!dy,theme:themeObj?themeObj.slug:null},usr?usr.id:null);}
+  function start(mode,dy,themeObj,wkly){sGm(mode);sDy(!!dy);sCth(themeObj||null);sWk(!!wkly);var q=getQs(mode,dy,themeObj);sQs(q);sCi(0);sTl(qTimer(q[0]));sSc(0);sSt(0);sMs(0);sCc(0);sSa(null);sRv(false);sRs([]);sPt(0);sSh(false);sDlb([]);sDlr(null);go("play");track("game_start",{mode:mode,daily:!!dy,weekly:!!wkly,theme:themeObj?themeObj.slug:null},usr?usr.id:null);}
 
   function ans(a,evt){
     if(rv||sa)return;clearInterval(tmr.current);sSa(a.t);sRv(true);
     var m=MODES.find(function(x){return x.id===gm;});
-    if(a.ok){var ns=st+1,sm=1+(ns-1)*0.15,p=Math.round(cq.diff*Math.max(0,tl)*10*sm*(m?m.mult:1));sSt(ns);sMs(function(v){return Math.max(v,ns);});sCc(function(v){return v+1;});sSc(function(v){return v+p;});sPt(p);sAn(true);setTimeout(function(){sAn(false);},500);fireConfetti(evt);sRs(function(v){return v.concat([{ok:true,pts:p}]);});}
+    if(a.ok){var ns=st+1,sm=1+(ns-1)*0.15,wm=isWeekly?weekly.mult:1,p=Math.round(cq.diff*Math.max(0,tl)*10*sm*(m?m.mult:1)*wm);sSt(ns);sMs(function(v){return Math.max(v,ns);});sCc(function(v){return v+1;});sSc(function(v){return v+p;});sPt(p);sAn(true);setTimeout(function(){sAn(false);},500);fireConfetti(evt);sRs(function(v){return v.concat([{ok:true,pts:p}]);});}
     else{sSt(0);sPt(0);sRs(function(v){return v.concat([{ok:false,pts:0}]);});}
   }
 
@@ -340,6 +343,8 @@ function App(){
     }
     // If this was a duel challenge, save challenger score
     if(duelData&&duelData.creator_name){finishDuel();}
+    // Load daily leaderboard if daily game
+    if(daily){loadDailyLb(sc);}
     go("result");
   }
 
@@ -429,6 +434,34 @@ function App(){
       } else {sLbs([]);}
     }).catch(function(e){console.log("LB failed",e);});
   }
+
+  function loadDailyLb(myScore){
+    var today=new Date().toISOString().split("T")[0];
+    sbGet("scores?select=score,profiles(username)&is_daily=eq.true&played_at=gte."+today+"T00:00:00Z").then(function(rows){
+      if(rows&&Array.isArray(rows)&&rows.length>0){
+        var list=rows.map(function(r){return{u:r.profiles?r.profiles.username:(lang==="en"?"Anonymous":"Anonyme"),s:r.score||0,me:usr&&r.profiles&&r.profiles.username===usr.u};}).filter(function(r){return r.u;});
+        list.sort(function(a,b){return b.s-a.s;});
+        sDlb(list.slice(0,10));
+        var rank=null;
+        for(var i=0;i<list.length;i++){if(list[i].me){rank=i+1;break;}}
+        sDlr(rank);
+      }
+    }).catch(function(){});
+  }
+
+  // Weekly rotation: deterministic mode of the week based on ISO week number
+  function getWeekNumber(){var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+3-(d.getDay()+6)%7);var w1=new Date(d.getFullYear(),0,4);return 1+Math.round(((d-w1)/86400000-3+(w1.getDay()+6)%7)/7);}
+  var weekNum=getWeekNumber();
+  var weeklyModes=[
+    {mode:"calibre",mult:3,label:lang==="en"?"Calibre \u2014 Triple points":"Calibre \u2014 Points tripl\u00e9s"},
+    {mode:"manufacture",mult:4,label:lang==="en"?"Manufacture \u2014 Quadruple points":"Manufacture \u2014 Points quadrupl\u00e9s"},
+    {mode:"haute",mult:5,label:lang==="en"?"Haute Horlogerie \u2014 Quintuple points":"Haute Horlogerie \u2014 Points quintupl\u00e9s"},
+    {mode:"calibre",mult:2,label:lang==="en"?"Calibre \u2014 Double points":"Calibre \u2014 Points doubl\u00e9s"},
+    {mode:"manufacture",mult:3,label:lang==="en"?"Manufacture \u2014 Triple points":"Manufacture \u2014 Points tripl\u00e9s"},
+    {mode:"haute",mult:4,label:lang==="en"?"Haute Horlogerie \u2014 Quadruple points":"Haute Horlogerie \u2014 Points quadrupl\u00e9s"}
+  ];
+  var weeklyIdx=weekNum%weeklyModes.length;
+  var weekly=weeklyModes[weeklyIdx];
 
   function genCode(){var c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";var r="";for(var i=0;i<6;i++)r+=c[Math.floor(Math.random()*c.length)];return r;}
 
@@ -551,6 +584,15 @@ function App(){
           h("div",{style:{fontSize:20,fontWeight:400,lineHeight:1.3}},lang==="en"?"10 questions.\nEvery second counts.":"10 questions.\nChaque seconde compte.")),
         !dd&&h("div",{style:{fontSize:24,opacity:0.4,marginTop:4}},"\u2192")));
 
+    // Weekly mode card
+    var weeklyOk=unlocked(weekly.mode);
+    var weeklyCard=h("button",{key:"weekly",onClick:function(){if(weeklyOk)start(weekly.mode,false,null,true);},disabled:!weeklyOk,style:{width:"100%",padding:"20px 24px",background:C.card,border:"1px solid "+C.acc,borderRadius:0,cursor:weeklyOk?"pointer":"default",fontFamily:font,textAlign:"left",marginBottom:24,opacity:weeklyOk?1:0.4,animation:"reveal 0.2s ease 0.05s both"}},
+      h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"}},
+        h("div",null,
+          h("div",{style:{fontSize:11,letterSpacing:"0.15em",textTransform:"uppercase",color:C.acc,marginBottom:6}},t.weeklyMode),
+          h("div",{style:{fontSize:15,fontWeight:500}},weekly.label)),
+        h("div",{style:{fontSize:24,opacity:0.4}},"\u2192")));
+
     // Mode cards
     var modeCards=MODES.map(function(m,i){
       var ok=unlocked(m.id);var s=mst[m.id]||{g:0,c:0};
@@ -617,6 +659,9 @@ function App(){
 
       /* Daily Challenge */
       dailyCard,
+
+      /* Weekly Mode */
+      weeklyCard,
 
       /* Modes */
       h("div",{style:{marginBottom:32}},
@@ -745,7 +790,7 @@ function App(){
       toast,
       daily&&h("div",{style:{fontSize:11,color:C.acc,letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:8,animation:"reveal 0.3s"}},t.daily),
       h("div",{style:{marginBottom:40,animation:"reveal 0.4s"}},
-        h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.2em",textTransform:"uppercase",marginBottom:12}},modeName+" \u00b7 x"+(MODES.find(function(m){return m.id===gm;})||{}).mult),
+        h("div",{style:{fontSize:11,color:isWeekly?C.acc:C.mid,letterSpacing:"0.2em",textTransform:"uppercase",marginBottom:12}},modeName+" \u00b7 x"+(MODES.find(function(m){return m.id===gm;})||{}).mult+(isWeekly?" \u00b7 "+t.weeklyBonus+weekly.mult:"")),
         h("div",{style:{fontSize:72,fontWeight:300,letterSpacing:"-0.04em",lineHeight:1}},sc),
         h("div",{style:{fontSize:13,color:C.mid,marginTop:8}},t.points)),
       h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",borderTop:"1px solid "+C.lt,borderBottom:"1px solid "+C.lt,marginBottom:24,animation:"reveal 0.4s ease 0.1s both"}},
@@ -759,6 +804,15 @@ function App(){
           h("span",null,t.level+" "+lv+" \u2014 "+lvlT(lv)),h("span",null,xp+" "+t.xp)),
         h("div",{style:{height:3,background:C.lt,width:"100%"}},
           h("div",{style:{height:"100%",width:((xp%500)/500*100)+"%",background:C.fg,transition:"width 1s"}}))),
+      /* Daily leaderboard */
+      daily&&dailyLb.length>0&&h("div",{style:{marginBottom:24,animation:"reveal 0.4s ease 0.24s both"}},
+        h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}},t.dailyRanking),
+        dailyLb.slice(0,5).map(function(p,i){return h("div",{key:i,style:{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:"1px solid "+C.sub,background:p.me?C.sub:"transparent"}},
+          h("div",{style:{width:20,fontSize:13,fontWeight:i<3?700:400,color:i<3?C.fg:C.mid,textAlign:"center"}},(i+1)),
+          h("div",{style:{width:24,height:24,borderRadius:"50%",background:p.me?C.fg:C.lt,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:500,color:p.me?C.bg:C.fg}},p.u.charAt(0).toUpperCase()),
+          h("div",{style:{flex:1,fontSize:13,fontWeight:p.me?600:400}},p.u),
+          h("div",{style:{fontSize:14,fontWeight:500}},p.s));}),
+        dailyRank&&dailyRank>5&&h("div",{style:{padding:"10px 0",fontSize:12,color:C.mid,textAlign:"center",borderTop:"1px solid "+C.lt,marginTop:4}},t.yourRank+" : "+dailyRank+(lang==="en"?"th":"e"))),
       h("div",{style:{marginBottom:32,animation:"reveal 0.4s ease 0.25s both"}},
         h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.08em",marginBottom:8}},t.detail),
         qs.map(function(q,i){var r=rs[i];return h("div",{key:i,style:{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:"1px solid "+C.sub}},
