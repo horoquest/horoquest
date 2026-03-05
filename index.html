@@ -782,7 +782,7 @@ function App(){
           (function(){var cs=duelData.challenger_score!==null&&duelData.challenger_score!==undefined?duelData.challenger_score:sc;if(cs>duelData.creator_score)return t.win;if(cs<duelData.creator_score)return t.lose;return t.draw;})())),
 
       /* Duel code display (after creating) */
-      duelCode&&!duelData.challenger_name&&h("div",{style:{marginBottom:24,padding:"20px 24px",background:C.sub,textAlign:"center",animation:"reveal 0.4s ease 0.28s both"}},
+      duelCode&&duelData&&!duelData.challenger_name&&h("div",{style:{marginBottom:24,padding:"20px 24px",background:C.sub,textAlign:"center",animation:"reveal 0.4s ease 0.28s both"}},
         h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}},t.duelCode),
         h("div",{style:{fontSize:32,fontFamily:"monospace",fontWeight:700,letterSpacing:"0.3em",marginBottom:12}},duelCode),
         h("button",{onClick:function(){var url=window.location.origin+window.location.pathname+"?duel="+duelCode;navigator.clipboard.writeText(url).then(function(){sCp(true);setTimeout(function(){sCp(false);},2000);});},style:{background:"none",border:"1px solid "+C.lt,padding:"8px 20px",fontSize:11,color:C.mid,cursor:"pointer",fontFamily:font}},cpd?t.copied:t.copy+" URL"),
