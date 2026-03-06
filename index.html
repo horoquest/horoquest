@@ -283,7 +283,7 @@ function App(){
   var _dlb=_([]),dailyLb=_dlb[0],sDlb=_dlb[1];
   var _dlr=_(null),dailyRank=_dlr[0],sDlr=_dlr[1];
   var _streakMsg=_(null),streakMsg=_streakMsg[0],sStreakMsg=_streakMsg[1];
-  var introPlaying=useRef(true);
+  var introStart=useRef(Date.now());
   var tmr=useRef(null);
   var t=I18N[lang]||I18N.fr;
   function qText(q){return lang==="en"&&q.text_en?q.text_en:q.text;}
@@ -622,7 +622,7 @@ function App(){
 
   /* HOME */
   if(scr==="home"){
-    var isIntro=introPlaying.current;introPlaying.current=false;
+    var isIntro=(Date.now()-introStart.current)<3000;
     var cardS={background:C.card,border:"1px solid "+C.lt,padding:"20px 24px",marginBottom:1,cursor:"pointer",fontFamily:font,width:"100%",textAlign:"left",transition:"all 0.15s"};
 
     // Daily challenge card
