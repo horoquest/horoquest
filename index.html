@@ -3,7 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>HOROQUEST</title>
+<title>HOROQUEST \u2014 Testez votre culture horlog\u00e8re</title>
+<meta name="description" content="Quiz interactif sur l'horlogerie. Testez vos connaissances sur les montres, les manufactures et les complications horlog\u00e8res. D\u00e9fi quotidien, duels entre amis et classement mondial.">
+<meta name="theme-color" content="#1A1A1A">
+<link rel="canonical" href="https://horoquest.vercel.app/">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://horoquest.vercel.app/">
+<meta property="og:title" content="HOROQUEST \u2014 Le quiz horloger">
+<meta property="og:description" content="Testez vos connaissances horlog\u00e8res. D\u00e9fi du jour, 3 modes de difficult\u00e9, duels et classement.">
+<meta property="og:image" content="https://horoquest.vercel.app/og-image.png">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_US">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HOROQUEST \u2014 Le quiz horloger">
+<meta name="twitter:description" content="Testez vos connaissances horlog\u00e8res. D\u00e9fi du jour, duels et classement.">
+<meta name="twitter:image" content="https://horoquest.vercel.app/og-image.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <style>
@@ -13,8 +29,16 @@
 @keyframes slideUp{from{opacity:0;transform:translateY(100%)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes tick{0%{transform:rotate(-280deg)}50%{transform:rotate(280deg)}100%{transform:rotate(-280deg)}}
+@keyframes correctPulse{0%{transform:scale(1)}40%{transform:scale(1.02)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}100%{transform:translateX(0)}}
+@keyframes scoreCount{0%{transform:translateY(8px);opacity:0}50%{transform:translateY(-2px);opacity:1}100%{transform:translateY(0);opacity:1}}
+@keyframes timerPulse{0%{opacity:1}50%{opacity:0.5}100%{opacity:1}}
+@keyframes dotPop{0%{transform:scale(0)}60%{transform:scale(1.6)}100%{transform:scale(1)}}
+@keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 input:focus,select:focus{outline:none}
 ::selection{background:#D4281E;color:#fff}
+button{transition:transform 0.1s,opacity 0.15s !important}
+button:active:not(:disabled){transform:scale(0.97) !important}
 body{font-family:'Helvetica Neue','Helvetica','Arial',sans-serif;background:#F5F5F0;color:#1A1A1A}
 </style>
 </head>
@@ -91,8 +115,8 @@ var BASE_TIMER=8;
 function qTimer(q){if(!q)return BASE_TIMER;var len=q.text.length+(q.answers||[]).reduce(function(s,a){return s+a.t.length;},0);if(len<80)return BASE_TIMER;if(len<150)return 10;if(len<250)return 13;return 16;}
 
 var I18N={
-  fr:{hero:"Testez votre\nculture\nhorlog\u00e8re.",daily:"D\u00e9fi du jour",dailyDone:"D\u00e9fi du jour \u2713",mode:"Mode",level:"Niveau",best:"Meilleur",badges:"Badges",ranking:"Classement",login:"Connexion",logout:"D\u00e9connexion",create:"Cr\u00e9er un compte",points:"points",precision:"Pr\u00e9cision",streak:"Streak",detail:"D\u00e9tail",replay:"Rejouer ",share:"Partager",home:"Accueil",back:"\u2190 Retour",consec:" cons\u00e9cutif",days:" jour",loginTo:"Connexion pour appara\u00eetre",alltime:"All-time",week:"Semaine",questions:" questions",games:" parties",email:"EMAIL",password:"MOT DE PASSE",sendMagic:"Envoyer un magic link",noAccount:"Pas de compte ? ",createAccount:"Cr\u00e9er",haveAccount:"D\u00e9j\u00e0 un compte ? ",createTitle:"Cr\u00e9er un compte.",loginTitle:"Connexion.",checkEmail:"V\u00e9rifiez votre email.",sentTo:"Lien envoy\u00e9 \u00e0",otherEmail:"Autre email",pseudo:"PSEUDO",createBtn:"Cr\u00e9er mon compte",copied:"Copi\u00e9 \u2713",copy:"Copier",close:"Fermer",xp:"XP",pts:"pts",shareTxt:"Partager",byTheme:"Par th\u00e8me",sponsored:"Sponsoris\u00e9",duel:"Duel",challenge:"D\u00e9fier un ami",duelCode:"Code duel",joinDuel:"Rejoindre un duel",enterCode:"Entrez le code",vs:"VS",you:"Vous",win:"Victoire !",lose:"D\u00e9faite",draw:"\u00c9galit\u00e9 !",waiting:"En attente d'un adversaire...",duelResult:"R\u00e9sultat du duel",next:"Suivant \u2192",dailyRanking:"Classement du jour",yourRank:"Votre position",anon:"Anonyme",choosePseudo:"Choisissez votre pseudo",pseudoVisible:"Visible dans le classement",letsGo:"C'est parti !",dailySub:"10 questions.\nChaque seconde compte.",createCta:"Cr\u00e9ez un compte pour sauvegarder vos scores et appara\u00eetre au classement.",signupOk:"Compte cr\u00e9\u00e9. Connectez-vous.",lvls:["Novice","Apprenti","Connaisseur","Expert","Ma\u00eetre","Grand Ma\u00eetre","L\u00e9gende"]},
-  en:{hero:"Test your\nwatch\nknowledge.",daily:"Daily Challenge",dailyDone:"Daily Done \u2713",mode:"Mode",level:"Level",best:"Best",badges:"Badges",ranking:"Leaderboard",login:"Log in",logout:"Log out",create:"Create account",points:"points",precision:"Accuracy",streak:"Streak",detail:"Detail",replay:"Replay ",share:"Share",home:"Home",back:"\u2190 Back",consec:" consecutive",days:" day",loginTo:"Log in to appear",alltime:"All-time",week:"Week",questions:" questions",games:" games",email:"EMAIL",password:"PASSWORD",sendMagic:"Send magic link",noAccount:"No account? ",createAccount:"Create",haveAccount:"Already have an account? ",createTitle:"Create account.",loginTitle:"Log in.",checkEmail:"Check your email.",sentTo:"Link sent to",otherEmail:"Other email",pseudo:"USERNAME",createBtn:"Create my account",copied:"Copied \u2713",copy:"Copy",close:"Close",xp:"XP",pts:"pts",shareTxt:"Share",byTheme:"By theme",sponsored:"Sponsored",duel:"Duel",challenge:"Challenge a friend",duelCode:"Duel code",joinDuel:"Join a duel",enterCode:"Enter the code",vs:"VS",you:"You",win:"Victory!",lose:"Defeat",draw:"Draw!",waiting:"Waiting for an opponent...",duelResult:"Duel result",next:"Next \u2192",dailyRanking:"Today\u2019s ranking",yourRank:"Your position",anon:"Anonymous",choosePseudo:"Choose your username",pseudoVisible:"Visible on the leaderboard",letsGo:"Let\u2019s go!",dailySub:"10 questions.\nEvery second counts.",createCta:"Create an account to save your scores and compete on the leaderboard.",signupOk:"Account created. Sign in.",lvls:["Novice","Apprentice","Connoisseur","Expert","Master","Grand Master","Legend"]}
+  fr:{hero:"Testez votre\nculture\nhorlog\u00e8re.",daily:"D\u00e9fi du jour",dailyDone:"D\u00e9fi du jour \u2713",mode:"Mode",level:"Niveau",best:"Meilleur",badges:"Badges",ranking:"Classement",login:"Connexion",logout:"D\u00e9connexion",create:"Cr\u00e9er un compte",points:"points",precision:"Pr\u00e9cision",streak:"Streak",detail:"D\u00e9tail",replay:"Rejouer ",share:"Partager",home:"Accueil",back:"\u2190 Retour",consec:" cons\u00e9cutif",days:" jour",loginTo:"Connexion pour appara\u00eetre",alltime:"All-time",week:"Semaine",questions:" questions",games:" parties",email:"EMAIL",password:"MOT DE PASSE",sendMagic:"Envoyer un magic link",noAccount:"Pas de compte ? ",createAccount:"Cr\u00e9er",haveAccount:"D\u00e9j\u00e0 un compte ? ",createTitle:"Cr\u00e9er un compte.",loginTitle:"Connexion.",checkEmail:"V\u00e9rifiez votre email.",sentTo:"Lien envoy\u00e9 \u00e0",otherEmail:"Autre email",pseudo:"PSEUDO",createBtn:"Cr\u00e9er mon compte",copied:"Copi\u00e9 \u2713",copy:"Copier",close:"Fermer",xp:"XP",pts:"pts",shareTxt:"Partager",byTheme:"Par th\u00e8me",sponsored:"Sponsoris\u00e9",duel:"Duel",challenge:"D\u00e9fier un ami",duelCode:"Code duel",joinDuel:"Rejoindre un duel",enterCode:"Entrez le code",vs:"VS",you:"Vous",win:"Victoire !",lose:"D\u00e9faite",draw:"\u00c9galit\u00e9 !",waiting:"En attente d'un adversaire...",duelResult:"R\u00e9sultat du duel",next:"Suivant \u2192",dailyRanking:"Classement du jour",yourRank:"Votre position",anon:"Anonyme",choosePseudo:"Choisissez votre pseudo",pseudoVisible:"Visible dans le classement",letsGo:"C'est parti !",dailySub:"10 questions.\nChaque seconde compte.",createCta:"Cr\u00e9ez un compte pour sauvegarder vos scores et appara\u00eetre au classement.",signupOk:"Compte cr\u00e9\u00e9. Connectez-vous.",lvls:["Novice","Apprenti","Connaisseur","Expert","Ma\u00eetre","Grand Ma\u00eetre","L\u00e9gende"],streakMsgs:["\ud83d\udd25 {n} jours d'affil\u00e9e ! Continue comme \u00e7a !","\ud83d\udd25 {n} jours ! Tu es inarr\u00eatable !","\ud83d\udd25 {n} jours ! L\u00e9gendaire !"]},
+  en:{hero:"Test your\nwatch\nknowledge.",daily:"Daily Challenge",dailyDone:"Daily Done \u2713",mode:"Mode",level:"Level",best:"Best",badges:"Badges",ranking:"Leaderboard",login:"Log in",logout:"Log out",create:"Create account",points:"points",precision:"Accuracy",streak:"Streak",detail:"Detail",replay:"Replay ",share:"Share",home:"Home",back:"\u2190 Back",consec:" consecutive",days:" day",loginTo:"Log in to appear",alltime:"All-time",week:"Week",questions:" questions",games:" games",email:"EMAIL",password:"PASSWORD",sendMagic:"Send magic link",noAccount:"No account? ",createAccount:"Create",haveAccount:"Already have an account? ",createTitle:"Create account.",loginTitle:"Log in.",checkEmail:"Check your email.",sentTo:"Link sent to",otherEmail:"Other email",pseudo:"USERNAME",createBtn:"Create my account",copied:"Copied \u2713",copy:"Copy",close:"Close",xp:"XP",pts:"pts",shareTxt:"Share",byTheme:"By theme",sponsored:"Sponsored",duel:"Duel",challenge:"Challenge a friend",duelCode:"Duel code",joinDuel:"Join a duel",enterCode:"Enter the code",vs:"VS",you:"You",win:"Victory!",lose:"Defeat",draw:"Draw!",waiting:"Waiting for an opponent...",duelResult:"Duel result",next:"Next \u2192",dailyRanking:"Today\u2019s ranking",yourRank:"Your position",anon:"Anonymous",choosePseudo:"Choose your username",pseudoVisible:"Visible on the leaderboard",letsGo:"Let\u2019s go!",dailySub:"10 questions.\nEvery second counts.",createCta:"Create an account to save your scores and compete on the leaderboard.",signupOk:"Account created. Sign in.",lvls:["Novice","Apprentice","Connoisseur","Expert","Master","Grand Master","Legend"],streakMsgs:["\ud83d\udd25 {n}-day streak! Keep it up!","\ud83d\udd25 {n} days! You\u2019re unstoppable!","\ud83d\udd25 {n} days! Legendary!"]}
 };
 
 function btn(label,onClick,style){return h("button",{onClick:onClick,style:Object.assign({width:"100%",padding:"16px 0",background:C.fg,color:C.bg,border:"none",borderRadius:0,fontSize:13,fontWeight:500,letterSpacing:"0.15em",textTransform:"uppercase",cursor:"pointer",fontFamily:font,transition:"opacity 0.2s"},style||{})},label);}
@@ -251,6 +275,7 @@ function App(){
   function showErr(msg){sErr(msg);setTimeout(function(){sErr(null);},4000);}
   var _dlb=_([]),dailyLb=_dlb[0],sDlb=_dlb[1];
   var _dlr=_(null),dailyRank=_dlr[0],sDlr=_dlr[1];
+  var _streakMsg=_(null),streakMsg=_streakMsg[0],sStreakMsg=_streakMsg[1];
   var tmr=useRef(null);
   var t=I18N[lang]||I18N.fr;
   function qText(q){return lang==="en"&&q.text_en?q.text_en:q.text;}
@@ -520,8 +545,9 @@ function App(){
     track("duel_complete",{code:duelCode,score:sc,correct:cc},usr?usr.id:null);
   }
 
-  function shareTxt(){var acc=qs.length>0?Math.round((cc/qs.length)*100):0;var mn=curTheme?(lang==="en"&&curTheme.name_en?curTheme.name_en:curTheme.name):(MODES.find(function(m){return m.id===gm;})||{}).name||"";return"HOROQUEST "+mn+" \u2014 "+sc+" pts | "+cc+"/"+qs.length+" ("+acc+"%) | "+t.streak+" "+ms+"x"+(daily?" | "+t.daily:"");}
+  function shareTxt(){var acc=qs.length>0?Math.round((cc/qs.length)*100):0;var mn=curTheme?(lang==="en"&&curTheme.name_en?curTheme.name_en:curTheme.name):(MODES.find(function(m){return m.id===gm;})||{}).name||"";var grid=rs.map(function(r){return r&&r.ok?"\u2b1b":"\u2b1c";}).join("");var stars=acc===100?"\u2b50\u2b50\u2b50":acc>=80?"\u2b50\u2b50":acc>=50?"\u2b50":"";return"\u231a HOROQUEST"+(daily?" \u2014 "+t.daily:"")+"\n"+mn+" | "+sc+" pts\n\n"+grid+"\n"+cc+"/"+qs.length+" ("+acc+"%) "+stars+(ms>=3?"\n\ud83d\udd25 "+t.streak+" "+ms+"x":"")+"\n\nhoroquest.vercel.app";}
   function doCopy(){navigator.clipboard.writeText(shareTxt()).then(function(){sCp(true);setTimeout(function(){sCp(false);},2000);track("share",{mode:gm,score:sc},usr?usr.id:null);}).catch(function(){});}
+  function doShare(){var txt=shareTxt();if(navigator.share){navigator.share({title:"HOROQUEST",text:txt,url:"https://horoquest.vercel.app"}).then(function(){track("share",{mode:gm,score:sc,method:"native"},usr?usr.id:null);}).catch(function(){});}else{doCopy();}}
 
   var toast=nb?h("div",{style:{position:"fixed",top:20,left:"50%",transform:"translateX(-50%)",zIndex:200,background:C.card,border:"1px solid "+C.lt,padding:"12px 24px",display:"flex",alignItems:"center",gap:12,animation:"reveal 0.3s",fontSize:13,maxWidth:"90%"}},
     h("span",{style:{fontWeight:700}},lang==="en"&&nb.name_en?nb.name_en:nb.name),h("span",{style:{color:C.mid}},"\u2014 "+nb.desc)):null;
@@ -535,7 +561,7 @@ function App(){
       btn(t.letsGo,saveUsername,{opacity:al||!un.trim()?0.4:1}))):null;
 
   var errToast=errMsg?h("div",{style:{position:"fixed",bottom:20,left:"50%",transform:"translateX(-50%)",zIndex:300,background:C.acc,color:C.bg,padding:"10px 24px",fontSize:12,fontWeight:500,animation:"reveal 0.3s",maxWidth:"90%",textAlign:"center"}},errMsg):null;
-  function wrap(children){return h("div",{style:{minHeight:"100vh",background:C.bg,color:C.fg,fontFamily:font,display:"flex",justifyContent:"center"}},children,usernameModal,errToast);}
+  function wrap(children){return h("div",{style:{minHeight:"100vh",background:C.bg,color:C.fg,fontFamily:font,display:"flex",justifyContent:"center",animation:"pageIn 0.3s"}},children,usernameModal,errToast);}
 
   if(loading) return wrap(h("div",{style:{width:"100%",maxWidth:400,display:"flex",alignItems:"center",justifyContent:"center",minHeight:"100vh"}},loader()));
 
@@ -649,10 +675,15 @@ function App(){
           h("div",{style:{fontSize:11,fontWeight:500,letterSpacing:"0.35em",color:C.fg,textTransform:"uppercase",marginBottom:12}},"Horoquest"),
           h("div",{style:{fontSize:36,fontWeight:300,letterSpacing:"-0.02em",lineHeight:1.15}},t.hero.split("\n").reduce(function(acc,line,i){if(i>0)acc.push(h("br",{key:"br"+i}));acc.push(line);return acc;},[])))),
 
-      /* Streak */
-      ds>0&&h("div",{style:{fontSize:13,color:C.acc,marginBottom:32,letterSpacing:"0.05em",display:"flex",alignItems:"center",gap:8}},
-        h("span",{style:{fontSize:18,fontWeight:500}},ds),
-        h("span",null,t.days+(ds>1?"s":"")+t.consec+(ds>1?"s":""))),
+      /* Streak banner */
+      ds>0&&h("div",{style:{marginBottom:32,padding:"16px 20px",background:ds>=7?"linear-gradient(135deg,#1A1A1A,#2a2a2a)":C.sub,color:ds>=7?C.bg:C.fg,border:ds>=7?"none":"1px solid "+C.lt,animation:"reveal 0.4s",position:"relative",overflow:"hidden"}},
+        ds>=30&&h("div",{style:{position:"absolute",right:-10,top:-10,fontSize:48,opacity:0.1,transform:"rotate(12deg)"}},"\ud83c\udfc6"),
+        h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"}},
+          h("div",null,
+            h("div",{style:{fontSize:28,fontWeight:300,letterSpacing:"-0.02em",marginBottom:2}},ds+t.days+(ds>1?"s":"")),
+            h("div",{style:{fontSize:12,color:ds>=7?"rgba(255,255,255,0.6)":C.mid}},t.streakMsgs[ds>=30?2:ds>=7?1:0].replace("{n}",ds))),
+          h("div",{style:{display:"flex",gap:3}},
+            [1,2,3,4,5,6,7].map(function(d){return h("div",{key:d,style:{width:4,height:d<=ds%7||ds>=7?20:8,background:ds>=7?(d<=ds%7||ds>=7?"#D4281E":"rgba(255,255,255,0.2)"):(d<=(ds%7||7)?C.acc:C.lt),transition:"height 0.3s",borderRadius:1}});})))),
 
       /* Stats (if played) */
       (tg>0||usr)&&h("div",{style:{marginBottom:32}},
@@ -746,15 +777,15 @@ function App(){
     return wrap(h("div",{style:{width:"100%",maxWidth:400,padding:"0 24px",display:"flex",flexDirection:"column",minHeight:"100vh",paddingTop:24,paddingBottom:24}},
       cft.length>0&&cft.map(renderPiece),
       h("div",{style:{position:"fixed",left:0,top:0,width:3,height:"100vh",background:C.sub,zIndex:10}},
-        h("div",{style:{width:"100%",height:(pct*100)+"%",background:low?C.acc:C.fg,transition:"height 0.1s linear"}})),
+        h("div",{style:{width:"100%",height:(pct*100)+"%",background:low?C.acc:C.fg,transition:"height 0.1s linear",animation:low?"timerPulse 0.5s infinite":"none"}})),
       h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:4}},
         h("div",{style:{fontSize:11,color:C.mid}},modeName+(daily?" \u00b7 "+t.daily:"")+(curTheme&&curTheme.is_sponsored?" \u00b7 "+t.sponsored:"")),
         st>=2&&h("div",{style:{fontSize:11,color:C.acc}},st+"x")),
       h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:24}},
         h("div",{style:{fontSize:12,color:C.mid}},(ci<9?"0":"")+(ci+1)+" / 10"),
         h("div",{style:{textAlign:"right"}},
-          h("div",{style:{fontSize:24,fontWeight:300,position:"relative"}},sc,
-            anim&&pts>0&&h("span",{style:{position:"absolute",right:-40,top:0,fontSize:13,color:C.acc,animation:"reveal 0.3s"}},"+"+pts)),
+          h("div",{style:{fontSize:24,fontWeight:300,position:"relative",animation:anim?"scoreCount 0.3s":"none"}},sc,
+            anim&&pts>0&&h("span",{style:{position:"absolute",right:-40,top:0,fontSize:13,color:C.acc,fontWeight:500,animation:"scoreCount 0.4s"}},"+"+pts)),
           h("div",{style:{fontSize:11,color:C.mid}},t.pts))),
       h("div",{style:{display:"flex",gap:6,marginBottom:16}},
         [1,2,3,4,5].map(function(d){return h("div",{key:d,style:{width:6,height:6,borderRadius:"50%",background:d<=cq.diff?C.fg:C.lt}});})),
@@ -763,16 +794,16 @@ function App(){
         h("h2",{style:{fontSize:24,fontWeight:400,lineHeight:1.4,marginBottom:32,animation:"reveal 0.3s"}},qText(cq)),
         h("div",{style:{display:"flex",flexDirection:"column",gap:1}},
           cq.answers.map(function(a,i){
-            var bg=C.card,tc=C.fg,brd="1px solid "+C.lt,ind=null;
-            if(rv){if(a.ok){bg="#EBF5EE";tc=C.ok;brd="1px solid "+C.ok;ind=h("div",{style:{width:6,height:6,borderRadius:"50%",background:C.ok}});}
-            else if(sa===a.t){bg="#FDF0EF";tc=C.acc;brd="1px solid "+C.acc;ind=h("div",{style:{width:6,height:6,background:C.acc,transform:"rotate(45deg)"}});}
+            var bg=C.card,tc=C.fg,brd="1px solid "+C.lt,ind=null,anm="reveal 0.2s ease "+(i*0.04)+"s both";
+            if(rv){if(a.ok){bg="#EBF5EE";tc=C.ok;brd="1px solid "+C.ok;ind=h("div",{style:{width:6,height:6,borderRadius:"50%",background:C.ok,animation:"dotPop 0.3s"}});anm="correctPulse 0.35s";}
+            else if(sa===a.t){bg="#FDF0EF";tc=C.acc;brd="1px solid "+C.acc;ind=h("div",{style:{width:6,height:6,background:C.acc,transform:"rotate(45deg)",animation:"dotPop 0.3s"}});anm="wrongShake 0.4s";}
             else{tc=C.lt;}}
-            return h("button",{key:i,onClick:function(e){ans(a,e);},disabled:rv,style:{width:"100%",padding:"16px 20px",background:bg,border:brd,borderRadius:0,fontSize:15,fontWeight:400,color:tc,textAlign:"left",cursor:rv?"default":"pointer",fontFamily:font,display:"flex",justifyContent:"space-between",alignItems:"center",transition:"all 0.15s",animation:"reveal 0.2s ease "+(i*0.04)+"s both"}},h("span",null,aText(a)),ind);
+            return h("button",{key:i,onClick:function(e){ans(a,e);},disabled:rv,style:{width:"100%",padding:"16px 20px",background:bg,border:brd,borderRadius:0,fontSize:15,fontWeight:400,color:tc,textAlign:"left",cursor:rv?"default":"pointer",fontFamily:font,display:"flex",justifyContent:"space-between",alignItems:"center",transition:"all 0.15s",animation:anm}},h("span",null,aText(a)),ind);
           })),
         rv&&cq.expl&&h("div",{style:{marginTop:20,padding:"16px 20px",background:C.sub,fontSize:13,color:C.mid,lineHeight:1.6,borderLeft:"2px solid "+C.fg,animation:"reveal 0.3s"}},qExpl(cq)),
         rv&&h("button",{onClick:adv,style:{marginTop:16,width:"100%",padding:"14px 0",background:C.fg,color:C.bg,border:"none",borderRadius:0,fontSize:13,fontWeight:500,letterSpacing:"0.1em",cursor:"pointer",fontFamily:font,animation:"reveal 0.3s ease 0.2s both"}},t.next)),
       h("div",{style:{display:"flex",gap:3,marginTop:24,justifyContent:"center"}},
-        qs.map(function(_,i){var r=rs[i];var bg=C.lt;var scale="scale(1)";if(r){bg=r.ok?C.fg:C.acc;}if(i===ci&&!r)bg="transparent";if(i===ci&&rv&&sa){var lastR=rs[rs.length-1];if(lastR&&lastR.ok){bg=C.fg;scale="scale(1.8)";}}return h("div",{key:i,style:{width:8,height:8,background:bg,border:i===ci&&!rv?"1px solid "+C.fg:"1px solid transparent",transition:"all 0.25s cubic-bezier(0.34,1.56,0.64,1)",transform:scale}});}))
+        qs.map(function(_,i){var r=rs[i];var bg=C.lt;var anmDot="none";if(r){bg=r.ok?C.fg:C.acc;if(i===rs.length-1)anmDot="dotPop 0.3s";}if(i===ci&&!r)bg="transparent";return h("div",{key:i,style:{width:8,height:8,background:bg,border:i===ci&&!rv?"1px solid "+C.fg:"1px solid transparent",transition:"all 0.25s cubic-bezier(0.34,1.56,0.64,1)",animation:anmDot}});}))
     ));
   }
 
@@ -849,7 +880,7 @@ function App(){
         !duelCode&&h("div",{style:{height:1}}),
         btn(t.replay+modeName,function(){sDuel(null);sDc(null);start(gm,false);}),
         h("div",{style:{height:1}}),
-        btnSec(t.share,function(){sSh(true);}),
+        navigator.share?btn(t.share,doShare,{background:C.acc}):btnSec(t.share,function(){sSh(true);}),
         h("div",{style:{height:1}}),
         btnSec(t.ranking,function(){loadLeaderboard(lt);go("lb");}),
         h("div",{style:{height:1}}),
