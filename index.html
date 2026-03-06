@@ -35,6 +35,13 @@
 @keyframes timerPulse{0%{opacity:1}50%{opacity:0.5}100%{opacity:1}}
 @keyframes dotPop{0%{transform:scale(0)}60%{transform:scale(1.6)}100%{transform:scale(1)}}
 @keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes introWheel{0%{opacity:0;transform:scale(0.6) rotate(0deg)}40%{opacity:1;transform:scale(1) rotate(0deg)}100%{opacity:0.5;transform:scale(1) rotate(0deg)}}
+@keyframes introWheelMove{0%{top:35vh;right:calc(50% - 60px);width:120px;height:120px}100%{top:-20px;right:-10px;width:120px;height:120px}}
+@keyframes introTitle{0%{opacity:0;letter-spacing:1.2em}60%{opacity:1;letter-spacing:0.5em}100%{opacity:1;letter-spacing:0.35em}}
+@keyframes introHeroLine{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes introSlideUp{0%{opacity:0;transform:translateY(40px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes introLine{0%{width:0}100%{width:48px}}
+@keyframes introFadeIn{0%{opacity:0}100%{opacity:1}}
 input:focus,select:focus{outline:none}
 ::selection{background:#D4281E;color:#fff}
 button{transition:transform 0.1s,opacity 0.15s !important}
@@ -276,7 +283,10 @@ function App(){
   var _dlb=_([]),dailyLb=_dlb[0],sDlb=_dlb[1];
   var _dlr=_(null),dailyRank=_dlr[0],sDlr=_dlr[1];
   var _streakMsg=_(null),streakMsg=_streakMsg[0],sStreakMsg=_streakMsg[1];
+  var _intro=_(true),introPlaying=_intro[0],sIntro=_intro[1];
+  var introRef=useRef(null);
   var tmr=useRef(null);
+  useEffect(function(){if(introPlaying){introRef.current=setTimeout(function(){sIntro(false);},3000);}return function(){if(introRef.current)clearTimeout(introRef.current);};},[]);
   var t=I18N[lang]||I18N.fr;
   function qText(q){return lang==="en"&&q.text_en?q.text_en:q.text;}
   function qExpl(q){return lang==="en"&&q.expl_en?q.expl_en:q.expl;}
@@ -617,7 +627,7 @@ function App(){
     var cardS={background:C.card,border:"1px solid "+C.lt,padding:"20px 24px",marginBottom:1,cursor:"pointer",fontFamily:font,width:"100%",textAlign:"left",transition:"all 0.15s"};
 
     // Daily challenge card
-    var dailyCard=h("button",{key:"daily",onClick:function(){if(!dd)start("calibre",true);},disabled:dd,style:{width:"100%",padding:"28px 24px",background:dd?C.sub:C.fg,color:dd?C.mid:C.bg,border:dd?"1px solid "+C.lt:"none",borderRadius:0,cursor:dd?"default":"pointer",fontFamily:font,textAlign:"left",marginBottom:32,animation:"reveal 0.3s"}},
+    var dailyCard=h("button",{key:"daily",onClick:function(){if(!dd)start("calibre",true);},disabled:dd,style:{width:"100%",padding:"28px 24px",background:dd?C.sub:C.fg,color:dd?C.mid:C.bg,border:dd?"1px solid "+C.lt:"none",borderRadius:0,cursor:dd?"default":"pointer",fontFamily:font,textAlign:"left",marginBottom:32,animation:introPlaying?"introSlideUp 0.5s ease 1.6s both":"reveal 0.3s"}},
       h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}},
         h("div",null,
           h("div",{style:{fontSize:11,letterSpacing:"0.15em",textTransform:"uppercase",opacity:0.6,marginBottom:8}},dd?t.dailyDone:t.daily),
@@ -633,7 +643,7 @@ function App(){
         var inRange=d>=m.range[0]&&d<=m.range[1];
         return h("div",{key:d,style:{width:6,height:6,borderRadius:"50%",background:inRange?(ok?C.fg:C.mid):C.lt}});
       });
-      return h("button",{key:m.id,onClick:function(){if(ok)start(m.id,false);},disabled:!ok,style:Object.assign({},cardS,{opacity:ok?1:0.35,cursor:ok?"pointer":"default",display:"block",animation:"reveal 0.2s ease "+(i*0.06)+"s both"})},
+      return h("button",{key:m.id,onClick:function(){if(ok)start(m.id,false);},disabled:!ok,style:Object.assign({},cardS,{opacity:ok?1:0.35,cursor:ok?"pointer":"default",display:"block",animation:introPlaying?"introSlideUp 0.4s ease "+(1.8+i*0.1)+"s both":"reveal 0.2s ease "+(i*0.06)+"s both"})},
         h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}},
           h("div",null,
             h("div",{style:{fontSize:17,fontWeight:500,color:ok?C.fg:C.mid,marginBottom:4}},m.name),
@@ -650,7 +660,7 @@ function App(){
       toast,
 
       /* Header */
-      h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:48}},
+      h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:48,animation:introPlaying?"introFadeIn 0.4s ease 1.6s both":"none"}},
         h("div",{style:{display:"flex",alignItems:"center",gap:12}},
           h("div",{style:{fontSize:11,color:C.mid}},allQ.length+t.questions),
           h("div",{style:{display:"flex",gap:1}},
@@ -663,8 +673,8 @@ function App(){
 
       /* Hero */
       h("div",{style:{marginBottom:48,position:"relative"}},
-        /* Decorative balance wheel — top right */
-        h("svg",{width:"120",height:"120",viewBox:"0 0 100 100",style:{position:"absolute",right:-10,top:-20,opacity:0.5,animation:"tick 3s ease-in-out infinite"}},
+        /* Decorative balance wheel — animated entrance */
+        h("svg",{width:"120",height:"120",viewBox:"0 0 100 100",style:{position:"absolute",right:-10,top:-20,opacity:0.5,animation:introPlaying?"introWheel 0.8s ease both, tick 3s ease-in-out 0.8s infinite":"tick 3s ease-in-out infinite"}},
           h("circle",{cx:"50",cy:"50",r:"40",fill:"none",stroke:C.acc,strokeWidth:"2.5"}),
           h("line",{x1:"50",y1:"50",x2:"50",y2:"12",stroke:C.acc,strokeWidth:"2.5",strokeLinecap:"round"}),
           h("line",{x1:"50",y1:"50",x2:"83",y2:"69",stroke:C.acc,strokeWidth:"2.5",strokeLinecap:"round"}),
@@ -672,11 +682,18 @@ function App(){
           h("circle",{cx:"50",cy:"50",r:"5",fill:C.acc}),
           [0,30,60,90,120,150,180,210,240,270,300,330].map(function(a){var r=43;var x=50+r*Math.cos(a*Math.PI/180);var y=50+r*Math.sin(a*Math.PI/180);return h("circle",{key:a,cx:x.toFixed(1),cy:y.toFixed(1),r:"2",fill:C.acc});})),
         h("div",{style:{position:"relative"}},
-          h("div",{style:{fontSize:11,fontWeight:500,letterSpacing:"0.35em",color:C.fg,textTransform:"uppercase",marginBottom:12}},"Horoquest"),
-          h("div",{style:{fontSize:36,fontWeight:300,letterSpacing:"-0.02em",lineHeight:1.15}},t.hero.split("\n").reduce(function(acc,line,i){if(i>0)acc.push(h("br",{key:"br"+i}));acc.push(line);return acc;},[])))),
+          /* Logo — letters spread then tighten */
+          h("div",{style:{fontSize:11,fontWeight:500,color:C.fg,textTransform:"uppercase",marginBottom:12,animation:introPlaying?"introTitle 0.8s ease 0.3s both":"none",letterSpacing:"0.35em"}},"Horoquest"),
+          /* Red accent line */
+          h("div",{style:{height:2,background:C.acc,marginBottom:16,animation:introPlaying?"introLine 0.5s ease 0.7s both":"none",width:48}}),
+          /* Hero text — each line staggered */
+          h("div",{style:{fontSize:36,fontWeight:300,letterSpacing:"-0.02em",lineHeight:1.15}},
+            t.hero.split("\n").map(function(line,i){
+              return h("span",{key:"hl"+i,style:{display:"block",animation:introPlaying?"introHeroLine 0.5s ease "+(0.8+i*0.15)+"s both":"none"}},line);
+            })))),
 
       /* Streak banner */
-      ds>0&&h("div",{style:{marginBottom:32,padding:"16px 20px",background:ds>=7?"linear-gradient(135deg,#1A1A1A,#2a2a2a)":C.sub,color:ds>=7?C.bg:C.fg,border:ds>=7?"none":"1px solid "+C.lt,animation:"reveal 0.4s",position:"relative",overflow:"hidden"}},
+      ds>0&&h("div",{style:{marginBottom:32,padding:"16px 20px",background:ds>=7?"linear-gradient(135deg,#1A1A1A,#2a2a2a)":C.sub,color:ds>=7?C.bg:C.fg,border:ds>=7?"none":"1px solid "+C.lt,animation:introPlaying?"introSlideUp 0.5s ease 1.4s both":"reveal 0.4s",position:"relative",overflow:"hidden"}},
         ds>=30&&h("div",{style:{position:"absolute",right:-10,top:-10,fontSize:48,opacity:0.1,transform:"rotate(12deg)"}},"\ud83c\udfc6"),
         h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"}},
           h("div",null,
@@ -686,7 +703,7 @@ function App(){
             [1,2,3,4,5,6,7].map(function(d){return h("div",{key:d,style:{width:4,height:d<=ds%7||ds>=7?20:8,background:ds>=7?(d<=ds%7||ds>=7?"#D4281E":"rgba(255,255,255,0.2)"):(d<=(ds%7||7)?C.acc:C.lt),transition:"height 0.3s",borderRadius:1}});})))),
 
       /* Stats (if played) */
-      (tg>0||usr)&&h("div",{style:{marginBottom:32}},
+      (tg>0||usr)&&h("div",{style:{marginBottom:32,animation:introPlaying?"introFadeIn 0.4s ease 1.5s both":"none"}},
         h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",borderTop:"1px solid "+C.lt,borderBottom:"1px solid "+C.lt}},
           [[t.level,lv+" \u2014 "+lvlT(lv)],[t.xp,""+xp],[t.best,""+best]].map(function(s,i){
             return h("div",{key:i,style:{padding:"14px 0",borderRight:i<2?"1px solid "+C.lt:"none"}},
