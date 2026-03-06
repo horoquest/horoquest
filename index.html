@@ -6,6 +6,9 @@
 <title>HOROQUEST \u2014 Testez votre culture horlog\u00e8re</title>
 <meta name="description" content="Quiz interactif sur l'horlogerie. Testez vos connaissances sur les montres, les manufactures et les complications horlog\u00e8res. D\u00e9fi quotidien, duels entre amis et classement mondial.">
 <meta name="theme-color" content="#1A1A1A">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="canonical" href="https://horoquest.vercel.app/">
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -911,6 +914,7 @@ function App(){
 }
 
 ReactDOM.render(h(App),document.getElementById("root"));
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}
 </script>
 </body>
 </html>
