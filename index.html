@@ -578,7 +578,7 @@ function App(){
 
   function doDeleteAccount(){
     if(!usr||!tok)return;sDelL(true);
-    fetchT(SB_URL+"/functions/v1/delete-account",{method:"POST",headers:{"Authorization":"Bearer "+tok,"Content-Type":"application/json"}},10000)
+    fetchT(SB_URL+"/functions/v1/delete-account",{method:"POST",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+tok,"Content-Type":"application/json"}},10000)
     .then(function(r){return r.json();})
     .then(function(res){
       sDelL(false);sDelM(false);
