@@ -1,16 +1,24 @@
-## Hi there 👋
+# HOROQUEST
 
-<!--
-**horoquest/horoquest** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+Quiz horloger PWA — testez vos connaissances en horlogerie.
 
-Here are some ideas to get you started:
+**https://horoquest.vercel.app**
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## Features
+
+- 3 niveaux de difficulte (Calibre, Manufacture, Haute Horlogerie)
+- Defi quotidien avec streaks
+- Duels entre amis
+- Classements
+- Bilingue FR/EN
+- PWA installable (offline)
+
+## Stack
+
+- Vanilla JS + React 18 (CDN, zero build tool)
+- Supabase (PostgreSQL, Auth, REST API)
+- Vercel (hosting)
+
+## License
+
+All rights reserved.

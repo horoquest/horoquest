@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politique de confidentialité — HOROQUEST</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+body{font-family:'Helvetica Neue','Helvetica','Arial',sans-serif;background:#1A1A1A;color:#E8E4DC;line-height:1.7;padding:40px 20px}
+.container{max-width:640px;margin:0 auto}
+h1{font-size:20px;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px}
+h2{font-size:14px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin:32px 0 12px;color:#D4281E}
+p,li{font-size:13px;color:#A8A49C;margin-bottom:8px}
+ul{padding-left:20px}
+a{color:#D4281E;text-decoration:none}
+a:hover{text-decoration:underline}
+.lang{display:flex;gap:8px;margin-bottom:32px}
+.lang button{padding:4px 12px;background:transparent;color:#A8A49C;border:1px solid #333;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;letter-spacing:0.1em}
+.lang button.active{background:#E8E4DC;color:#1A1A1A}
+.back{display:inline-block;margin-bottom:24px;font-size:12px;color:#A8A49C;letter-spacing:0.1em;text-transform:uppercase}
+.section{display:none}
+.section.visible{display:block}
+.date{font-size:11px;color:#555;margin-bottom:24px}
+</style>
+</head>
+<body>
+<div class="container">
+<a href="/" class="back">&larr; Retour au quiz</a>
+<h1>HOROQUEST</h1>
+<div class="lang">
+<button id="btn-fr" class="active" onclick="switchLang('fr')">FR</button>
+<button id="btn-en" onclick="switchLang('en')">EN</button>
+</div>
+
+<!-- FRENCH -->
+<div id="fr" class="section visible">
+<h2>Politique de confidentialit&eacute;</h2>
+<p class="date">Derni&egrave;re mise &agrave; jour : 9 mars 2026</p>
+
+<h2>Responsable du traitement</h2>
+<p>Joshua Grillet &mdash; projet personnel.<br>Contact : <a href="mailto:joshua.grillet@proton.me">joshua.grillet@proton.me</a></p>
+
+<h2>Donn&eacute;es collect&eacute;es</h2>
+<ul>
+<li><strong>Compte utilisateur</strong> : adresse email (via Supabase Auth), nom d'utilisateur choisi.</li>
+<li><strong>Donn&eacute;es de jeu</strong> : scores, parties jou&eacute;es, streaks, niveau, badges, duels.</li>
+<li><strong>Analytics internes</strong> : pages vues, sessions anonymes, actions dans l'app (stock&eacute;es dans Supabase).</li>
+<li><strong>Analytics tiers</strong> : Google Analytics, Meta Pixel ou outils similaires peuvent &ecirc;tre utilis&eacute;s pour mesurer l'audience. Ces services d&eacute;posent des cookies et collectent des donn&eacute;es de navigation (adresse IP, appareil, pages visit&eacute;es).</li>
+</ul>
+
+<h2>Finalit&eacute;s</h2>
+<ul>
+<li>Permettre l'inscription, la connexion et la sauvegarde de la progression.</li>
+<li>Afficher les classements et g&eacute;rer les duels.</li>
+<li>Am&eacute;liorer l'exp&eacute;rience utilisateur et mesurer l'audience.</li>
+</ul>
+
+<h2>Base l&eacute;gale</h2>
+<p>Consentement (cr&eacute;ation de compte) et int&eacute;r&ecirc;t l&eacute;gitime (analytics, am&eacute;lioration du service).</p>
+
+<h2>Dur&eacute;e de conservation</h2>
+<p>Les donn&eacute;es sont conserv&eacute;es tant que le compte est actif. Les donn&eacute;es analytics sont conserv&eacute;es 12 mois maximum.</p>
+
+<h2>Partage des donn&eacute;es</h2>
+<p>Les donn&eacute;es ne sont pas vendues. Elles peuvent &ecirc;tre trait&eacute;es par :</p>
+<ul>
+<li><strong>Supabase</strong> (h&eacute;bergement base de donn&eacute;es, authentification)</li>
+<li><strong>Vercel</strong> (h&eacute;bergement du site)</li>
+<li><strong>Google Analytics / Meta</strong> (mesure d'audience, le cas &eacute;ch&eacute;ant)</li>
+</ul>
+
+<h2>Cookies</h2>
+<p>L'app utilise des cookies techniques (session, pr&eacute;f&eacute;rences) et peut utiliser des cookies tiers (analytics, publicit&eacute;). Vous pouvez les refuser via les param&egrave;tres de votre navigateur.</p>
+
+<h2>Vos droits</h2>
+<p>Conform&eacute;ment au RGPD, vous disposez d'un droit d'acc&egrave;s, de rectification, de suppression et de portabilit&eacute; de vos donn&eacute;es. Pour exercer ces droits : <a href="mailto:joshua.grillet@proton.me">joshua.grillet@proton.me</a></p>
+</div>
+
+<!-- ENGLISH -->
+<div id="en" class="section">
+<h2>Privacy Policy</h2>
+<p class="date">Last updated: March 9, 2026</p>
+
+<h2>Data Controller</h2>
+<p>Joshua Grillet &mdash; personal project.<br>Contact: <a href="mailto:joshua.grillet@proton.me">joshua.grillet@proton.me</a></p>
+
+<h2>Data Collected</h2>
+<ul>
+<li><strong>User account</strong>: email address (via Supabase Auth), chosen username.</li>
+<li><strong>Game data</strong>: scores, games played, streaks, level, badges, duels.</li>
+<li><strong>Internal analytics</strong>: page views, anonymous sessions, in-app actions (stored in Supabase).</li>
+<li><strong>Third-party analytics</strong>: Google Analytics, Meta Pixel or similar tools may be used to measure traffic. These services use cookies and collect browsing data (IP address, device, pages visited).</li>
+</ul>
+
+<h2>Purposes</h2>
+<ul>
+<li>Enable sign-up, login and progress saving.</li>
+<li>Display leaderboards and manage duels.</li>
+<li>Improve user experience and measure audience.</li>
+</ul>
+
+<h2>Legal Basis</h2>
+<p>Consent (account creation) and legitimate interest (analytics, service improvement).</p>
+
+<h2>Data Retention</h2>
+<p>Data is retained as long as the account is active. Analytics data is kept for a maximum of 12 months.</p>
+
+<h2>Data Sharing</h2>
+<p>Data is never sold. It may be processed by:</p>
+<ul>
+<li><strong>Supabase</strong> (database hosting, authentication)</li>
+<li><strong>Vercel</strong> (website hosting)</li>
+<li><strong>Google Analytics / Meta</strong> (audience measurement, if applicable)</li>
+</ul>
+
+<h2>Cookies</h2>
+<p>The app uses technical cookies (session, preferences) and may use third-party cookies (analytics, advertising). You can reject them via your browser settings.</p>
+
+<h2>Your Rights</h2>
+<p>Under the GDPR, you have the right to access, rectify, delete and port your data. To exercise these rights: <a href="mailto:joshua.grillet@proton.me">joshua.grillet@proton.me</a></p>
+</div>
+
+</div>
+<script>
+function switchLang(lang){
+document.getElementById('fr').className='section'+(lang==='fr'?' visible':'');
+document.getElementById('en').className='section'+(lang==='en'?' visible':'');
+document.getElementById('btn-fr').className=lang==='fr'?'active':'';
+document.getElementById('btn-en').className=lang==='en'?'active':'';
+}
+</script>
+</body>
+</html>

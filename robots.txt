@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Allow: /privacy.html
+Disallow: /admin/
+
+Sitemap: https://horoquest.vercel.app/sitemap.xml
