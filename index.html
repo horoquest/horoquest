@@ -274,6 +274,7 @@ function App(){
   function showErr(msg){sErr(msg);setTimeout(function(){sErr(null);},4000);}
   var _dlb=_([]),dailyLb=_dlb[0],sDlb=_dlb[1];
   var _dlr=_(null),dailyRank=_dlr[0],sDlr=_dlr[1];
+  var _hlb=_([]),homeLb=_hlb[0],sHlb=_hlb[1];
   var _streakMsg=_(null),streakMsg=_streakMsg[0],sStreakMsg=_streakMsg[1];
   var introStart=useRef(Date.now());
   var navDir=useRef("fwd");
@@ -314,8 +315,27 @@ function App(){
     }).catch(function(){});
   }
 
+  function loadHomeLb(){
+    var today=new Date().toISOString().split("T")[0];
+    sbGet("scores?select=score,profiles(username)&played_at=gte."+today+"T00:00:00Z").then(function(rows){
+      if(rows&&Array.isArray(rows)&&rows.length>0){
+        var totals={};
+        rows.forEach(function(r){
+          var name=r.profiles?r.profiles.username:null;
+          if(!name)return;
+          if(!totals[name])totals[name]={u:name,s:0,me:usr&&r.profiles&&r.profiles.username===usr.u};
+          totals[name].s+=r.score||0;
+        });
+        var list=Object.keys(totals).map(function(k){return totals[k];});
+        list.sort(function(a,b){return b.s-a.s;});
+        sHlb(list.slice(0,5));
+      }
+    }).catch(function(){});
+  }
+
   useEffect(function(){
     loadQuestions();
+    loadHomeLb();
     // Check for duel code in URL
     var params=new URLSearchParams(window.location.search);
     var dc=params.get("duel");
@@ -739,6 +759,19 @@ function App(){
       /* Daily Challenge */
       dailyCard,
 
+      /* Mini daily leaderboard */
+      homeLb.length>0&&h("div",{style:{marginBottom:32,animation:isIntro?"introSlideUp 0.5s ease 1.7s both":"reveal 0.3s"}},
+        h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}},
+          h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.12em",textTransform:"uppercase"}},t.today),
+          h("button",{onClick:function(){sLt("day");loadLeaderboard("day");nav("lb");},style:{background:"none",border:"none",color:C.mid,cursor:"pointer",fontSize:11,fontFamily:font,textDecoration:"underline"}},t.ranking+" \u2192")),
+        homeLb.map(function(l,i){
+          return h("div",{key:"hlb"+i,style:{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:"1px solid "+C.sub,background:l.me?C.sub:"transparent"}},
+            h("div",{style:{width:22,fontSize:13,fontWeight:i<3?700:400,color:i<3?C.fg:C.mid,textAlign:"center"}},i+1),
+            h("div",{style:{width:24,height:24,borderRadius:"50%",background:l.me?C.fg:C.lt,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:500,color:l.me?C.bg:C.fg}},l.u.charAt(0)),
+            h("div",{style:{flex:1,fontSize:13,fontWeight:l.me?700:400}},l.u),
+            h("div",{style:{fontSize:14,fontWeight:500}},l.s));
+        })),
+
       /* Modes */
       h("div",{style:{marginBottom:32}},
         h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}},t.mode),
@@ -798,7 +831,7 @@ function App(){
           h("button",{onClick:function(){if(duelJoinCode&&duelJoinCode.length===6)joinDuel(duelJoinCode);},style:{padding:"14px 20px",background:duelJoinCode&&duelJoinCode.length===6?C.fg:C.lt,color:C.bg,border:"none",borderRadius:0,fontSize:12,fontWeight:500,letterSpacing:"0.1em",cursor:duelJoinCode&&duelJoinCode.length===6?"pointer":"default",fontFamily:font}},"\u2192"))),
 
       /* Leaderboard */
-      h("div",{style:{marginBottom:24}},btnSec(t.ranking,function(){loadLeaderboard(lt);nav("lb");})),
+      h("div",{style:{marginBottom:24}},btnSec(t.ranking,function(){sLt("day");loadLeaderboard("day");nav("lb");})),
 
       /* Badges */
       eb.length>0&&h("div",{style:{marginBottom:32}},
