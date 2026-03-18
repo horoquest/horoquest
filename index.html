@@ -708,14 +708,8 @@ function App(){
 
       /* Hero */
       h("div",{style:{marginBottom:48,position:"relative"}},
-        /* Decorative balance wheel — animated entrance */
-        h("svg",{width:"120",height:"120",viewBox:"0 0 100 100",style:{position:"absolute",right:-10,top:-20,opacity:0.5,animation:isIntro?"introWheel 0.8s ease both, tick 3s ease-in-out 0.8s infinite":"tick 3s ease-in-out infinite"}},
-          h("circle",{cx:"50",cy:"50",r:"40",fill:"none",stroke:C.acc,strokeWidth:"2.5"}),
-          h("line",{x1:"50",y1:"50",x2:"50",y2:"12",stroke:C.acc,strokeWidth:"2.5",strokeLinecap:"round"}),
-          h("line",{x1:"50",y1:"50",x2:"83",y2:"69",stroke:C.acc,strokeWidth:"2.5",strokeLinecap:"round"}),
-          h("line",{x1:"50",y1:"50",x2:"17",y2:"69",stroke:C.acc,strokeWidth:"2.5",strokeLinecap:"round"}),
-          h("circle",{cx:"50",cy:"50",r:"5",fill:C.acc}),
-          [0,30,60,90,120,150,180,210,240,270,300,330].map(function(a){var r=43;var x=50+r*Math.cos(a*Math.PI/180);var y=50+r*Math.sin(a*Math.PI/180);return h("circle",{key:a,cx:x.toFixed(1),cy:y.toFixed(1),r:"2",fill:C.acc});})),
+        /* Decorative escapement — animated GIF */
+        h("img",{src:"escapement.gif",width:"120",style:{position:"absolute",right:-10,top:0,opacity:1,animation:isIntro?"introFadeIn 0.8s ease 0.5s both":"none"}}),
         h("div",{style:{position:"relative"}},
           /* Logo — letters spread then tighten */
           h("div",{style:{fontSize:11,fontWeight:500,color:C.fg,textTransform:"uppercase",marginBottom:12,animation:isIntro?"introTitle 0.8s ease 0.3s both":"none",letterSpacing:"0.35em"}},"Horoquest"),
