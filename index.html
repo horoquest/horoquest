@@ -754,15 +754,11 @@ function App(){
               return h("span",{key:"hl"+i,style:{display:"block",animation:isIntro?"introHeroLine 0.5s ease "+(0.8+i*0.15)+"s both":"none"}},line);
             })))),
 
-      /* Streak banner */
-      ds>0&&h("div",{style:{marginBottom:32,padding:"24px 20px",background:C.sub,border:"1px solid "+C.lt,animation:isIntro?"introSlideUp 0.5s ease 1.4s both":"reveal 0.4s"}},
-        h("div",{style:{fontSize:28,fontWeight:300,letterSpacing:"-0.02em"}},ds+t.days+(ds>1?"s":"")+" \u2014 "+t.streakMsgs[ds>=30?2:ds>=7?1:0])),
-
       /* Stats (if played) */
       (tg>0||usr)&&h("div",{style:{marginBottom:32,animation:isIntro?"introFadeIn 0.4s ease 1.5s both":"none"}},
-        h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",borderTop:"1px solid "+C.lt,borderBottom:"1px solid "+C.lt}},
-          [[t.level,lv+" \u2014 "+lvlT(lv)],[t.xp,""+xp],[t.best,""+best]].map(function(s,i){
-            return h("div",{key:i,style:{padding:"14px 0",borderRight:i<2?"1px solid "+C.lt:"none"}},
+        h("div",{style:{display:"grid",gridTemplateColumns:ds>0?"1fr 1fr 1fr 1fr":"1fr 1fr 1fr",borderTop:"1px solid "+C.lt,borderBottom:"1px solid "+C.lt}},
+          [[t.level,lv+" \u2014 "+lvlT(lv)],[t.xp,""+xp],[t.best,""+best]].concat(ds>0?[[t.streak,ds+t.days+(ds>1?"s":"")]]:[]).map(function(s,i,arr){
+            return h("div",{key:i,style:{padding:"14px 0",borderRight:i<arr.length-1?"1px solid "+C.lt:"none"}},
               h("div",{style:{fontSize:10,color:C.mid,letterSpacing:"0.08em",marginBottom:2}},s[0]),
               h("div",{style:{fontSize:16,fontWeight:500}},s[1]));}))),
 
