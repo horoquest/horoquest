@@ -861,20 +861,20 @@ function App(){
 
   /* PLAYING */
   if(scr==="play"&&cq){
-    var speedPct=Math.max(0,1-tl/curTimer);
     var _mf=MODES.find(function(m){return m.id===gm;})||{};var modeName=curTheme?(lang==="en"&&curTheme.name_en?curTheme.name_en:curTheme.name):((lang==="en"&&_mf.name_en?_mf.name_en:_mf.name)||"");
+    var sm=1+(st)*0.15;var liveBonus=rv?0:Math.round(cq.diff*(Math.max(0,curTimer-tl)*8)*sm*(_mf.mult||1));
     return wrap(h("div",{style:{width:"100%",maxWidth:400,padding:"0 24px",display:"flex",flexDirection:"column",minHeight:"100vh",paddingTop:24,paddingBottom:24}},
       cft.length>0&&cft.map(renderPiece),
-      speedPct>0&&h("div",{style:{position:"fixed",left:0,top:0,width:3,height:"100vh",background:C.sub,zIndex:10}},
-        h("div",{style:{width:"100%",height:(speedPct*100)+"%",background:speedPct>0.5?C.ok:speedPct>0.15?C.mid:C.lt,transition:"height 0.1s linear"}})),
       h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:4}},
         h("div",{style:{fontSize:11,color:C.mid}},modeName+(daily?" \u00b7 "+t.daily:"")+(curTheme&&curTheme.is_sponsored?" \u00b7 "+t.sponsored:"")),
         st>=2&&h("div",{style:{fontSize:11,color:C.acc}},st+"x")),
       h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:24}},
-        h("div",{style:{fontSize:12,color:C.mid}},(ci<9?"0":"")+(ci+1)+" / 10"),
+        h("div",{style:{display:"flex",alignItems:"baseline",gap:8}},
+          h("div",{style:{fontSize:12,color:C.mid}},(ci<9?"0":"")+(ci+1)+" / 10"),
+          !rv&&liveBonus>0&&h("div",{style:{fontSize:12,color:C.ok,fontWeight:500}},"+"+liveBonus+" bonus")),
         h("div",{style:{textAlign:"right"}},
           h("div",{style:{fontSize:24,fontWeight:300,position:"relative",animation:anim?"scoreCount 0.3s":"none"}},sc,
-            anim&&pts>0&&h("span",{style:{position:"absolute",right:-40,top:0,fontSize:13,color:C.acc,fontWeight:500,animation:"scoreCount 0.4s"}},"+"+pts)),
+            anim&&pts>0&&h("span",{style:{position:"absolute",right:-40,top:0,fontSize:13,color:C.ok,fontWeight:500,animation:"scoreCount 0.4s"}},"+"+pts)),
           h("div",{style:{fontSize:11,color:C.mid}},t.pts))),
       h("div",{style:{display:"flex",gap:6,marginBottom:16,alignItems:"center"}},
         [1,2,3,4,5].map(function(d){return h("div",{key:d,style:{width:6,height:6,borderRadius:"50%",background:d<=cq.diff?C.fg:C.lt}});}),
