@@ -2,12 +2,13 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HOROQUEST \u2014 Testez votre culture horlog\u00e8re</title>
 <meta name="description" content="Quiz interactif sur l'horlogerie. Testez vos connaissances sur les montres, les manufactures et les complications horlog\u00e8res. D\u00e9fi quotidien, duels entre amis et classement mondial.">
 <meta name="theme-color" content="#1A1A1A">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="canonical" href="https://horoquest.vercel.app/">
 <!-- Open Graph -->
@@ -47,12 +48,15 @@
 @keyframes introSlideUp{0%{opacity:0;transform:translateY(40px)}100%{opacity:1;transform:translateY(0)}}
 @keyframes introLine{0%{width:0}100%{width:48px}}
 @keyframes introFadeIn{0%{opacity:0}100%{opacity:1}}
-input:focus,select:focus{outline:none}
+input:focus,select:focus{outline:2px solid #D4281E;outline-offset:2px}
+button:focus-visible{outline:2px solid #D4281E;outline-offset:2px}
 ::selection{background:#D4281E;color:#fff}
 button{transition:transform 0.1s,opacity 0.15s !important}
 button:active:not(:disabled){transform:scale(0.97) !important}
 html,body{overflow-x:hidden}
 body{font-family:'Helvetica Neue','Helvetica','Arial',sans-serif;background:#F5F5F0;color:#1A1A1A;-webkit-user-select:none;user-select:none}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important}}
+@media(max-width:480px){.hq-hero-text{font-size:28px !important}}
 </style>
 </head>
 <body>
@@ -682,6 +686,8 @@ function App(){
   if(scr==="home"){
     var isIntro=(Date.now()-introStart.current)<3000;
     var cardS={background:C.card,border:"1px solid "+C.lt,padding:"20px 24px",marginBottom:1,cursor:"pointer",fontFamily:font,width:"100%",textAlign:"left",transition:"all 0.15s"};
+    function cardHover(e){e.currentTarget.style.background="#F9F9F5";}
+    function cardLeave(e){e.currentTarget.style.background=C.card;}
 
     // Daily challenge card
     var dailyCard=h("button",{key:"daily",onClick:function(){if(!dd)start("calibre",true);},disabled:dd,style:{width:"100%",padding:"28px 24px",background:dd?C.sub:C.fg,color:dd?C.mid:C.bg,border:dd?"1px solid "+C.lt:"none",borderRadius:0,cursor:dd?"default":"pointer",fontFamily:font,textAlign:"left",marginBottom:32,animation:isIntro?"introSlideUp 0.5s ease 1.6s both":"reveal 0.3s"}},
@@ -700,7 +706,8 @@ function App(){
         var inRange=d>=m.range[0]&&d<=m.range[1];
         return h("div",{key:d,style:{width:6,height:6,borderRadius:"50%",background:inRange?(ok?C.fg:C.mid):C.lt}});
       });
-      return h("button",{key:m.id,onClick:function(){if(ok)start(m.id,false);},disabled:!ok,style:Object.assign({},cardS,{opacity:ok?1:0.35,cursor:ok?"pointer":"default",display:"block",animation:isIntro?"introSlideUp 0.4s ease "+(1.8+i*0.1)+"s both":"reveal 0.2s ease "+(i*0.06)+"s both"})},
+      var unlockHint=!ok&&m.req?(lang==="en"?m.req.games+" games in "+MODES.find(function(x){return x.id===m.req.mode;}).name_en+" with "+m.req.acc+"%+":m.req.games+" parties en "+MODES.find(function(x){return x.id===m.req.mode;}).name+" avec "+m.req.acc+"%+"):null;
+      return h("button",{key:m.id,onClick:function(){if(ok)start(m.id,false);},disabled:!ok,onMouseEnter:ok?cardHover:null,onMouseLeave:ok?cardLeave:null,style:Object.assign({},cardS,{opacity:ok?1:0.45,cursor:ok?"pointer":"default",display:"block",animation:isIntro?"introSlideUp 0.4s ease "+(1.8+i*0.1)+"s both":"reveal 0.2s ease "+(i*0.06)+"s both"})},
         h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}},
           h("div",null,
             h("div",{style:{fontSize:17,fontWeight:500,color:ok?C.fg:C.mid,marginBottom:4}},lang==="en"&&m.name_en?m.name_en:m.name),
@@ -710,7 +717,8 @@ function App(){
           h("div",{style:{display:"flex",gap:4}},diffDots),
           h("div",{style:{display:"flex",gap:16}},
             h("div",{style:{fontSize:11,color:C.mid}},qCount+"q \u00b7 x"+m.mult),
-            s.g>0&&h("div",{style:{fontSize:11,color:C.acc}},s.g+t.games+" \u00b7 "+acc+"%"))));
+            s.g>0&&h("div",{style:{fontSize:11,color:C.acc}},s.g+t.games+" \u00b7 "+acc+"%"))),
+        unlockHint&&h("div",{style:{fontSize:10,color:C.mid,marginTop:8,fontStyle:"italic"}},unlockHint));
     });
 
     return wrap(h("div",{style:{width:"100%",maxWidth:400,padding:"0 24px",display:"flex",flexDirection:"column",minHeight:"100vh",paddingTop:24,paddingBottom:40}},
@@ -721,12 +729,12 @@ function App(){
         h("div",{style:{display:"flex",alignItems:"center",gap:12}},
           h("div",{style:{fontSize:11,color:C.mid}},allQ.length+t.questions),
           h("div",{style:{display:"flex",gap:4,alignItems:"center"}},
-            h("button",{onClick:function(){sLang("fr");},style:{padding:2,background:"none",border:"none",cursor:"pointer",opacity:lang==="fr"?1:0.35,transition:"opacity 0.2s"}},
+            h("button",{"aria-label":"Français",onClick:function(){sLang("fr");},style:{padding:12,background:"none",border:"none",cursor:"pointer",opacity:lang==="fr"?1:0.35,transition:"opacity 0.2s"}},
               h("svg",{width:"20",height:"14",viewBox:"0 0 30 20"},
                 h("rect",{width:"10",height:"20",fill:"#002395"}),
                 h("rect",{x:"10",width:"10",height:"20",fill:"#fff"}),
                 h("rect",{x:"20",width:"10",height:"20",fill:"#ED2939"}))),
-            h("button",{onClick:function(){sLang("en");},style:{padding:2,background:"none",border:"none",cursor:"pointer",opacity:lang==="en"?1:0.35,transition:"opacity 0.2s"}},
+            h("button",{"aria-label":"English",onClick:function(){sLang("en");},style:{padding:12,background:"none",border:"none",cursor:"pointer",opacity:lang==="en"?1:0.35,transition:"opacity 0.2s"}},
               h("svg",{width:"20",height:"14",viewBox:"0 0 60 40"},
                 h("rect",{width:"60",height:"40",fill:"#012169"}),
                 h("path",{d:"M0,0 L60,40 M60,0 L0,40",stroke:"#fff",strokeWidth:"6"}),
@@ -741,14 +749,14 @@ function App(){
       /* Hero */
       h("div",{style:{marginBottom:48,position:"relative"}},
         /* Decorative escapement — animated GIF */
-        h("img",{src:"escapement.gif",width:"120",style:{position:"absolute",right:-10,top:0,opacity:1,animation:isIntro?"introFadeIn 0.8s ease 0.5s both":"none"}}),
+        h("img",{src:"escapement.gif",alt:"Mécanisme d'échappement animé",width:"120",style:{position:"absolute",right:-10,top:0,opacity:1,animation:isIntro?"introFadeIn 0.8s ease 0.5s both":"none"}}),
         h("div",{style:{position:"relative"}},
           /* Logo — letters spread then tighten */
           h("div",{style:{fontSize:11,fontWeight:500,color:C.fg,textTransform:"uppercase",marginBottom:12,animation:isIntro?"introTitle 0.8s ease 0.3s both":"none",letterSpacing:"0.35em"}},"Horoquest"),
           /* Red accent line */
           h("div",{style:{height:2,background:C.acc,marginBottom:16,animation:isIntro?"introLine 0.5s ease 0.7s both":"none",width:48}}),
           /* Hero text — each line staggered */
-          h("div",{style:{fontSize:36,fontWeight:300,letterSpacing:"-0.02em",lineHeight:1.15}},
+          h("div",{className:"hq-hero-text",style:{fontSize:36,fontWeight:300,letterSpacing:"-0.02em",lineHeight:1.15}},
             t.hero.split("\n").map(function(line,i){
               return h("span",{key:"hl"+i,style:{display:"block",animation:isIntro?"introHeroLine 0.5s ease "+(0.8+i*0.15)+"s both":"none"}},line);
             })))),
@@ -776,6 +784,11 @@ function App(){
             h("div",{style:{flex:1,fontSize:13,fontWeight:l.me?700:400}},l.u),
             h("div",{style:{fontSize:14,fontWeight:500}},l.s));
         })),
+
+      /* CTA inscription (moved up for visibility) */
+      !usr&&h("div",{style:{marginBottom:32,padding:"20px 24px",background:C.card,border:"1px solid "+C.lt,animation:isIntro?"introSlideUp 0.4s ease 1.7s both":"reveal 0.3s"}},
+        h("div",{style:{fontSize:13,color:C.mid,marginBottom:16,lineHeight:1.5}},t.createCta),
+        btnSec(t.create,function(){nav("auth");sAm("signup");})),
 
       /* Modes */
       h("div",{style:{marginBottom:32}},
@@ -819,7 +832,9 @@ function App(){
                 h("circle",{cx:"9",cy:"9",r:"5.5",fill:"none",stroke:col,strokeWidth:"1.2"}),
                 h("line",{x1:"13",y1:"13",x2:"17",y2:"17",stroke:col,strokeWidth:"1.2",strokeLinecap:"round"}))
             }[th.slug]||null;
-            return h("button",{key:th.slug,onClick:function(){start("calibre",false,th);},style:{padding:"20px",background:th.is_sponsored?C.fg:C.card,color:th.is_sponsored?C.bg:C.fg,border:th.is_sponsored?"none":"1px solid "+C.lt,borderRadius:0,cursor:"pointer",fontFamily:font,textAlign:"left",animation:"reveal 0.2s ease "+(i*0.04)+"s both",transition:"all 0.15s"}},
+            function thHover(sp){return sp?null:function(e){e.currentTarget.style.background="#F9F9F5";};}
+            function thLeave(sp){return sp?null:function(e){e.currentTarget.style.background=C.card;};}
+            return h("button",{key:th.slug,onClick:function(){start("calibre",false,th);},onMouseEnter:thHover(th.is_sponsored),onMouseLeave:thLeave(th.is_sponsored),style:{padding:"20px",background:th.is_sponsored?C.fg:C.card,color:th.is_sponsored?C.bg:C.fg,border:th.is_sponsored?"none":"1px solid "+C.lt,borderRadius:0,cursor:"pointer",fontFamily:font,textAlign:"left",animation:"reveal 0.2s ease "+(i*0.04)+"s both",transition:"all 0.15s"}},
               h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}},
                 themeIcon,
                 h("div",{style:{fontSize:10,color:th.is_sponsored?C.lt:C.mid}},qCount+"q")),
@@ -832,7 +847,7 @@ function App(){
       h("div",{style:{marginBottom:32}},
         h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}},t.duel),
         h("div",{style:{display:"flex",gap:1}},
-          h("input",{type:"text",value:duelJoinCode||"",onChange:function(e){sDj(e.target.value.toUpperCase().slice(0,6));},onKeyDown:function(e){if(e.key==="Enter"&&duelJoinCode&&duelJoinCode.length===6)joinDuel(duelJoinCode);},placeholder:t.enterCode,maxLength:6,style:{flex:1,padding:"14px 16px",background:C.card,border:"1px solid "+C.lt,borderRadius:0,fontSize:14,fontFamily:"monospace",letterSpacing:"0.3em",textTransform:"uppercase",color:C.fg,fontWeight:500}}),
+          h("input",{"aria-label":t.enterCode,type:"text",value:duelJoinCode||"",onChange:function(e){sDj(e.target.value.toUpperCase().slice(0,6));},onKeyDown:function(e){if(e.key==="Enter"&&duelJoinCode&&duelJoinCode.length===6)joinDuel(duelJoinCode);},placeholder:t.enterCode,maxLength:6,style:{flex:1,padding:"14px 16px",background:C.card,border:"1px solid "+C.lt,borderRadius:0,fontSize:14,fontFamily:"monospace",letterSpacing:"0.3em",textTransform:"uppercase",color:C.fg,fontWeight:500}}),
           h("button",{onClick:function(){if(duelJoinCode&&duelJoinCode.length===6)joinDuel(duelJoinCode);},style:{padding:"14px 20px",background:duelJoinCode&&duelJoinCode.length===6?C.fg:C.lt,color:C.bg,border:"none",borderRadius:0,fontSize:12,fontWeight:500,letterSpacing:"0.1em",cursor:duelJoinCode&&duelJoinCode.length===6?"pointer":"default",fontFamily:font}},"\u2192"))),
 
       /* Leaderboard */
@@ -844,18 +859,13 @@ function App(){
         h("div",{style:{display:"flex",gap:8,flexWrap:"wrap"}},
           eb.map(function(bid){var b=BADGES.find(function(x){return x.id===bid;});return b?h("div",{key:bid,style:{padding:"6px 14px",border:"1px solid "+C.lt,fontSize:11,fontWeight:500}},lang==="en"&&b.name_en?b.name_en:b.name):null;}))),
 
-      /* CTA inscription */
-      !usr&&h("div",{style:{marginTop:16,padding:"24px 0",borderTop:"1px solid "+C.lt}},
-        h("div",{style:{fontSize:13,color:C.mid,marginBottom:16,lineHeight:1.5}},t.createCta),
-        btnSec(t.create,function(){nav("auth");sAm("signup");})),
-
       /* Delete account */
       usr&&h("div",{style:{marginTop:32,paddingTop:16,borderTop:"1px solid "+C.lt,textAlign:"center"}},
         h("button",{onClick:function(){sDelM(true);},style:{background:"none",border:"none",color:C.acc,cursor:"pointer",fontSize:11,fontFamily:font,letterSpacing:"0.05em"}},t.deleteAccount)),
 
       /* Privacy link */
       h("div",{style:{marginTop:32,paddingTop:16,borderTop:"1px solid "+C.lt,textAlign:"center"}},
-        h("a",{href:"/privacy.html",style:{fontSize:11,color:C.mid,textDecoration:"none",letterSpacing:"0.05em"}},lang==="en"?"Privacy Policy":"Confidentialit\u00e9"))
+        h("a",{href:"/privacy.html",style:{fontSize:11,color:"#6B6B66",textDecoration:"underline",letterSpacing:"0.05em"}},lang==="en"?"Privacy Policy":"Confidentialit\u00e9"))
     ));
   }
 
