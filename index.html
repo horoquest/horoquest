@@ -288,7 +288,9 @@ function App(){
   var _lpp=_(_initLpp),lpp=_lpp[0],sLppRaw=_lpp[1];
   function sLpp(v){sLppRaw(v);try{if(v)localStorage.setItem("hq_lpp",v);else localStorage.removeItem("hq_lpp");}catch(e){}}
   var _pr=_(0),pr=_pr[0],sPr=_pr[1];
-  var _mst=_({calibre:{g:0,c:0},manufacture:{g:0,c:0},haute:{g:0,c:0}}),mst=_mst[0],sMst=_mst[1];
+  var _initMst=(function(){try{var d=localStorage.getItem("hq_mst");return d?JSON.parse(d):{calibre:{g:0,c:0},manufacture:{g:0,c:0},haute:{g:0,c:0}};}catch(e){return{calibre:{g:0,c:0},manufacture:{g:0,c:0},haute:{g:0,c:0}};}})();
+  var _mst=_(_initMst),mst=_mst[0],sMstRaw=_mst[1];
+  function sMst(v){if(typeof v==="function"){sMstRaw(function(p){var n=v(p);try{localStorage.setItem("hq_mst",JSON.stringify(n));}catch(e){}return n;});}else{sMstRaw(v);try{localStorage.setItem("hq_mst",JSON.stringify(v));}catch(e){}}}
   var _eb=_([]),eb=_eb[0],sEb=_eb[1];
   var _nb=_(null),nb=_nb[0],sNb=_nb[1];
   var _lt=_("all"),lt=_lt[0],sLt=_lt[1];
@@ -468,7 +470,8 @@ function App(){
     prevBest.current=best;sIsNb(sc>best);sBs(function(v){return Math.max(v,sc);});sLv(Math.floor((xp+xpE)/500)+1);
     if(daily)sDd(true);
     var isPf=cc===qs.length;if(isPf)sPr(function(v){return v+1;});
-    sMst(function(p){var m=Object.assign({},p);var s=Object.assign({},m[gm]||{g:0,c:0});s.g+=1;s.c+=cc;m[gm]=s;return m;});
+    var newMst=Object.assign({},mst);var _ms2=Object.assign({},newMst[gm]||{g:0,c:0});_ms2.g+=1;_ms2.c+=cc;newMst[gm]=_ms2;
+    sMst(newMst);
     var stats={tg:tg+1,ds:ds,pr:pr+(isPf?1:0)};
     BADGES.forEach(function(b){if(eb.indexOf(b.id)===-1&&b.check(stats)){sEb(function(prev){return prev.concat([b.id]);});sNb(b);setTimeout(function(){sNb(null);},3000);}});
     track("game_end",{mode:gm,score:sc,correct:cc,total:qs.length,daily:daily,streak:ms,perfect:isPf,theme:curTheme?curTheme.slug:null},usr?usr.id:null);
@@ -476,7 +479,7 @@ function App(){
       var scoreData={user_id:usr.id,score:sc,mode:gm,correct_count:cc,total_questions:qs.length,is_daily:daily};
       if(curTheme)scoreData.theme_slug=curTheme.slug;
       sbPost("scores",scoreData,tok)
-        .then(function(){return sbPatch("profiles?id=eq."+usr.id,{xp:xp+xpE,level:Math.floor((xp+xpE)/500)+1,total_games:tg+1,best_score:Math.max(best,sc),current_streak:ds,last_played_date:new Date().toISOString().split("T")[0],perfect_runs:pr+(isPf?1:0)},tok);})
+        .then(function(){return sbPatch("profiles?id=eq."+usr.id,{xp:xp+xpE,level:Math.floor((xp+xpE)/500)+1,total_games:tg+1,best_score:Math.max(best,sc),current_streak:ds,last_played_date:new Date().toISOString().split("T")[0],perfect_runs:pr+(isPf?1:0),mode_stats:newMst},tok);})
         .catch(function(e){console.log("Save failed",e);showErr(lang==="en"?"Score not saved":"Score non sauvegard\u00e9");});
     }
     // If this was a duel challenge, save challenger score
@@ -530,6 +533,7 @@ function App(){
       if(p&&p.length>0){
         var prof=p[0];sUsr({id:user.id,u:prof.username,e:user.email});
         sXp(prof.xp||0);sLv(prof.level||1);sTg(prof.total_games||0);sBs(prof.best_score||0);sDs(prof.current_streak||0);sPr(prof.perfect_runs||0);
+        if(prof.mode_stats){sMst(prof.mode_stats);}
         nav("home");
       } else {
         sPu({id:user.id,e:user.email,token:token});
@@ -554,7 +558,7 @@ function App(){
     });
   }
 
-  function logout(){sUsr(null);sTok(null);sXp(0);sLv(1);sTg(0);sBs(0);sDs(0);sMst({calibre:{g:0,c:0},manufacture:{g:0,c:0},haute:{g:0,c:0}});sEb([]);sPr(0);try{window._hqSession=null;localStorage.removeItem("hq_rt");localStorage.removeItem("hq_at");localStorage.removeItem("hq_uid");localStorage.removeItem("hq_ue");}catch(e){}}
+  function logout(){sUsr(null);sTok(null);sXp(0);sLv(1);sTg(0);sBs(0);sDs(0);sMst({calibre:{g:0,c:0},manufacture:{g:0,c:0},haute:{g:0,c:0}});sEb([]);sPr(0);try{window._hqSession=null;localStorage.removeItem("hq_rt");localStorage.removeItem("hq_at");localStorage.removeItem("hq_uid");localStorage.removeItem("hq_ue");localStorage.removeItem("hq_mst");}catch(e){}}
 
   function loadLeaderboard(period){
     var query="scores?select=score,profiles(username)";
