@@ -484,7 +484,7 @@ function App(){
     // Load daily leaderboard if daily game
     if(daily){loadDailyLb(sc);}
     sndFinish();sFinScr("finished");
-    setTimeout(function(){sFinScr("result");if(sc>prevBest.current&&prevBest.current>0)sndNewBest();nav("result");},1200);
+    setTimeout(function(){sFinScr("result");if(sc>prevBest.current&&prevBest.current>0)sndNewBest();nav("result");},2500);
   }
 
   function unlocked(mid){var m=MODES.find(function(x){return x.id===mid;});if(!m||!m.req)return true;var s=mst[m.req.mode]||{g:0,c:0};if(s.g<m.req.games)return false;return s.g>0?Math.round((s.c/(s.g*10))*100)>=m.req.acc:false;}
