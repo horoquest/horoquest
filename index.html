@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HOROQUEST \u2014 Testez votre culture horlog\u00e8re</title>
-<meta name="description" content="Quiz interactif sur l'horlogerie. Testez vos connaissances sur les montres, les manufactures et les complications horlog\u00e8res. D\u00e9fi quotidien, duels entre amis et classement mondial.">
+<title>HOROQUEST \u2014 Daily Horology Quiz | Quiz Horlogerie &amp; Montres</title>
+<meta name="description" content="The daily horology quiz &amp; watch trivia game. Daily challenge, streaks, friend duels. Le quiz horlogerie quotidien \u2014 montres, manufactures, complications. Gratuit FR/EN.">
 <meta name="theme-color" content="#1A1A1A">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
@@ -14,16 +14,26 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://horoquest.vercel.app/">
-<meta property="og:title" content="HOROQUEST \u2014 Le quiz horloger">
-<meta property="og:description" content="Testez vos connaissances horlog\u00e8res. D\u00e9fi du jour, 3 modes de difficult\u00e9, duels et classement.">
+<meta property="og:title" content="HOROQUEST \u2014 Daily Horology Quiz | Quiz Horlogerie">
+<meta property="og:description" content="The daily watch quiz game. Test your horology knowledge \u2014 daily challenge, streaks &amp; duels. Quiz horlogerie quotidien gratuit FR/EN.">
 <meta property="og:image" content="https://horoquest.vercel.app/og-image.png">
-<meta property="og:locale" content="fr_FR">
-<meta property="og:locale:alternate" content="en_US">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="fr_FR">
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="HOROQUEST \u2014 Le quiz horloger">
-<meta name="twitter:description" content="Testez vos connaissances horlog\u00e8res. D\u00e9fi du jour, duels et classement.">
+<meta name="twitter:title" content="HOROQUEST \u2014 Daily Horology Quiz | Quiz Horlogerie">
+<meta name="twitter:description" content="The daily watch quiz game. Daily challenge, streaks &amp; duels. Quiz horlogerie quotidien FR/EN.">
 <meta name="twitter:image" content="https://horoquest.vercel.app/og-image.png">
+<!-- hreflang -->
+<link rel="alternate" hreflang="en" href="https://horoquest.vercel.app/">
+<link rel="alternate" hreflang="fr" href="https://horoquest.vercel.app/">
+<link rel="alternate" hreflang="x-default" href="https://horoquest.vercel.app/">
+<!-- Schema.org -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"HOROQUEST","url":"https://horoquest.vercel.app/","description":"Daily horology quiz game. Test your watch knowledge with daily challenges, streaks and friend duels. Quiz horlogerie quotidien gratuit.","applicationCategory":"GameApplication","operatingSystem":"All","inLanguage":["en","fr"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Organization","name":"Horoquest"},"featureList":["Daily challenge","Streaks","Friend duels","Global leaderboard","3 difficulty modes"]}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <style>
@@ -80,7 +90,7 @@ body{font-family:'Helvetica Neue','Helvetica','Arial',sans-serif;background:#F5F
 </style>
 </head>
 <body>
-<div id="root"></div>
+<div id="root"><div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#F5F5F0;color:#1A1A1A;max-width:400px;margin:0 auto;padding:40px 24px;min-height:100vh"><h1 style="font-size:28px;font-weight:300;letter-spacing:0.15em;margin-bottom:8px">HOROQUEST</h1><h2 style="font-size:16px;font-weight:300;color:#666;margin-bottom:24px">Daily Horology Quiz &mdash; Quiz Horlogerie &amp; Montres</h2><p style="font-size:14px;color:#555;line-height:1.7;margin-bottom:16px">The daily horology quiz game. Test your watch knowledge with daily challenges, streaks and friend duels. Free bilingual watch trivia &mdash; horology quiz in English and French.</p><p style="font-size:14px;color:#555;line-height:1.7">Le quiz horlogerie quotidien gratuit. Testez votre culture horlog&egrave;re &mdash; montres, manufactures, complications. D&eacute;fi du jour, streaks, duels et classement mondial.</p></div></div>
 <script>
 var h=React.createElement;var useState=React.useState;var useEffect=React.useEffect;var useRef=React.useRef;
 
