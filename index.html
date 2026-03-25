@@ -269,7 +269,7 @@ function App(){
   var _ld=_(true),loading=_ld[0],sLd=_ld[1];
   var _le2=_(false),loadErr=_le2[0],sLoadErr=_le2[1];
   var _off=_(typeof navigator!=="undefined"&&!navigator.onLine),isOff=_off[0],sOff=_off[1];
-  var _initLang=(function(){try{var l=localStorage.getItem("hq_lang");return l==="en"?"en":"fr";}catch(e){return"fr";}})();
+  var _initLang=(function(){try{var l=localStorage.getItem("hq_lang");return l==="fr"?"fr":"en";}catch(e){return"en";}})();
   var _lang=_(_initLang),lang=_lang[0],sLangRaw=_lang[1];
   function sLang(v){sLangRaw(v);try{localStorage.setItem("hq_lang",v);}catch(e){}}
   var _nu=_(false),needsUn=_nu[0],sNu=_nu[1];
