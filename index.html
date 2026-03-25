@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HOROQUEST \u2014 Daily Horology Quiz | Quiz Horlogerie &amp; Montres</title>
-<meta name="description" content="The daily horology quiz &amp; watch trivia game. Daily challenge, streaks, friend duels. Le quiz horlogerie quotidien \u2014 montres, manufactures, complications. Gratuit FR/EN.">
+<title>HOROQUEST — Daily Horology Quiz | Quiz Horlogerie &amp; Montres</title>
+<meta name="description" content="Daily horology quiz — test your watch knowledge. Daily challenge, streaks &amp; duels. Quiz horlogerie quotidien, gratuit FR/EN.">
 <meta name="theme-color" content="#1A1A1A">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
@@ -13,19 +13,22 @@
 <link rel="canonical" href="https://horoquest.vercel.app/">
 <!-- Open Graph -->
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="HOROQUEST">
 <meta property="og:url" content="https://horoquest.vercel.app/">
-<meta property="og:title" content="HOROQUEST \u2014 Daily Horology Quiz | Quiz Horlogerie">
-<meta property="og:description" content="The daily watch quiz game. Test your horology knowledge \u2014 daily challenge, streaks &amp; duels. Quiz horlogerie quotidien gratuit FR/EN.">
+<meta property="og:title" content="HOROQUEST — Daily Horology Quiz | Quiz Horlogerie">
+<meta property="og:description" content="The daily watch quiz game. Test your horology knowledge — daily challenge, streaks &amp; duels. Quiz horlogerie quotidien gratuit FR/EN.">
 <meta property="og:image" content="https://horoquest.vercel.app/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="HOROQUEST — Daily Horology Quiz">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="fr_FR">
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="HOROQUEST \u2014 Daily Horology Quiz | Quiz Horlogerie">
+<meta name="twitter:title" content="HOROQUEST — Daily Horology Quiz | Quiz Horlogerie">
 <meta name="twitter:description" content="The daily watch quiz game. Daily challenge, streaks &amp; duels. Quiz horlogerie quotidien FR/EN.">
 <meta name="twitter:image" content="https://horoquest.vercel.app/og-image.png">
+<meta name="twitter:image:alt" content="HOROQUEST — Daily Horology Quiz">
 <!-- hreflang -->
 <link rel="alternate" hreflang="en" href="https://horoquest.vercel.app/">
 <link rel="alternate" hreflang="fr" href="https://horoquest.vercel.app/">
@@ -34,8 +37,8 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"HOROQUEST","url":"https://horoquest.vercel.app/","description":"Daily horology quiz game. Test your watch knowledge with daily challenges, streaks and friend duels. Quiz horlogerie quotidien gratuit.","applicationCategory":"GameApplication","operatingSystem":"All","inLanguage":["en","fr"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Organization","name":"Horoquest"},"featureList":["Daily challenge","Streaks","Friend duels","Global leaderboard","3 difficulty modes"]}
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 @keyframes reveal{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
@@ -633,12 +636,12 @@ function App(){
     track("duel_complete",{code:duelCode,score:sc,correct:cc},usr?usr.id:null);
   }
 
-  function shareTxt(){var acc=qs.length>0?Math.round((cc/qs.length)*100):0;var _ms=MODES.find(function(m){return m.id===gm;})||{};var mn=curTheme?(lang==="en"&&curTheme.name_en?curTheme.name_en:curTheme.name):((lang==="en"&&_ms.name_en?_ms.name_en:_ms.name)||"");var grid=rs.map(function(r){return r&&r.ok?"\u2b1b":"\u2b1c";}).join("");var stars=acc===100?"\u2b50\u2b50\u2b50":acc>=80?"\u2b50\u2b50":acc>=50?"\u2b50":"";return"\u231a HOROQUEST"+(daily?" \u2014 "+t.daily:"")+"\n"+mn+" | "+sc+" pts\n\n"+grid+"\n"+cc+"/"+qs.length+" ("+acc+"%) "+stars+(ms>=3?"\n\ud83d\udd25 "+t.streak+" "+ms+"x":"")+"\n\nhoroquest.vercel.app";}
+  function shareTxt(){var acc=qs.length>0?Math.round((cc/qs.length)*100):0;var _ms=MODES.find(function(m){return m.id===gm;})||{};var mn=curTheme?(lang==="en"&&curTheme.name_en?curTheme.name_en:curTheme.name):((lang==="en"&&_ms.name_en?_ms.name_en:_ms.name)||"");var grid=rs.map(function(r){return r&&r.ok?"\u2b1b":"\u2b1c";}).join("");var stars=acc===100?"\u2b50\u2b50\u2b50":acc>=80?"\u2b50\u2b50":acc>=50?"\u2b50":"";return"\u231a HOROQUEST"+(daily?" — "+t.daily:"")+"\n"+mn+" | "+sc+" pts\n\n"+grid+"\n"+cc+"/"+qs.length+" ("+acc+"%) "+stars+(ms>=3?"\n\ud83d\udd25 "+t.streak+" "+ms+"x":"")+"\n\nhoroquest.vercel.app";}
   function doCopy(){navigator.clipboard.writeText(shareTxt()).then(function(){sCp(true);setTimeout(function(){sCp(false);},2000);track("share",{mode:gm,score:sc},usr?usr.id:null);}).catch(function(){});}
   function doShare(){var txt=shareTxt();if(navigator.share){navigator.share({title:"HOROQUEST",text:txt,url:"https://horoquest.vercel.app"}).then(function(){track("share",{mode:gm,score:sc,method:"native"},usr?usr.id:null);}).catch(function(){});}else{doCopy();}}
 
   var toast=nb?h("div",{style:{position:"fixed",top:20,left:"50%",transform:"translateX(-50%)",zIndex:200,background:C.card,border:"1px solid "+C.lt,padding:"12px 24px",display:"flex",alignItems:"center",gap:12,animation:"reveal 0.3s",fontSize:13,maxWidth:"90%"}},
-    h("span",{style:{fontWeight:700}},lang==="en"&&nb.name_en?nb.name_en:nb.name),h("span",{style:{color:C.mid}},"\u2014 "+nb.desc)):null;
+    h("span",{style:{fontWeight:700}},lang==="en"&&nb.name_en?nb.name_en:nb.name),h("span",{style:{color:C.mid}},"— "+nb.desc)):null;
 
   var usernameModal=needsUn?h("div",{style:{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",animation:"fadeIn 0.2s"}},
     h("div",{style:{position:"absolute",inset:0,background:"rgba(0,0,0,0.5)"}}),
@@ -819,7 +822,7 @@ function App(){
       /* Stats (if played) */
       (tg>0||usr)&&h("div",{style:{marginBottom:32,animation:isIntro?"introFadeIn 0.4s ease 1.5s both":"none"}},
         h("div",{style:{display:"grid",gridTemplateColumns:ds>0?"1fr 1fr 1fr 1fr":"1fr 1fr 1fr",borderTop:"1px solid "+C.lt,borderBottom:"1px solid "+C.lt}},
-          [[t.level,lv+" \u2014 "+lvlT(lv)],[t.xp,""+xp],[t.best,""+best]].concat(ds>0?[[t.streak,ds+t.days+(ds>1?"s":"")]]:[]).map(function(s,i,arr){
+          [[t.level,lv+" — "+lvlT(lv)],[t.xp,""+xp],[t.best,""+best]].concat(ds>0?[[t.streak,ds+t.days+(ds>1?"s":"")]]:[]).map(function(s,i,arr){
             return h("div",{key:i,style:{padding:"14px 0",borderRight:i<arr.length-1?"1px solid "+C.lt:"none"}},
               h("div",{style:{fontSize:10,color:C.mid,letterSpacing:"0.08em",marginBottom:2}},s[0]),
               h("div",{style:{fontSize:16,fontWeight:500}},s[1]));}))),
@@ -1027,12 +1030,12 @@ function App(){
       ds>0&&h("div",{style:{fontSize:13,color:C.acc,marginBottom:16,animation:"reveal 0.4s ease 0.15s both"}},ds+t.days+(ds>1?"s":"")+t.consec+(ds>1?"s":"")),
       h("div",{style:{marginBottom:24,animation:"reveal 0.4s ease 0.2s both"}},
         h("div",{style:{display:"flex",justifyContent:"space-between",fontSize:11,color:C.mid,marginBottom:6}},
-          h("span",null,t.level+" "+lv+" \u2014 "+lvlT(lv)),h("span",null,xp+" "+t.xp)),
+          h("span",null,t.level+" "+lv+" — "+lvlT(lv)),h("span",null,xp+" "+t.xp)),
         h("div",{style:{height:4,background:C.lt,width:"100%",borderRadius:2,overflow:"hidden"}},
           h("div",{style:{height:"100%",width:xpW+"%",background:C.fg,transition:"width 1s cubic-bezier(0.23,1,0.32,1)",borderRadius:2}})),
         h("div",{style:{display:"flex",justifyContent:"space-between",fontSize:10,color:C.mid,marginTop:4}},
           h("span",null,(lv*500-xp)+" XP "+t.nextLevel),
-          h("span",null,t.level+" "+(lv+1)+" \u2014 "+lvlT(lv+1)))),
+          h("span",null,t.level+" "+(lv+1)+" — "+lvlT(lv+1)))),
       /* Daily leaderboard */
       daily&&dailyLb.length>0&&h("div",{style:{marginBottom:24,animation:"reveal 0.4s ease 0.24s both"}},
         h("div",{style:{fontSize:11,color:C.mid,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}},t.dailyRanking),
