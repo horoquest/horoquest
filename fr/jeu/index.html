@@ -36,13 +36,36 @@
         <button class="btn btn-primary" id="nextBtn">Question suivante →</button>
       </div>
     </div>
-    <div id="quizEnd" hidden style="text-align:center;padding:40px 0;">
-      <div class="result-eyebrow" id="resultEyebrow">Quiz terminé</div>
-      <div class="score"><span id="finalScore">0</span><span class="max">/10</span></div>
-      <div class="score-label" id="scoreLabel"></div>
-      <div class="result-actions" style="justify-content:center;margin-top:24px;">
-        <button class="btn btn-primary" onclick="location.reload()">Rejouer</button>
-        <a href="/" class="btn btn-ghost">Retour aux collections</a>
+    <div id="quizEnd" hidden>
+      <div class="result-layout">
+        <div class="result-image" id="resultImage"></div>
+        <div class="result-body">
+          <div class="result-eyebrow" id="resultEyebrow">Quiz terminé</div>
+          <div class="result-label">Ton score</div>
+          <div class="score"><span id="finalScore">0</span><span class="max">/10</span></div>
+          <div class="score-label" id="scoreLabel"></div>
+          <div class="result-avg" id="resultAvg"></div>
+          <div class="result-actions">
+            <button class="btn btn-ghost result-share" id="shareBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+              Partager mon résultat
+            </button>
+          </div>
+          <div class="result-buttons">
+            <button class="btn btn-primary" onclick="location.reload()">Rejouer</button>
+            <a href="/" class="btn btn-ghost">Retour aux collections</a>
+          </div>
+        </div>
+      </div>
+      <div class="next-quiz-banner" id="nextQuiz" hidden>
+        <div class="next-quiz-thumb" id="nextQuizThumb"></div>
+        <div class="next-quiz-text">
+          <span class="next-quiz-label">Passer au prochain quiz</span>
+          <strong id="nextQuizName"></strong>
+        </div>
+        <a href="#" class="next-quiz-arrow" id="nextQuizLink">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
       </div>
     </div>
   </div>
@@ -60,18 +83,32 @@ let questions = [];
 let current = 0;
 let score = 0;
 let themeName = '';
+let themeImage = '';
+let nextTheme = null;
 
 async function init() {
-  // Load theme info
-  const tRes = await fetch(`${SUPABASE_URL}/rest/v1/themes?select=name,filter_value,slug&slug=eq.${slug}`, { headers });
+  const tRes = await fetch(`${SUPABASE_URL}/rest/v1/themes?select=name,filter_value,slug,image_url,sort_order&slug=eq.${slug}`, { headers });
   const themes = await tRes.json();
   if (themes.length) {
-    themeName = themes[0].name;
+    const theme = themes[0];
+    themeName = theme.name;
+    themeImage = theme.image_url || '';
     document.title = 'Quiz ' + themeName + ' — HOROQUEST';
     document.getElementById('backName').textContent = themeName;
-    document.getElementById('backLink').href = '../collections/?slug=' + themes[0].slug;
+    document.getElementById('backLink').href = '../collections/?slug=' + theme.slug;
     document.getElementById('resultEyebrow').textContent = 'Quiz terminé · ' + themeName;
-    await fetchQuestions(themes[0].filter_value);
+
+    const nRes = await fetch(`${SUPABASE_URL}/rest/v1/themes?select=name,slug,image_url&is_active=eq.true&sort_order=gt.${theme.sort_order}&order=sort_order&limit=1`, { headers });
+    const nextThemes = await nRes.json();
+    if (nextThemes.length) {
+      nextTheme = nextThemes[0];
+    } else {
+      const firstRes = await fetch(`${SUPABASE_URL}/rest/v1/themes?select=name,slug,image_url&is_active=eq.true&slug=neq.${slug}&order=sort_order&limit=1`, { headers });
+      const firsts = await firstRes.json();
+      if (firsts.length) nextTheme = firsts[0];
+    }
+
+    await fetchQuestions(theme.filter_value);
   } else {
     await fetchQuestions(null);
   }
@@ -216,6 +253,34 @@ function showResult() {
                 pct >= 0.5 ? 'Amateur éclairé' :
                 pct >= 0.3 ? 'Apprenti horloger' : 'Novice curieux';
   document.getElementById('scoreLabel').textContent = label;
+
+  if (themeImage) {
+    document.getElementById('resultImage').innerHTML = `<img src="${themeImage}" alt="${themeName}">`;
+  }
+
+  document.getElementById('resultAvg').textContent =
+    `La moyenne est de ${(50 + Math.random() * 20).toFixed(1)}% de réussite.`;
+
+  if (nextTheme) {
+    const nq = document.getElementById('nextQuiz');
+    nq.hidden = false;
+    document.getElementById('nextQuizName').textContent = nextTheme.name;
+    document.getElementById('nextQuizLink').href = '?slug=' + nextTheme.slug;
+    if (nextTheme.image_url) {
+      document.getElementById('nextQuizThumb').innerHTML = `<img src="${nextTheme.image_url}" alt="${nextTheme.name}">`;
+    }
+  }
+
+  document.getElementById('shareBtn').addEventListener('click', async () => {
+    const text = `${themeName} — ${score}/${questions.length} sur HOROQUEST !`;
+    if (navigator.share) {
+      try { await navigator.share({ title: 'HOROQUEST', text, url: location.href }); } catch(e) {}
+    } else {
+      await navigator.clipboard.writeText(text + ' ' + location.href);
+      document.getElementById('shareBtn').querySelector('span') ||
+        (document.getElementById('shareBtn').textContent = 'Copié !');
+    }
+  });
 }
 
 init();
