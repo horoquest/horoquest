@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,17 +10,17 @@
 
 <header class="site-header">
   <div class="container">
-    <a href="/" class="logo" aria-label="Horoquest, accueil">HOROQUEST<span class="dot"></span></a>
-    <nav class="nav-center" aria-label="Principale">
-      <a href="/#collections" class="active">Collections</a>
-      <a href="/#how">Comment ça marche</a>
+    <a href="/en/" class="logo" aria-label="Horoquest, home">HOROQUEST<span class="dot"></span></a>
+    <nav class="nav-center" aria-label="Main">
+      <a href="/en/#collections" class="active">Collections</a>
+      <a href="/en/#how">How it works</a>
     </nav>
     <div class="nav-right">
-      <div class="lang-toggle" role="group" aria-label="Langue">
-        <a href="/fr/collections/" class="lang-btn on" id="langFR">FR</a>
-        <a href="/en/collections/" class="lang-btn" id="langEN">EN</a>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <a href="/fr/collections/" class="lang-btn" id="langFR">FR</a>
+        <a href="/en/collections/" class="lang-btn on" id="langEN">EN</a>
       </div>
-      <a href="#" class="btn btn-ghost">Connexion</a>
+      <a href="#" class="btn btn-ghost">Login</a>
       <button class="burger" aria-label="Menu"><span></span></button>
     </div>
   </div>
@@ -28,8 +28,8 @@
 
 <main>
   <div class="container">
-    <nav class="breadcrumb" aria-label="Fil d'ariane">
-      <a href="/#collections">Collections</a>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/en/#collections">Collections</a>
       <span class="sep">/</span>
       <span class="current" id="breadcrumbName">…</span>
     </nav>
@@ -45,7 +45,7 @@
           <p class="desc" id="collDesc"></p>
         </div>
         <div>
-          <a href="#" class="btn btn-primary btn-lg" id="playBtn">Jouer au quiz →</a>
+          <a href="#" class="btn btn-primary btn-lg" id="playBtn">Play the quiz →</a>
         </div>
       </div>
     </div>
@@ -54,8 +54,8 @@
   <section class="section" style="padding-top:32px;">
     <div class="container">
       <div class="section-head">
-        <h2>Découvrir d'autres collections</h2>
-        <a href="/#collections" class="meta" style="text-decoration:none;">Voir tout →</a>
+        <h2>Discover other collections</h2>
+        <a href="/en/#collections" class="meta" style="text-decoration:none;">See all →</a>
       </div>
       <div class="coll-grid" id="otherGrid"></div>
     </div>
@@ -67,8 +67,8 @@
     <div class="footer-bottom">
       <div class="logo">HOROQUEST<span class="dot"></span></div>
       <nav>
-        <a href="#">Politique de confidentialité</a>
-        <a href="#">Conditions</a>
+        <a href="#">Privacy policy</a>
+        <a href="#">Terms</a>
         <a href="#">Contact</a>
       </nav>
       <div>© 2025 Horoquest</div>
@@ -82,46 +82,46 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
 
 const params = new URLSearchParams(location.search);
-const slug = params.get('slug') || location.pathname.split('/').pop().replace('.html', '');
+const slug = params.get('slug') || 'rolex';
 
 async function load() {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/themes?select=*&slug=eq.${slug}`, { headers });
   const themes = await res.json();
-  if (!themes.length) { document.title = 'Collection introuvable'; return; }
+  if (!themes.length) { document.title = 'Collection not found'; return; }
   const theme = themes[0];
 
-  document.title = theme.name + ' — HOROQUEST';
-  document.getElementById('breadcrumbName').textContent = theme.name;
-  document.getElementById('collName').textContent = theme.name + '.';
-  document.getElementById('collDesc').textContent = theme.description;
+  const name = theme.name_en || theme.name;
+  const desc = theme.description_en || theme.description;
+
+  document.title = name + ' — HOROQUEST';
+  document.getElementById('breadcrumbName').textContent = name;
+  document.getElementById('collName').textContent = name + '.';
+  document.getElementById('collDesc').textContent = desc;
   document.getElementById('playBtn').href = '../jeu/?slug=' + theme.slug;
 
+  // Update lang toggle to keep slug
   document.getElementById('langFR').href = '/fr/collections/?slug=' + theme.slug;
   document.getElementById('langEN').href = '/en/collections/?slug=' + theme.slug;
 
-  // Count questions
   const qRes = await fetch(`${SUPABASE_URL}/rest/v1/questions?select=id&theme_slugs=cs.{${theme.filter_value}}`, { headers });
   const qs = await qRes.json();
   const count = Array.isArray(qs) ? qs.length : 0;
   document.getElementById('pillCount').textContent = count + ' questions';
 
-  // Hero image
   if (theme.image_url) {
     const img = document.createElement('img');
     img.src = theme.image_url;
-    img.alt = theme.name;
+    img.alt = name;
     img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
     document.getElementById('heroImage').appendChild(img);
   }
 
-  // Other collections
-  const allRes = await fetch(`${SUPABASE_URL}/rest/v1/themes?select=slug,name,image_url,description&is_active=eq.true&slug=neq.${slug}&limit=4&order=sort_order`, { headers });
+  const allRes = await fetch(`${SUPABASE_URL}/rest/v1/themes?select=slug,name_en,name,image_url&is_active=eq.true&slug=neq.${slug}&limit=4&order=sort_order`, { headers });
   const others = await allRes.json();
-  const ICON_DOT = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/></svg>';
   document.getElementById('otherGrid').innerHTML = others.map(c => `
     <a class="coll-card" href="?slug=${c.slug}">
-      <div class="coll-thumb">${c.image_url ? `<img src="${c.image_url}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;">` : ''}</div>
-      <h3 class="coll-title">${c.name}</h3>
+      <div class="coll-thumb">${c.image_url ? `<img src="${c.image_url}" alt="${c.name_en || c.name}" style="width:100%;height:100%;object-fit:cover;">` : ''}</div>
+      <h3 class="coll-title">${c.name_en || c.name}</h3>
     </a>
   `).join('');
 }

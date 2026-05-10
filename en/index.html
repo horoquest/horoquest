@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOROQUEST — Watch Quiz</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<header class="site-header" data-screen-label="01 Header">
+  <div class="container">
+    <a href="/en/" class="logo">HOROQUEST<span class="dot"></span></a>
+    <nav class="nav-center">
+      <a href="#collections" class="active">Collections</a>
+      <a href="#how">How it works</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-toggle">
+        <a href="/" class="lang-btn">FR</a>
+        <a href="/en/" class="lang-btn on">EN</a>
+      </div>
+      <a href="#" class="btn btn-ghost">Login</a>
+      <button class="burger" aria-label="Menu"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="hero" data-screen-label="02 Hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <h1>Test your <em>watch knowledge</em>.</h1>
+        <p class="lead">Themed quizzes about the world of watches — from Rolex to vintage timepieces, chronographs to haute horlogerie. Pick a theme, answer ten questions.</p>
+        <div class="hero-actions">
+          <a href="#collections" class="btn btn-primary btn-lg">Start a quiz</a>
+          <a href="#how" class="btn btn-ghost btn-lg">How it works</a>
+        </div>
+        <div class="hero-meta">
+          <span class="pin"></span>
+          <span><strong style="color:var(--ink);">19 collections</strong> · 250+ questions · free</span>
+        </div>
+      </div>
+      <div class="hero-illu" data-placeholder="Vintage chronograph" data-key="hero-watch">
+        <div class="badge">New · Japanese</div>
+        <div class="stat"><strong>1 423</strong>players this week</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="collections" class="section" data-screen-label="06 All collections">
+  <div class="container">
+    <div class="section-head">
+      <h2>All collections</h2>
+      <span class="meta" id="allCount">19 quizzes</span>
+    </div>
+    <div class="coll-grid" id="allGrid"></div>
+  </div>
+</section>
+
+<section id="how" class="section" data-screen-label="07 How it works">
+  <div class="container">
+    <div class="section-head">
+      <h2>How it works</h2>
+      <span class="meta">Three steps</span>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><circle cx="8" cy="14" r="1.3" fill="currentColor"/></svg>
+        <div class="num">01</div>
+        <h3>Choose a collection</h3>
+        <p>Rolex, diving, aviation, haute horlogerie… 19 themes to choose from, beginner to expert.</p>
+      </div>
+      <div class="step">
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+        <div class="num">02</div>
+        <h3>Answer 10 questions</h3>
+        <p>Each answer comes with an explanation so you learn as you play. No pressure.</p>
+      </div>
+      <div class="step">
+        <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 21V10"/><path d="M12 21V4"/><path d="M18 21v-7"/></svg>
+        <div class="num">03</div>
+        <h3>Discover your score</h3>
+        <p>Compare yourself to the average, share your result and move on to another collection.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="logo">HOROQUEST<span class="dot"></span></div>
+        <p>Themed quizzes about watchmaking — from haute horlogerie to vintage timepieces.</p>
+      </div>
+      <div>
+        <h4>Collections</h4>
+        <ul>
+          <li><a href="collections/?slug=rolex">Rolex</a></li>
+          <li><a href="collections/?slug=omega">Omega</a></li>
+          <li><a href="collections/?slug=haute-horlogerie">Haute Horlogerie</a></li>
+          <li><a href="collections/?slug=montres-vintage">Vintage Watches</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="#">The team</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Newsletter</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2025 Horoquest</div>
+      <nav>
+        <a href="#">Privacy policy</a>
+        <a href="#">Terms</a>
+        <a href="#">Legal notices</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/placeholders.js"></script>
+<script>
+  const COLLECTIONS = [
+    { name: "Rolex", q: 25, slug: "rolex", cat: "Brands", isNew: false },
+    { name: "Omega", q: 13, slug: "omega", cat: "Brands", isNew: false },
+    { name: "Space Conquest", q: 3, slug: "conquete-spatiale", cat: "History", isNew: false },
+    { name: "Design Icons", q: 32, slug: "icones-design", cat: "Culture", isNew: false },
+    { name: "Diving & Depths", q: 7, slug: "plongee-profondeurs", cat: "History", isNew: false },
+    { name: "Pilots & Aviation", q: 11, slug: "pilotes-aviation", cat: "History", isNew: false },
+    { name: "Adventurers & Explorers", q: 11, slug: "aventuriers-explorateurs", cat: "History", isNew: true },
+    { name: "Haute Horlogerie", q: 14, slug: "haute-horlogerie", cat: "Technique", isNew: false },
+    { name: "The Master Watchmakers", q: 5, slug: "les-horlogers", cat: "History", isNew: false },
+    { name: "Chronographs", q: 9, slug: "chronographes", cat: "Technique", isNew: false },
+    { name: "Celebrities & Cinema", q: 25, slug: "celebrites-cinema", cat: "Culture", isNew: false },
+    { name: "Military Watches", q: 7, slug: "militaire", cat: "History", isNew: false },
+    { name: "Scandals & Forgers", q: 3, slug: "scandales-faussaires", cat: "Culture", isNew: true },
+    { name: "Spot the Watch", q: 6, slug: "reconnais-la-montre", cat: "Game", isNew: false },
+    { name: "The Quartz Crisis", q: 3, slug: "crise-du-quartz", cat: "History", isNew: false },
+    { name: "Technique & Complications", q: 11, slug: "technique-complications", cat: "Technique", isNew: false },
+    { name: "The Origins", q: 3, slug: "les-origines", cat: "History", isNew: false },
+    { name: "Vintage Watches", q: 60, slug: "montres-vintage", cat: "Culture", isNew: false },
+    { name: "Japanese Watchmaking", q: 2, slug: "horlogerie-japonaise", cat: "Brands", isNew: true }
+  ];
+
+  const ICON_DOT = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/></svg>';
+
+  function cardHTML(c) {
+    return `
+      <a class="coll-card" href="collections/?slug=${c.slug}">
+        <div class="coll-thumb" data-placeholder="${c.name}" data-key="${c.slug}">
+          ${c.isNew ? '<div class="coll-badge">New</div>' : ''}
+        </div>
+        <h3 class="coll-title">${c.name}</h3>
+        <div class="coll-meta">
+          <span class="cat">${ICON_DOT}${c.cat}</span>
+          <span class="sep"></span>
+          <span class="type">${c.q} questions</span>
+        </div>
+      </a>`;
+  }
+
+  document.getElementById('allGrid').innerHTML = COLLECTIONS.map(cardHTML).join('');
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      if (id.length > 1) {
+        const target = document.querySelector(id);
+        if (target) {
+          e.preventDefault();
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 60, behavior: 'smooth' });
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

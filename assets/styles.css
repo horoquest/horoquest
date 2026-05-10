@@ -115,14 +115,19 @@ img, svg { display: block; max-width: 100%; }
   letter-spacing: 0.06em;
   background: transparent;
 }
-.lang-toggle button {
+.lang-toggle button,
+.lang-toggle .lang-btn {
   background: none;
   border: 0;
   padding: 6px 12px;
   color: var(--ink-soft);
   text-transform: uppercase;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 0.06em;
 }
-.lang-toggle button.on {
+.lang-toggle button.on,
+.lang-toggle .lang-btn.on {
   background: var(--ink);
   color: var(--bg);
 }
