@@ -543,22 +543,13 @@ img, svg { display: block; max-width: 100%; }
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
-  opacity: 0;
-  transition: opacity 300ms ease;
-}
-.coll-hero-image:hover .coll-hero-play {
-  opacity: 1;
 }
 .coll-hero-image::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0);
-  transition: background 300ms ease;
-  pointer-events: none;
-}
-.coll-hero-image:hover::after {
   background: rgba(0, 0, 0, 0.3);
+  pointer-events: none;
 }
 .coll-hero-meta {
   text-align: center;
@@ -928,8 +919,6 @@ img, svg { display: block; max-width: 100%; }
   .coll-grid, .coll-grid.cols-3 { grid-template-columns: 1fr 1fr; gap: 16px; }
   .coll-title { font-size: 16px; }
   .steps { grid-template-columns: 1fr; }
-  .coll-hero-play { opacity: 1; }
-  .coll-hero-image::after { background: rgba(0, 0, 0, 0.3); }
   .result-grid { grid-template-columns: 1fr; gap: 32px; }
   .next-quiz-banner { grid-template-columns: 64px 1fr auto; gap: 14px; }
   .next-quiz-banner .thumb { width: 64px; height: 44px; }
