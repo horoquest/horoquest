@@ -529,7 +529,7 @@ img, svg { display: block; max-width: 100%; }
 /* ========== COLLECTION HERO ========== */
 .coll-hero { padding: 32px 0 56px; }
 .coll-hero-image {
-  aspect-ratio: 21 / 9;
+  aspect-ratio: 1 / 1;
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--bg-soft);
