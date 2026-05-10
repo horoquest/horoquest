@@ -544,6 +544,10 @@ img, svg { display: block; max-width: 100%; }
   transform: translate(-50%, -50%);
   z-index: 2;
 }
+.coll-hero-play:hover {
+  transform: translate(-50%, -50%);
+  box-shadow: none;
+}
 .coll-hero-image::after {
   content: '';
   position: absolute;
