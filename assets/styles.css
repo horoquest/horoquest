@@ -663,6 +663,14 @@ img, svg { display: block; max-width: 100%; }
   margin: 0 0 36px;
   text-wrap: balance;
 }
+.q-image {
+  margin: -12px 0 32px;
+  max-width: 400px;
+}
+.q-image img {
+  width: 100%;
+  height: auto;
+}
 .answers {
   display: flex; flex-direction: column;
   gap: 12px;

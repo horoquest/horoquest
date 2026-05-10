@@ -29,6 +29,7 @@
     <div id="quizContent" hidden>
       <div class="q-num">Question <strong id="qNum">1</strong>/10</div>
       <h1 class="q-text" id="qText"></h1>
+      <div class="q-image" id="qImage" hidden></div>
       <div class="answers" id="answers"></div>
       <div class="explain" id="explain" hidden></div>
       <div class="next-row" id="nextRow" hidden>
@@ -78,7 +79,7 @@ async function init() {
 
 async function fetchQuestions(filterValue) {
   try {
-    let url = `${SUPABASE_URL}/rest/v1/questions?select=id,text,explanation,difficulty,answers(id,text,is_correct)`;
+    let url = `${SUPABASE_URL}/rest/v1/questions?select=id,text,explanation,difficulty,image_url,answers(id,text,is_correct)`;
     if (filterValue) url += `&theme_slugs=cs.{${filterValue}}`;
     url += '&limit=100';
     const res = await fetch(url, { headers });
@@ -106,6 +107,14 @@ function showQuestion() {
   const q = questions[current];
   document.getElementById('qNum').textContent = current + 1;
   document.getElementById('qText').textContent = q.text;
+  const qImg = document.getElementById('qImage');
+  if (q.image_url) {
+    qImg.hidden = false;
+    qImg.innerHTML = `<img src="${q.image_url}" alt="">`;
+  } else {
+    qImg.hidden = true;
+    qImg.innerHTML = '';
+  }
   document.getElementById('progBar').style.width = ((current) / questions.length * 100) + '%';
   const explain = document.getElementById('explain');
   explain.hidden = true;
