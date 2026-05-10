@@ -664,7 +664,7 @@ img, svg { display: block; max-width: 100%; }
   text-wrap: balance;
 }
 .q-image {
-  margin: -12px 0 32px;
+  margin: -12px auto 32px;
   max-width: 400px;
 }
 .q-image img {
