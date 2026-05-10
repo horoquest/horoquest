@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz Rolex — HOROQUEST</title>
+<title>Quiz — HOROQUEST</title>
 <link rel="stylesheet" href="../../assets/styles.css?v=2">
 </head>
-<body class="quiz-page" data-screen-label="Quiz · Rolex">
+<body class="quiz-page">
 
 <header class="quiz-header">
   <div class="container">
-    <a class="quiz-back" href="../collections/rolex.html">
+    <a class="quiz-back" id="backLink" href="../collections/index.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="15 18 9 12 15 6"/></svg>
-      <span>Rolex</span>
+      <span id="backName">Collection</span>
     </a>
     <a class="quiz-close" href="../../index.html" aria-label="Fermer">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
@@ -36,7 +36,7 @@
       </div>
     </div>
     <div id="quizEnd" hidden style="text-align:center;padding:40px 0;">
-      <div class="result-eyebrow">Quiz terminé</div>
+      <div class="result-eyebrow" id="resultEyebrow">Quiz terminé</div>
       <div class="score"><span id="finalScore">0</span><span class="max">/10</span></div>
       <div class="score-label" id="scoreLabel"></div>
       <div class="result-actions" style="justify-content:center;margin-top:24px;">
@@ -50,29 +50,50 @@
 <script>
 const SUPABASE_URL = 'https://bqnawfnkukcbqkujsskr.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxbmF3Zm5rdWtjYnFrdWpzc2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1ODQ5NDAsImV4cCI6MjA4NzE2MDk0MH0.VeSr_1gEnsn3P0_cmQBcOkJNDpUe1rbIAD8E7nSbxQM';
+const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
+
+const params = new URLSearchParams(location.search);
+const slug = params.get('slug') || 'rolex';
 
 let questions = [];
 let current = 0;
 let score = 0;
+let themeName = '';
 
-async function fetchQuestions() {
+async function init() {
+  // Load theme info
+  const tRes = await fetch(`${SUPABASE_URL}/rest/v1/themes?select=name,filter_value,slug&slug=eq.${slug}`, { headers });
+  const themes = await tRes.json();
+  if (themes.length) {
+    themeName = themes[0].name;
+    document.title = 'Quiz ' + themeName + ' — HOROQUEST';
+    document.getElementById('backName').textContent = themeName;
+    document.getElementById('backLink').href = '../collections/index.html?slug=' + themes[0].slug;
+    document.getElementById('resultEyebrow').textContent = 'Quiz terminé · ' + themeName;
+    await fetchQuestions(themes[0].filter_value);
+  } else {
+    await fetchQuestions(null);
+  }
+}
+
+async function fetchQuestions(filterValue) {
   try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/questions?select=id,text,explanation,difficulty,category_id,answers(id,text,is_correct)&limit=50`,
-      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
-    );
+    let url = `${SUPABASE_URL}/rest/v1/questions?select=id,text,explanation,difficulty,answers(id,text,is_correct)`;
+    if (filterValue) url += `&theme_slugs=cs.{${filterValue}}`;
+    url += '&limit=100';
+    const res = await fetch(url, { headers });
     let data = await res.json();
-    // Shuffle and pick 10
+    if (!Array.isArray(data)) throw new Error('Invalid response');
     data = data.filter(q => q.answers && q.answers.length === 4);
     for (let i = data.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [data[i], data[j]] = [data[j], data[i]];
     }
     questions = data.slice(0, 10);
-    if (questions.length === 0) throw new Error('Aucune question');
+    if (questions.length === 0) throw new Error('Aucune question pour ce thème');
     showQuestion();
   } catch (e) {
-    document.getElementById('loading').textContent = 'Erreur de chargement. Vérifiez la connexion.';
+    document.getElementById('loading').textContent = 'Aucune question disponible pour ce thème.';
     console.error(e);
   }
 }
@@ -93,13 +114,11 @@ function showQuestion() {
 
   const answersDiv = document.getElementById('answers');
   const letters = ['A', 'B', 'C', 'D'];
-  // Shuffle answers
   const shuffled = [...q.answers];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
-  q._shuffled = shuffled;
 
   answersDiv.innerHTML = shuffled.map((a, i) => `
     <button class="answer" data-i="${i}" data-correct="${a.is_correct}">
@@ -137,7 +156,6 @@ function handleAnswer(btn) {
 
   const q = questions[current];
 
-  // Inject wrong answer reminder + explanation inside the correct answer card
   if (correctBtn) {
     if (!isCorrect) {
       const wrongText = btn.querySelector('span:not(.letter)').textContent;
@@ -154,7 +172,6 @@ function handleAnswer(btn) {
     }
   }
 
-  // Animate: fade out wrong, expand correct
   setTimeout(() => {
     buttons.forEach(b => {
       if (b !== correctBtn) b.classList.add('fade-out');
@@ -192,7 +209,7 @@ function showResult() {
   document.getElementById('scoreLabel').textContent = label;
 }
 
-fetchQuestions();
+init();
 </script>
 </body>
 </html>

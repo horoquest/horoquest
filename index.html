@@ -105,10 +105,10 @@
       <div>
         <h4>Collections</h4>
         <ul>
-          <li><a href="fr/collections/rolex.html">Rolex</a></li>
-          <li><a href="fr/collections/omega.html">Omega</a></li>
-          <li><a href="fr/collections/haute-horlogerie.html">Haute horlogerie</a></li>
-          <li><a href="fr/collections/montres-vintage.html">Montres vintage</a></li>
+          <li><a href="fr/collections/?slug=rolex">Rolex</a></li>
+          <li><a href="fr/collections/?slug=omega">Omega</a></li>
+          <li><a href="fr/collections/?slug=haute-horlogerie">Haute horlogerie</a></li>
+          <li><a href="fr/collections/?slug=montres-vintage">Montres vintage</a></li>
         </ul>
       </div>
       <div>
@@ -159,7 +159,7 @@
 
   function cardHTML(c) {
     return `
-      <a class="coll-card" href="fr/collections/${c.slug}.html">
+      <a class="coll-card" href="fr/collections/?slug=${c.slug}">
         <div class="coll-thumb" data-placeholder="${c.name}" data-key="${c.slug}">
           ${c.isNew ? '<div class="coll-badge">Nouveau</div>' : ''}
         </div>
