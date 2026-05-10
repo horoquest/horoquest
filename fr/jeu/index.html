@@ -10,11 +10,11 @@
 
 <header class="quiz-header">
   <div class="container">
-    <a class="quiz-back" id="backLink" href="../collections/index.html">
+    <a class="quiz-back" id="backLink" href="../collections/">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="15 18 9 12 15 6"/></svg>
       <span id="backName">Collection</span>
     </a>
-    <a class="quiz-close" href="../../index.html" aria-label="Fermer">
+    <a class="quiz-close" href="/" aria-label="Fermer">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
     </a>
   </div>
@@ -41,7 +41,7 @@
       <div class="score-label" id="scoreLabel"></div>
       <div class="result-actions" style="justify-content:center;margin-top:24px;">
         <button class="btn btn-primary" onclick="location.reload()">Rejouer</button>
-        <a href="../../index.html" class="btn btn-ghost">Retour aux collections</a>
+        <a href="/" class="btn btn-ghost">Retour aux collections</a>
       </div>
     </div>
   </div>
@@ -68,7 +68,7 @@ async function init() {
     themeName = themes[0].name;
     document.title = 'Quiz ' + themeName + ' — HOROQUEST';
     document.getElementById('backName').textContent = themeName;
-    document.getElementById('backLink').href = '../collections/index.html?slug=' + themes[0].slug;
+    document.getElementById('backLink').href = '../collections/?slug=' + themes[0].slug;
     document.getElementById('resultEyebrow').textContent = 'Quiz terminé · ' + themeName;
     await fetchQuestions(themes[0].filter_value);
   } else {
