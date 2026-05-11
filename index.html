@@ -133,49 +133,71 @@
 
 <script src="assets/placeholders.js"></script>
 <script>
-  const COLLECTIONS = [
-    { name: "Rolex", q: 25, slug: "rolex", cat: "Marques", isNew: false },
-    { name: "Omega", q: 13, slug: "omega", cat: "Marques", isNew: false },
-    { name: "Conquête spatiale", q: 3, slug: "conquete-spatiale", cat: "Histoire", isNew: false },
-    { name: "Icônes du design", q: 32, slug: "icones-design", cat: "Culture", isNew: false },
-    { name: "Plongée & profondeurs", q: 7, slug: "plongee-profondeurs", cat: "Histoire", isNew: false },
-    { name: "Pilotes & aviation", q: 11, slug: "pilotes-aviation", cat: "Histoire", isNew: false },
-    { name: "Aventuriers & explorateurs", q: 11, slug: "aventuriers-explorateurs", cat: "Histoire", isNew: true },
-    { name: "Haute horlogerie", q: 14, slug: "haute-horlogerie", cat: "Technique", isNew: false },
-    { name: "Les horlogers", q: 5, slug: "les-horlogers", cat: "Histoire", isNew: false },
-    { name: "Les chronographes", q: 9, slug: "chronographes", cat: "Technique", isNew: false },
-    { name: "Célébrités & cinéma", q: 25, slug: "celebrites-cinema", cat: "Culture", isNew: false },
-    { name: "Montres militaires", q: 7, slug: "militaire", cat: "Histoire", isNew: false },
-    { name: "Scandales & faussaires", q: 3, slug: "scandales-faussaires", cat: "Culture", isNew: true },
-    { name: "Reconnais la montre", q: 6, slug: "reconnais-la-montre", cat: "Jeu", isNew: false },
-    { name: "La crise du quartz", q: 3, slug: "crise-du-quartz", cat: "Histoire", isNew: false },
-    { name: "Technique & complications", q: 11, slug: "technique-complications", cat: "Technique", isNew: false },
-    { name: "Les origines", q: 3, slug: "les-origines", cat: "Histoire", isNew: false },
-    { name: "Les montres vintage", q: 60, slug: "montres-vintage", cat: "Culture", isNew: false },
-    { name: "Horlogerie japonaise", q: 2, slug: "horlogerie-japonaise", cat: "Marques", isNew: true }
-  ];
+  const SUPABASE_URL = 'https://bqnawfnkukcbqkujsskr.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxbmF3Zm5rdWtjYnFrdWpzc2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1ODQ5NDAsImV4cCI6MjA4NzE2MDk0MH0.VeSr_1gEnsn3P0_cmQBcOkJNDpUe1rbIAD8E7nSbxQM';
+  const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
 
   const ICON_DOT = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/></svg>';
 
+  const CAT_MAP = {
+    'rolex': 'Marques', 'omega': 'Marques', 'horlogerie-japonaise': 'Marques',
+    'conquete-spatiale': 'Histoire', 'plongee-profondeurs': 'Histoire', 'pilotes-aviation': 'Histoire',
+    'aventuriers-explorateurs': 'Histoire', 'les-horlogers': 'Histoire', 'militaire': 'Histoire',
+    'crise-du-quartz': 'Histoire', 'les-origines': 'Histoire',
+    'icones-design': 'Culture', 'celebrites-cinema': 'Culture', 'scandales-faussaires': 'Culture', 'montres-vintage': 'Culture',
+    'haute-horlogerie': 'Technique', 'chronographes': 'Technique', 'technique-complications': 'Technique',
+    'reconnais-la-montre': 'Jeu'
+  };
+
   function cardHTML(c) {
+    const cat = CAT_MAP[c.slug] || '';
     return `
       <a class="coll-card" href="fr/collections/?slug=${c.slug}">
         <div class="coll-thumb" data-placeholder="${c.name}" data-key="${c.slug}">
-          ${c.isNew ? '<div class="coll-badge">Nouveau</div>' : ''}
+          ${c.image_url ? `<img src="${c.image_url}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;">` : ''}
         </div>
         <h3 class="coll-title">${c.name}</h3>
         <div class="coll-meta">
-          <span class="cat">${ICON_DOT}${c.cat}</span>
+          <span class="cat">${ICON_DOT}${cat}</span>
           <span class="sep"></span>
           <span class="type">${c.q} questions</span>
         </div>
       </a>`;
   }
 
-  document.getElementById('allGrid').innerHTML = COLLECTIONS.map(cardHTML).join('');
+  async function loadCollections() {
+    try {
+      const [themesRes, questionsRes] = await Promise.all([
+        fetch(`${SUPABASE_URL}/rest/v1/themes?select=name,slug,image_url,filter_value&is_active=eq.true&order=sort_order`, { headers }),
+        fetch(`${SUPABASE_URL}/rest/v1/questions?select=id,theme_slugs&limit=1000`, { headers })
+      ]);
+      const themes = await themesRes.json();
+      const questions = await questionsRes.json();
 
+      const counts = {};
+      if (Array.isArray(questions)) {
+        questions.forEach(q => {
+          (q.theme_slugs || []).forEach(t => { counts[t] = (counts[t] || 0) + 1; });
+        });
+      }
 
-  // smooth scroll
+      const collections = themes.map(t => ({
+        name: t.name,
+        slug: t.slug,
+        image_url: t.image_url,
+        q: counts[t.filter_value] || 0
+      }));
+
+      document.getElementById('allCount').textContent = collections.length + ' quiz';
+      document.getElementById('allGrid').innerHTML = collections.map(cardHTML).join('');
+      if (typeof loadPlaceholders === 'function') loadPlaceholders();
+    } catch (e) {
+      console.error('Failed to load collections:', e);
+    }
+  }
+
+  loadCollections();
+
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const id = a.getAttribute('href');
