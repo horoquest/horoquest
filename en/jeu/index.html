@@ -259,6 +259,7 @@ function showResult() {
     document.getElementById('resultImage').innerHTML = `<img src="${themeImage}" alt="${themeName}">`;
   }
 
+  saveScore();
   fetchAverage();
 
   if (nextTheme) {
@@ -269,6 +270,22 @@ function showResult() {
     if (nextTheme.image_url) {
       document.getElementById('nextQuizThumb').innerHTML = `<img src="${nextTheme.image_url}" alt="${nextTheme.name_en || nextTheme.name}">`;
     }
+  }
+
+  async function saveScore() {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/scores`, {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          correct_count: score,
+          total_questions: questions.length,
+          theme_slug: slug,
+          mode: 'collection',
+          score: score * 100
+        })
+      });
+    } catch(e) {}
   }
 
   async function fetchAverage() {

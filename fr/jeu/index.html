@@ -254,6 +254,8 @@ function showResult() {
                 pct >= 0.3 ? 'Apprenti horloger' : 'Novice curieux';
   document.getElementById('scoreLabel').textContent = label;
 
+  saveScore();
+
   if (themeImage) {
     document.getElementById('resultImage').innerHTML = `<img src="${themeImage}" alt="${themeName}">`;
   }
@@ -268,6 +270,22 @@ function showResult() {
     if (nextTheme.image_url) {
       document.getElementById('nextQuizThumb').innerHTML = `<img src="${nextTheme.image_url}" alt="${nextTheme.name}">`;
     }
+  }
+
+  async function saveScore() {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/scores`, {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          correct_count: score,
+          total_questions: questions.length,
+          theme_slug: slug,
+          mode: 'collection',
+          score: score * 100
+        })
+      });
+    } catch(e) {}
   }
 
   async function fetchAverage() {
