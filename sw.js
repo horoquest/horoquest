@@ -13,7 +13,7 @@ var CDN_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js'
 ];
 
-// Install — cache static + CDN assets
+// Install: cache static + CDN assets
 self.addEventListener('install', function(e) {
   e.waitUntil(
     Promise.all([
@@ -29,7 +29,7 @@ self.addEventListener('install', function(e) {
   );
 });
 
-// Activate — clean old caches
+// Activate: clean old caches
 self.addEventListener('activate', function(e) {
   var keep = [CACHE_NAME, CDN_CACHE];
   e.waitUntil(
@@ -44,7 +44,7 @@ self.addEventListener('activate', function(e) {
   );
 });
 
-// Fetch — network first for app, cache first for CDN, skip API
+// Fetch: network first for app, cache first for CDN, skip API
 self.addEventListener('fetch', function(e) {
   var url = new URL(e.request.url);
 

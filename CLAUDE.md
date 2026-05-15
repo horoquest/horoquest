@@ -67,10 +67,46 @@ Accès protégé par email (`joshua.grillet@proton.me`).
 
 ## Règles de travail
 - **Ne jamais faire d'action irréversible sans confirmation** (suppression, push, migration DB destructive)
-- Expliquer le code seulement si demandé — ne pas surcharger
+- **Pas de tiret cadratin (—)** dans le projet : utiliser `|` dans les `<title>`, `. ` ou `,` dans le copy, `·` dans les textes de partage
+- Expliquer le code seulement si demandé, ne pas surcharger
 - Préférer modifier des fichiers existants plutôt que d'en créer de nouveaux
 - Garder le code lisible (pas de minification manuelle)
-- Le service worker (`sw.js`) est sensible — le modifier avec précaution
+- Le service worker (`sw.js`) est sensible, le modifier avec précaution
 
 ## Déploiement
 Push sur GitHub → Vercel déploie automatiquement. Pas de CI/CD supplémentaire.
+
+## Génération de questions
+
+### Format
+Chaque question doit avoir :
+- `text` + `text_en` (FR + EN)
+- `difficulty` : 1 à 5
+- `explanation` + `explanation_en` : apporte un contexte au-delà de la simple confirmation
+- `image_url` : null par défaut
+- `category_id` : UUID de la catégorie (voir ci-dessous)
+- 4 réponses : `text`, `text_en`, `is_correct` (une seule vraie)
+
+Catégories et leurs UUIDs :
+- `culture` → `836cc785-96bc-4763-a383-658676ca6f62`
+- `histoire` → `60ada245-85d0-492d-8e6c-749bfec9ee2d`
+- `technique` → `67284ae1-2e6b-4015-904b-e1cb0d88fcaf`
+- `identification` → `6c3067e9-fc11-47e0-a976-5750d7eccec9`
+
+### Exigences de qualité
+- Les faits doivent être vérifiés et précis
+- Les mauvaises réponses doivent être plausibles (pas des absurdités)
+- Le style est narratif/anecdotique — pas "Quelle année X a été fondé" mais "Pourquoi X a fait Y"
+- Distribution cible : diff 1 (rare), diff 2-3 (majorité), diff 4-5 (expert)
+- Toujours proposer les questions à Joshua pour validation avant push
+- Joshua corrige les difficultés et retire les questions qui ne lui conviennent pas
+
+### Push vers Supabase
+Les INSERT nécessitent un JWT authentifié (RLS bloque la clé anon).
+
+**Obtenir le token** : sur horoquest-admin.vercel.app (connecté), ouvrir la Console DevTools et taper :
+```javascript
+localStorage.getItem('hqa_tok')
+```
+
+**Script d'insertion** : utiliser un script Python avec `urllib.request`, en passant le JWT dans le header `Authorization: Bearer <token>`. Insérer d'abord la question (récupérer l'`id` retourné), puis les 4 réponses avec `question_id`.

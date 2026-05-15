@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Collection — HOROQUEST</title>
+<title>Collection | HOROQUEST</title>
 <link rel="stylesheet" href="../../assets/styles.css?v=3">
 </head>
 <body>
@@ -51,8 +51,8 @@
   <section class="section" style="padding-top:32px;">
     <div class="container">
       <div class="section-head">
-        <h2>Découvrir d'autres collections</h2>
-        <a href="/#collections" class="meta" style="text-decoration:none;">Voir tout →</a>
+        <h2>Envie d'un autre défi ?</h2>
+        <a href="/#collections" class="meta" style="text-decoration:none;">Tous les quiz →</a>
       </div>
       <div class="coll-grid" id="otherGrid"></div>
     </div>
@@ -87,7 +87,7 @@ async function load() {
   if (!themes.length) { document.title = 'Collection introuvable'; return; }
   const theme = themes[0];
 
-  document.title = theme.name + ' — HOROQUEST';
+  document.title = theme.name + ' | HOROQUEST';
   document.getElementById('breadcrumbName').textContent = theme.name;
   document.getElementById('collName').textContent = theme.name + '.';
   document.getElementById('collDesc').textContent = theme.description;

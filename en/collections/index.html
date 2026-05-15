@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Collection — HOROQUEST</title>
+<title>Collection | HOROQUEST</title>
 <link rel="stylesheet" href="../../assets/styles.css?v=3">
 </head>
 <body>
@@ -51,8 +51,8 @@
   <section class="section" style="padding-top:32px;">
     <div class="container">
       <div class="section-head">
-        <h2>Discover other collections</h2>
-        <a href="/en/#collections" class="meta" style="text-decoration:none;">See all →</a>
+        <h2>Up for another one?</h2>
+        <a href="/en/#collections" class="meta" style="text-decoration:none;">All quizzes →</a>
       </div>
       <div class="coll-grid" id="otherGrid"></div>
     </div>
@@ -90,7 +90,7 @@ async function load() {
   const name = theme.name_en || theme.name;
   const desc = theme.description_en || theme.description;
 
-  document.title = name + ' — HOROQUEST';
+  document.title = name + ' | HOROQUEST';
   document.getElementById('breadcrumbName').textContent = name;
   document.getElementById('collName').textContent = name + '.';
   document.getElementById('collDesc').textContent = desc;

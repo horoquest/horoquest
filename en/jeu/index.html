@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz — HOROQUEST</title>
+<title>Quiz | HOROQUEST</title>
 <link rel="stylesheet" href="../../assets/styles.css?v=2">
 </head>
 <body class="quiz-page">
@@ -93,7 +93,7 @@ async function init() {
     const theme = themes[0];
     themeName = theme.name_en || theme.name;
     themeImage = theme.image_url || '';
-    document.title = themeName + ' Quiz — HOROQUEST';
+    document.title = themeName + ' Quiz | HOROQUEST';
     document.getElementById('backName').textContent = themeName;
     document.getElementById('backLink').href = '../collections/?slug=' + theme.slug;
     document.getElementById('resultEyebrow').textContent = 'Quiz complete · ' + themeName;
@@ -249,10 +249,10 @@ function showResult() {
   document.getElementById('quizEnd').hidden = false;
   document.getElementById('finalScore').textContent = score;
   const pct = score / questions.length;
-  const label = pct >= 0.9 ? 'Master Watchmaker!' :
-                pct >= 0.7 ? 'Seasoned Connoisseur' :
-                pct >= 0.5 ? 'Enlightened Enthusiast' :
-                pct >= 0.3 ? 'Apprentice Watchmaker' : 'Curious Novice';
+  const label = pct >= 0.9 ? 'Nailed it!' :
+                pct >= 0.7 ? 'Sharp eye' :
+                pct >= 0.5 ? 'Well played' :
+                pct >= 0.3 ? 'Not bad for a start' : 'It\'s all ahead of you';
   document.getElementById('scoreLabel').textContent = label;
 
   if (themeImage) {
@@ -301,7 +301,7 @@ function showResult() {
   }
 
   document.getElementById('shareBtn').addEventListener('click', async () => {
-    const text = `${themeName} — ${score}/${questions.length} on HOROQUEST!`;
+    const text = `${themeName} · ${score}/${questions.length} on HOROQUEST!`;
     if (navigator.share) {
       try { await navigator.share({ title: 'HOROQUEST', text, url: location.href }); } catch(e) {}
     } else {

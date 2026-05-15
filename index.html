@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HOROQUEST — Quiz horloger</title>
+<title>HOROQUEST | Quiz horloger</title>
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
@@ -33,8 +33,8 @@
   <div class="container">
     <div class="hero-grid">
       <div>
-        <h1>Testez votre <em>culture horlogère</em>.</h1>
-        <p class="lead">Quiz thématiques sur l'univers des montres&nbsp;— de Rolex aux montres vintage, des chronographes à la haute horlogerie. Choisissez un thème, répondez à dix questions.</p>
+        <h1>Vous connaissez vraiment <em>vos montres</em>&nbsp;?</h1>
+        <p class="lead">19 quiz pour mettre vos connaissances à l'épreuve, des anecdotes méconnues aux détails techniques qui font la différence. On apprend autant qu'on joue.</p>
         <div class="hero-actions">
           <a href="#collections" class="btn btn-primary btn-lg">Commencer un quiz</a>
           <a href="#how" class="btn btn-ghost btn-lg">Comment ça marche</a>
@@ -74,20 +74,20 @@
       <div class="step">
         <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><circle cx="8" cy="14" r="1.3" fill="currentColor"/></svg>
         <div class="num">01</div>
-        <h3>Choisissez une collection</h3>
-        <p>Rolex, plongée, aviation, haute horlogerie… 19 thématiques au choix, du débutant à l'expert.</p>
+        <h3>Choisissez votre terrain</h3>
+        <p>Rolex, conquête spatiale, montres vintage, complications… 19 thèmes, du plus accessible au plus pointu.</p>
       </div>
       <div class="step">
         <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
         <div class="num">02</div>
-        <h3>Répondez à 10 questions</h3>
-        <p>Une explication accompagne chaque réponse pour apprendre en jouant. Sans pression.</p>
+        <h3>Répondez (et apprenez)</h3>
+        <p>10 questions par quiz. Chaque réponse vient avec son explication. Les erreurs sont les meilleurs profs.</p>
       </div>
       <div class="step">
         <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 21V10"/><path d="M12 21V4"/><path d="M18 21v-7"/></svg>
         <div class="num">03</div>
-        <h3>Découvrez votre score</h3>
-        <p>Comparez-vous à la moyenne, partagez votre résultat et enchaînez avec une autre collection.</p>
+        <h3>Comparez-vous</h3>
+        <p>Votre score face à la moyenne, un résultat à partager, et un prochain quiz qui n'attend que vous.</p>
       </div>
     </div>
   </div>
@@ -100,7 +100,7 @@
     <div class="footer-top">
       <div>
         <div class="logo">HOROQUEST<span class="dot"></span></div>
-        <p>Quiz thématiques sur l'horlogerie&nbsp;— de la haute horlogerie aux montres vintage.</p>
+        <p>Pour ceux qui regardent les montres, pas l'heure.</p>
       </div>
       <div>
         <h4>Collections</h4>
@@ -137,20 +137,7 @@
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxbmF3Zm5rdWtjYnFrdWpzc2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1ODQ5NDAsImV4cCI6MjA4NzE2MDk0MH0.VeSr_1gEnsn3P0_cmQBcOkJNDpUe1rbIAD8E7nSbxQM';
   const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
 
-  const ICON_DOT = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/></svg>';
-
-  const CAT_MAP = {
-    'rolex': 'Marques', 'omega': 'Marques', 'horlogerie-japonaise': 'Marques',
-    'conquete-spatiale': 'Histoire', 'plongee-profondeurs': 'Histoire', 'pilotes-aviation': 'Histoire',
-    'aventuriers-explorateurs': 'Histoire', 'les-horlogers': 'Histoire', 'militaire': 'Histoire',
-    'crise-du-quartz': 'Histoire', 'les-origines': 'Histoire',
-    'icones-design': 'Culture', 'celebrites-cinema': 'Culture', 'scandales-faussaires': 'Culture', 'montres-vintage': 'Culture',
-    'haute-horlogerie': 'Technique', 'chronographes': 'Technique', 'technique-complications': 'Technique',
-    'reconnais-la-montre': 'Jeu'
-  };
-
   function cardHTML(c) {
-    const cat = CAT_MAP[c.slug] || '';
     return `
       <a class="coll-card" href="fr/collections/?slug=${c.slug}">
         <div class="coll-thumb" data-placeholder="${c.name}" data-key="${c.slug}">
@@ -158,8 +145,6 @@
         </div>
         <h3 class="coll-title">${c.name}</h3>
         <div class="coll-meta">
-          <span class="cat">${ICON_DOT}${cat}</span>
-          <span class="sep"></span>
           <span class="type">${c.q} questions</span>
         </div>
       </a>`;
