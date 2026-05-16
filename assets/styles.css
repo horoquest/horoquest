@@ -569,7 +569,7 @@ img, svg { display: block; max-width: 100%; }
 .coll-hero .desc {
   font-size: 18px;
   color: var(--ink-soft);
-  margin: 0 0 16px;
+  margin: 0 auto 16px;
   max-width: 50ch;
 }
 .coll-hero .pill {
