@@ -207,7 +207,7 @@ function handleAnswer(btn) {
       const wrongText = btn.querySelector('span:not(.letter)').textContent;
       const wrongDiv = document.createElement('div');
       wrongDiv.className = 'answer-wrong-recall';
-      wrongDiv.innerHTML = '<span class="wrong-label">Votre réponse</span>' + wrongText;
+      wrongDiv.innerHTML = '<span class="wrong-label">Ta réponse</span>' + wrongText;
       correctBtn.insertBefore(wrongDiv, correctBtn.querySelector('.letter').nextSibling);
     }
     if (q.explanation) {
