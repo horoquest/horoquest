@@ -399,7 +399,16 @@ img, svg { display: block; max-width: 100%; }
   transition: transform var(--t), box-shadow var(--t);
 }
 .hero-daily:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-.hero-daily-icon { width: 96px; height: 96px; color: #fff; opacity: .95; margin-bottom: 20px; }
+.hero-daily-moon { width: 183px; height: 183px; margin-bottom: 26px; }
+.hero-daily-moon .moon-disc {
+  transform-box: view-box;
+  transform-origin: 60px 68px;
+  animation: hq-moon-spin 18s linear infinite;
+}
+@keyframes hq-moon-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-daily-moon .moon-disc { animation: none; }
+}
 .hero-daily-foot { padding: 0 28px; }
 .hero-daily-foot strong { display: block; font-size: 22px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 4px; }
 .hero-daily-foot span { font-size: 14px; opacity: .85; }

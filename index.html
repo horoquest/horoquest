@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HOROQUEST | Quiz horloger</title>
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/styles.css?v=5">
 </head>
 <body>
 
@@ -47,7 +47,41 @@
       <a class="hero-illu hero-daily" href="fr/defi/">
         <span class="daily-card-label">Défi du jour</span>
         <span class="daily-streak-chip" id="heroStreakChip" hidden></span>
-        <svg class="hero-daily-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <svg class="hero-daily-moon" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+          <defs>
+            <clipPath id="hqMoonWin">
+              <path d="M16 60 A44.3 44.3 0 0 1 104 60 A22 9 0 0 0 60 60 A22 9 0 0 0 16 60 Z"/>
+            </clipPath>
+            <path id="hqStar" d="M0,-1L0.264,-0.364L0.951,-0.309L0.428,0.139L0.588,0.809L0,0.45L-0.588,0.809L-0.428,0.139L-0.951,-0.309L-0.264,-0.364Z" vector-effect="non-scaling-stroke"/>
+          </defs>
+          <g clip-path="url(#hqMoonWin)">
+            <rect x="6" y="6" width="108" height="108" fill="#971f14"/>
+            <g class="moon-disc">
+              <circle cx="60" cy="38" r="15" fill="#f5ead0"/>
+              <circle cx="60" cy="98" r="15" fill="#f5ead0"/>
+              <g stroke="#ecd6a6" stroke-width="1.3" fill="none">
+                <use href="#hqStar" transform="translate(46 26) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(74 26) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(30 42) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(90 42) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(20 60) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(100 60) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(40 56) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(80 56) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(60 60) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(28 76) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(92 76) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(46 72) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(74 72) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(38 90) scale(2.8)"/>
+                <use href="#hqStar" transform="translate(82 90) scale(2.8)"/>
+              </g>
+            </g>
+          </g>
+          <circle cx="60" cy="60" r="50" stroke="#ecd6a6" stroke-width="2"/>
+          <path d="M16 60 A44.3 44.3 0 0 1 104 60 A22 9 0 0 0 60 60 A22 9 0 0 0 16 60 Z" stroke="#ecd6a6" stroke-width="1.5"/>
+          <text x="60" y="82" text-anchor="middle" fill="#ecd6a6" opacity="0.78" font-size="6.2" letter-spacing="2" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">HOROQUEST</text>
+        </svg>
         <div class="hero-daily-foot">
           <strong>Relève le défi du jour</strong>
           <span id="heroDailyState">5 questions · nouveau chaque jour</span>
