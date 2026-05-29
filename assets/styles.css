@@ -386,6 +386,45 @@ img, svg { display: block; max-width: 100%; }
 }
 .coll-meta .type { color: var(--accent); font-weight: 500; }
 
+/* ========== DEFI DU JOUR (hero accueil) ========== */
+.hero-daily {
+  background: linear-gradient(150deg, var(--accent) 0%, var(--accent-dark) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--t), box-shadow var(--t);
+}
+.hero-daily:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.hero-daily-icon { width: 96px; height: 96px; color: #fff; opacity: .95; margin-bottom: 20px; }
+.hero-daily-foot { padding: 0 28px; }
+.hero-daily-foot strong { display: block; font-size: 22px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 4px; }
+.hero-daily-foot span { font-size: 14px; opacity: .85; }
+.daily-card-label {
+  position: absolute;
+  top: 16px; left: 16px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.18);
+  padding: 5px 9px;
+}
+.daily-streak-chip {
+  position: absolute;
+  top: 16px; right: 16px;
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 600;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 4px 8px;
+}
+.daily-streak-chip svg { width: 13px; height: 13px; }
+
 /* ========== FEATURED BANNER ========== */
 .featured {
   border-radius: var(--radius-lg);

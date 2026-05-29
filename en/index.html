@@ -43,10 +43,15 @@
           <span><strong style="color:var(--ink);">20 collections</strong> · 250+ questions · free</span>
         </div>
       </div>
-      <div class="hero-illu" data-placeholder="Vintage chronograph" data-key="hero-watch">
-        <div class="badge">New · Japanese</div>
-        <div class="stat"><strong>1 423</strong>players this week</div>
-      </div>
+      <a class="hero-illu hero-daily" href="daily/">
+        <span class="daily-card-label">Daily Challenge</span>
+        <span class="daily-streak-chip" id="heroStreakChip" hidden></span>
+        <svg class="hero-daily-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <div class="hero-daily-foot">
+          <strong>Take today's challenge</strong>
+          <span id="heroDailyState">5 questions · new every day</span>
+        </div>
+      </a>
     </div>
   </div>
 </section>
@@ -147,6 +152,31 @@
       </a>`;
   }
 
+  const FLAME_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
+
+  function populateHeroDaily() {
+    let streak = 0, playedToday = false;
+    try {
+      const s = JSON.parse(localStorage.getItem('hq_daily')) || {};
+      const fmt = d => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
+      const today = fmt(new Date());
+      const yesterday = fmt(new Date(Date.now() - 86400000));
+      if (s.today && s.today.date === today) playedToday = true;
+      if (s.streak && (s.lastPlayed === today || s.lastPlayed === yesterday)) streak = s.streak;
+    } catch (e) {}
+    const stateEl = document.getElementById('heroDailyState');
+    if (stateEl) {
+      stateEl.textContent = playedToday ? 'Played today · come back tomorrow'
+        : (streak > 0 ? 'Streak of ' + streak + ' day' + (streak > 1 ? 's' : '') + ' going'
+        : '5 questions · new every day');
+    }
+    const chip = document.getElementById('heroStreakChip');
+    if (chip && streak > 0) {
+      chip.innerHTML = FLAME_SVG + streak;
+      chip.hidden = false;
+    }
+  }
+
   async function loadCollections() {
     try {
       const [themesRes, questionsRes] = await Promise.all([
@@ -178,6 +208,7 @@
     }
   }
 
+  populateHeroDaily();
   loadCollections();
 
   document.querySelectorAll('a[href^="#"]').forEach(a => {
