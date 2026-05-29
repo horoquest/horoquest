@@ -24,6 +24,19 @@
       <button class="burger" aria-label="Menu"><span></span></button>
     </div>
   </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <nav class="mobile-menu-nav" aria-label="Mobile">
+      <a href="/#collections">Collections</a>
+      <a href="/#how">Comment ça marche</a>
+      <a href="#" class="mobile-login">Connexion</a>
+    </nav>
+    <div class="mobile-menu-lang">
+      <div class="lang-toggle">
+        <a href="/fr/collections/" class="lang-btn on" id="mLangFR">FR</a>
+        <a href="/en/collections/" class="lang-btn" id="mLangEN">EN</a>
+      </div>
+    </div>
+  </div>
 </header>
 
 <main>
@@ -95,6 +108,8 @@ async function load() {
 
   document.getElementById('langFR').href = '/fr/collections/?slug=' + theme.slug;
   document.getElementById('langEN').href = '/en/collections/?slug=' + theme.slug;
+  document.getElementById('mLangFR').href = '/fr/collections/?slug=' + theme.slug;
+  document.getElementById('mLangEN').href = '/en/collections/?slug=' + theme.slug;
 
   // Count questions
   const qRes = await fetch(`${SUPABASE_URL}/rest/v1/questions?select=id&theme_slugs=cs.{${theme.filter_value}}`, { headers });
@@ -124,6 +139,7 @@ async function load() {
 }
 load();
 </script>
+<script src="../../assets/menu.js"></script>
 
 </body>
 </html>

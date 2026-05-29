@@ -24,6 +24,19 @@
       <button class="burger" aria-label="Menu"><span></span></button>
     </div>
   </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <nav class="mobile-menu-nav" aria-label="Mobile">
+      <a href="#collections">Collections</a>
+      <a href="#how">Comment ça marche</a>
+      <a href="#" class="mobile-login">Connexion</a>
+    </nav>
+    <div class="mobile-menu-lang">
+      <div class="lang-toggle">
+        <a href="/" class="lang-btn on">FR</a>
+        <a href="/en/" class="lang-btn">EN</a>
+      </div>
+    </div>
+  </div>
 </header>
 
 <main>
@@ -170,6 +183,7 @@
   </div>
 </footer>
 
+<script src="assets/menu.js"></script>
 <script src="assets/placeholders.js"></script>
 <script>
   const SUPABASE_URL = 'https://bqnawfnkukcbqkujsskr.supabase.co';
