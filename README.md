@@ -2,7 +2,7 @@
 
 Quiz horloger PWA — testez vos connaissances en horlogerie.
 
-**https://horoquest.vercel.app**
+**https://horoquest.app**
 
 ## Features
 

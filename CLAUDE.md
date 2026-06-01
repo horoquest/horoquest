@@ -8,7 +8,7 @@ Public cible : grand public, professionnels de l'horlogerie, apprenants.
 ## Stack
 - **Frontend** : Vanilla JS, HTML/CSS statiques (pas de build tool, pas de framework)
 - **Base de données** : Supabase (PostgreSQL + auth + REST API)
-- **Hébergement** : Vercel (horoquest.vercel.app)
+- **Hébergement** : Vercel (horoquest.app)
 - **Repos** : GitHub public
   - App : https://github.com/horoquest/horoquest
   - Admin : https://github.com/horoquest/horoquest-admin

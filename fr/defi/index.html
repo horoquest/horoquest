@@ -323,7 +323,7 @@ function renderResult(score, streak, best, alreadyPlayed) {
   startCountdown();
 
   document.getElementById('shareBtn').onclick = async () => {
-    const text = `HOROQUEST · Défi du jour ${dateLabel}\n${shareGrid()}\n${score}/${DAILY_COUNT} · Série ${streak}\nhttps://horoquest.vercel.app/fr/defi/`;
+    const text = `HOROQUEST · Défi du jour ${dateLabel}\n${shareGrid()}\n${score}/${DAILY_COUNT} · Série ${streak}\nhttps://horoquest.app/fr/defi/`;
     if (navigator.share) {
       try { await navigator.share({ title: 'HOROQUEST', text }); } catch(e) {}
     } else {

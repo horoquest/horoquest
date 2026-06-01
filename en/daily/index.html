@@ -320,7 +320,7 @@ function renderResult(score, streak, best, alreadyPlayed) {
   startCountdown();
 
   document.getElementById('shareBtn').onclick = async () => {
-    const text = `HOROQUEST · Daily Challenge ${dateLabel}\n${shareGrid()}\n${score}/${DAILY_COUNT} · Streak ${streak}\nhttps://horoquest.vercel.app/en/daily/`;
+    const text = `HOROQUEST · Daily Challenge ${dateLabel}\n${shareGrid()}\n${score}/${DAILY_COUNT} · Streak ${streak}\nhttps://horoquest.app/en/daily/`;
     if (navigator.share) {
       try { await navigator.share({ title: 'HOROQUEST', text }); } catch(e) {}
     } else {
