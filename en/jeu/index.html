@@ -67,6 +67,19 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
       </div>
+      <div class="email-capture" id="emailCapture" hidden>
+        <div class="email-capture-inner">
+          <div class="email-capture-text">
+            <strong>A new quiz in your inbox</strong>
+            <p>Join the enthusiasts who get a quiz and a watch story. No spam.</p>
+          </div>
+          <form class="email-capture-form" id="emailForm" novalidate>
+            <input type="email" id="emailInput" name="email" placeholder="you@email.com" required autocomplete="email">
+            <button type="submit" class="btn btn-primary" id="emailSubmit">Sign me up</button>
+          </form>
+          <div class="email-capture-note" id="emailNote">Unsubscribe in one click.</div>
+        </div>
+      </div>
     </div>
   </div>
 </main>
@@ -75,6 +88,10 @@
 const SUPABASE_URL = 'https://bqnawfnkukcbqkujsskr.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxbmF3Zm5rdWtjYnFrdWpzc2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1ODQ5NDAsImV4cCI6MjA4NzE2MDk0MH0.VeSr_1gEnsn3P0_cmQBcOkJNDpUe1rbIAD8E7nSbxQM';
 const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
+
+// MailerLite: replace both XXXXXX with your account ID and form ID (same IDs as the FR page)
+const ML_ACCOUNT = 'XXXXXX';
+const ML_FORM = 'XXXXXX';
 
 const params = new URLSearchParams(location.search);
 const slug = params.get('slug') || 'rolex';
@@ -272,6 +289,8 @@ function showResult() {
     }
   }
 
+  showEmailCapture();
+
   async function saveScore() {
     try {
       await fetch(`${SUPABASE_URL}/rest/v1/scores`, {
@@ -306,6 +325,41 @@ function showResult() {
       try { await navigator.share({ title: 'HOROQUEST', text, url: location.href }); } catch(e) {}
     } else {
       await navigator.clipboard.writeText(text + ' ' + location.href);
+    }
+  });
+}
+
+function showEmailCapture() {
+  if (ML_ACCOUNT === 'XXXXXX') return;          // not configured yet
+  if (localStorage.getItem('hq_sub')) return;   // already subscribed
+  const box = document.getElementById('emailCapture');
+  if (box) box.hidden = false;
+}
+
+const emailForm = document.getElementById('emailForm');
+if (emailForm) {
+  emailForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = document.getElementById('emailInput');
+    const btn = document.getElementById('emailSubmit');
+    const note = document.getElementById('emailNote');
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) { note.textContent = 'Enter a valid address.'; return; }
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    try {
+      const data = new FormData();
+      data.append('fields[email]', email);
+      data.append('ml-submit', '1');
+      data.append('anticsrf', 'true');
+      await fetch(`https://assets.mailerlite.com/jsonp/${ML_ACCOUNT}/forms/${ML_FORM}/subscribe`, { method: 'POST', body: data });
+      localStorage.setItem('hq_sub', '1');
+      document.querySelector('#emailCapture .email-capture-inner').innerHTML =
+        '<div class="email-capture-success">All set. Check your inbox.</div>';
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Sign me up';
+      note.textContent = 'Something went wrong, try again.';
     }
   });
 }
