@@ -89,6 +89,19 @@
         <div class="result-buttons" style="margin-top:18px;">
           <a href="/en/" class="btn btn-ghost">Play a collection</a>
         </div>
+        <div class="email-capture" id="emailCapture" hidden>
+          <div class="email-capture-inner">
+            <div class="email-capture-text">
+              <strong>Never miss the daily challenge</strong>
+              <p>Join the enthusiasts who get the challenge and a watch story every day. No spam.</p>
+            </div>
+            <form class="email-capture-form" id="emailForm" novalidate>
+              <input type="email" id="emailInput" name="email" placeholder="you@email.com" required autocomplete="email">
+              <button type="submit" class="btn btn-primary" id="emailSubmit">Sign me up</button>
+            </form>
+            <div class="email-capture-note" id="emailNote">Unsubscribe in one click.</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -102,6 +115,10 @@ const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_
 
 const DAILY_COUNT = 5;
 const STORE_KEY = 'hq_daily';
+
+// MailerLite: "Passionnés Horoquest" group, EN result-page form
+const ML_ACCOUNT = '2398064';
+const ML_FORM = '189114013441852559';
 
 // Today's date in Paris time, YYYY-MM-DD (same challenge for everyone, shared with the FR page)
 function parisDate(d) {
@@ -318,6 +335,7 @@ function renderResult(score, streak, best, alreadyPlayed) {
 
   fetchAverage();
   startCountdown();
+  showEmailCapture();
 
   document.getElementById('shareBtn').onclick = async () => {
     const text = `HOROQUEST · Daily Challenge ${dateLabel}\n${shareGrid()}\n${score}/${DAILY_COUNT} · Streak ${streak}\nhttps://horoquest.app/en/daily/`;
@@ -382,6 +400,41 @@ function startCountdown() {
   }
   tick();
   setInterval(tick, 1000);
+}
+
+function showEmailCapture() {
+  if (ML_ACCOUNT === 'XXXXXX') return;          // not configured yet
+  if (localStorage.getItem('hq_sub')) return;   // already subscribed
+  const box = document.getElementById('emailCapture');
+  if (box) box.hidden = false;
+}
+
+const emailForm = document.getElementById('emailForm');
+if (emailForm) {
+  emailForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = document.getElementById('emailInput');
+    const btn = document.getElementById('emailSubmit');
+    const note = document.getElementById('emailNote');
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) { note.textContent = 'Enter a valid address.'; return; }
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    try {
+      const data = new FormData();
+      data.append('fields[email]', email);
+      data.append('ml-submit', '1');
+      data.append('anticsrf', 'true');
+      await fetch(`https://assets.mailerlite.com/jsonp/${ML_ACCOUNT}/forms/${ML_FORM}/subscribe`, { method: 'POST', body: data });
+      localStorage.setItem('hq_sub', '1');
+      document.querySelector('#emailCapture .email-capture-inner').innerHTML =
+        '<div class="email-capture-success">All set. Check your inbox.</div>';
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Sign me up';
+      note.textContent = 'Something went wrong, try again.';
+    }
+  });
 }
 
 init();

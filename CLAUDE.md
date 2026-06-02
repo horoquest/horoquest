@@ -71,7 +71,7 @@ Accès protégé par email (`joshua.grillet@proton.me`).
   - Tiret : utiliser `|` dans les `<title>`, `. ` ou `,` dans le copy, `·` dans les textes de partage
   - Emojis : aucun emoji dans l'interface ni dans les textes. Utiliser des icônes SVG (comme le reste du site) ou des éléments colorés en CSS (ex. carrés de score verts/rouges). Pour un partage type Wordle, utiliser des caractères monochromes (`■` / `□`), jamais d'emojis
 - **Mise en page soignée** : alignements cohérents et éléments bien centrés (surtout dans une colonne centrée), espacements réguliers. Viser un rendu propre et agréable à regarder
-- **Vocabulaire joueurs** : désigner les joueurs comme des « passionnés » (passionné·e·s), jamais des « horlogers ». Garder « horlogerie » et « culture horlogère » uniquement pour parler du domaine
+- **Vocabulaire joueurs** : désigner les joueurs comme des « passionnés » (forme simple, pas d'écriture inclusive), jamais des « horlogers ». Garder « horlogerie » et « culture horlogère » uniquement pour parler du domaine
 - Expliquer le code seulement si demandé, ne pas surcharger
 - Préférer modifier des fichiers existants plutôt que d'en créer de nouveaux
 - Garder le code lisible (pas de minification manuelle)

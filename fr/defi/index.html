@@ -93,6 +93,19 @@
         <div class="result-buttons" style="margin-top:18px;">
           <a href="/" class="btn btn-ghost">Jouer une collection</a>
         </div>
+        <div class="email-capture" id="emailCapture" hidden>
+          <div class="email-capture-inner">
+            <div class="email-capture-text">
+              <strong>Ne rate jamais le défi du jour</strong>
+              <p>Rejoins les passionnés qui reçoivent le défi et une anecdote horlogère chaque jour. Pas de spam.</p>
+            </div>
+            <form class="email-capture-form" id="emailForm" novalidate>
+              <input type="email" id="emailInput" name="email" placeholder="ton@email.com" required autocomplete="email">
+              <button type="submit" class="btn btn-primary" id="emailSubmit">Je m'inscris</button>
+            </form>
+            <div class="email-capture-note" id="emailNote">Désinscription en un clic.</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -106,6 +119,10 @@ const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_
 
 const DAILY_COUNT = 5;
 const STORE_KEY = 'hq_daily';
+
+// MailerLite : groupe "Passionnés Horoquest", formulaire "Capture page résultat"
+const ML_ACCOUNT = '2398064';
+const ML_FORM = '189107300234954370';
 
 // Date du jour en fuseau Paris, format YYYY-MM-DD (le même défi pour tout le monde)
 function parisDate(d) {
@@ -321,6 +338,7 @@ function renderResult(score, streak, best, alreadyPlayed) {
 
   fetchAverage();
   startCountdown();
+  showEmailCapture();
 
   document.getElementById('shareBtn').onclick = async () => {
     const text = `HOROQUEST · Défi du jour ${dateLabel}\n${shareGrid()}\n${score}/${DAILY_COUNT} · Série ${streak}\nhttps://horoquest.app/fr/defi/`;
@@ -364,7 +382,7 @@ async function fetchAverage() {
       const avg = scores.reduce((s, x) => s + (x.correct_count / x.total_questions) * 100, 0) / scores.length;
       const n = scores.length;
       document.getElementById('resultAvg').textContent =
-        `${n} passionné·e·s ont relevé le défi aujourd'hui · moyenne ${avg.toFixed(0)}%`;
+        `${n} passionnés ont relevé le défi aujourd'hui · moyenne ${avg.toFixed(0)}%`;
     }
   } catch(e) {}
 }
@@ -387,6 +405,41 @@ function startCountdown() {
   }
   tick();
   setInterval(tick, 1000);
+}
+
+function showEmailCapture() {
+  if (ML_ACCOUNT === 'XXXXXX') return;          // pas encore configuré
+  if (localStorage.getItem('hq_sub')) return;   // déjà inscrit
+  const box = document.getElementById('emailCapture');
+  if (box) box.hidden = false;
+}
+
+const emailForm = document.getElementById('emailForm');
+if (emailForm) {
+  emailForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = document.getElementById('emailInput');
+    const btn = document.getElementById('emailSubmit');
+    const note = document.getElementById('emailNote');
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) { note.textContent = 'Entre une adresse valide.'; return; }
+    btn.disabled = true;
+    btn.textContent = 'Envoi…';
+    try {
+      const data = new FormData();
+      data.append('fields[email]', email);
+      data.append('ml-submit', '1');
+      data.append('anticsrf', 'true');
+      await fetch(`https://assets.mailerlite.com/jsonp/${ML_ACCOUNT}/forms/${ML_FORM}/subscribe`, { method: 'POST', body: data });
+      localStorage.setItem('hq_sub', '1');
+      document.querySelector('#emailCapture .email-capture-inner').innerHTML =
+        '<div class="email-capture-success">C\'est noté. Surveille ta boîte mail.</div>';
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Je m\'inscris';
+      note.textContent = 'Une erreur est survenue, réessaie.';
+    }
+  });
 }
 
 init();
