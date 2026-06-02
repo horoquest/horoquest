@@ -77,7 +77,7 @@
             <input type="email" id="emailInput" name="email" placeholder="you@email.com" required autocomplete="email">
             <button type="submit" class="btn btn-primary" id="emailSubmit">Sign me up</button>
           </form>
-          <div class="email-capture-note" id="emailNote">Unsubscribe in one click.</div>
+          <div class="email-capture-note" id="emailNote">By subscribing, you agree to receive our emails. <a href="/privacy.html" style="color:inherit;text-decoration:underline;">Privacy</a>.</div>
         </div>
       </div>
     </div>
@@ -355,7 +355,7 @@ if (emailForm) {
       await fetch(`https://assets.mailerlite.com/jsonp/${ML_ACCOUNT}/forms/${ML_FORM}/subscribe`, { method: 'POST', body: data });
       localStorage.setItem('hq_sub', '1');
       document.querySelector('#emailCapture .email-capture-inner').innerHTML =
-        '<div class="email-capture-success">All set. Check your inbox.</div>';
+        '<div class="email-capture-success">Check your inbox to confirm your subscription.</div>';
     } catch (err) {
       btn.disabled = false;
       btn.textContent = 'Sign me up';
