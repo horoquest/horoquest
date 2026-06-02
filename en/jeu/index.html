@@ -355,7 +355,7 @@ if (emailForm) {
       await fetch(`https://assets.mailerlite.com/jsonp/${ML_ACCOUNT}/forms/${ML_FORM}/subscribe`, { method: 'POST', body: data });
       localStorage.setItem('hq_sub', '1');
       document.querySelector('#emailCapture .email-capture-inner').innerHTML =
-        '<div class="email-capture-success">Check your inbox to confirm your subscription.</div>';
+        '<div class="email-capture-success">You\'re in. Keep an eye on your inbox.</div>';
     } catch (err) {
       btn.disabled = false;
       btn.textContent = 'Sign me up';
