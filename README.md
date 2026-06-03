@@ -1,24 +1,24 @@
 # HOROQUEST
 
-Quiz horloger PWA — testez vos connaissances en horlogerie.
+Quiz horloger bilingue. Teste tes connaissances sur l'univers des montres.
 
 **https://horoquest.app**
 
-## Features
+## Le jeu
 
-- 3 niveaux de difficulte (Calibre, Manufacture, Haute Horlogerie)
-- Defi quotidien avec streaks
-- Duels entre amis
-- Classements
-- Bilingue FR/EN
-- PWA installable (offline)
+- 19 collections thématiques (Rolex, conquête spatiale, plongée, chronographes, et plus)
+- Difficulté de 1 à 5, avec une explication après chaque réponse
+- Défi du jour : cinq questions quotidiennes, une série à entretenir, un résultat partageable
+- Score enregistré anonymement, page de résultat avec la moyenne des autres passionnés
+- Bilingue FR et EN
+- PWA installable, jouable hors ligne
 
 ## Stack
 
-- Vanilla JS + React 18 (CDN, zero build tool)
-- Supabase (PostgreSQL, Auth, REST API)
-- Vercel (hosting)
+- Vanilla JS, HTML et CSS statiques (pas de build tool, pas de framework)
+- Supabase (PostgreSQL, API REST)
+- Vercel (hébergement)
 
-## License
+## Licence
 
-All rights reserved.
+Tous droits réservés.
