@@ -13,6 +13,13 @@
   .rubis-gem.sparkle { animation: rubisPop .7s cubic-bezier(.2,.8,.2,1); }
   @keyframes rubisPop { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
   .rubis-total { display: block; font-size: 14px; color: var(--ink-soft); margin-top: 5px; }
+  .rank-reveal { margin: -4px 0 22px; }
+  .rank-status { font-size: 13px; color: var(--ink-soft); }
+  .rank-promo { margin: 0 0 12px; padding: 12px 14px; border-left: 2px solid var(--accent); background: var(--bg-soft); }
+  .rank-promo .rank-quote { display: block; font-style: italic; font-size: 16px; line-height: 1.5; color: var(--ink); }
+  .rank-promo .rank-by { display: block; margin-top: 6px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .ranked-up .rank-promo { animation: rankIn .5s ease both; }
+  @keyframes rankIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 </style>
 </head>
 <body class="quiz-page">
@@ -59,6 +66,10 @@
               +<span id="rubisGain">0</span> rubies
             </span>
             <span class="rubis-total" id="rubisTotalLine"></span>
+          </div>
+          <div class="rank-reveal" id="rankReveal" hidden>
+            <div class="rank-promo" id="rankPromo" hidden></div>
+            <div class="rank-status" id="rankStatus"></div>
           </div>
           <div class="result-avg" id="resultAvg"></div>
           <div class="result-actions">
@@ -293,9 +304,11 @@ function showResult() {
 
   // Rubies (Phase 1): compute, accumulate, and record mastery for the hallmarks
   const rubisGain = HQ.computeRubis(correctQuestions, questions.length);
+  const rubisBefore = HQ.getRubis();
   const rubisTotal = HQ.addRubis(rubisGain);
   HQ.recordMastery(slug, correctQuestions.map(q => q.id));
   revealRubis(rubisGain, rubisTotal);
+  revealRank(rubisBefore, rubisTotal);
 
   if (themeImage) {
     document.getElementById('resultImage').innerHTML = `<img src="${themeImage}" alt="${themeName}">`;
@@ -371,6 +384,27 @@ function revealRubis(gain, total) {
   })(performance.now());
   const gem = box.querySelector('.rubis-gem');
   if (gem) { gem.innerHTML = HQ.gem; gem.classList.remove('sparkle'); void gem.offsetWidth; gem.classList.add('sparkle'); }
+}
+
+function revealRank(before, after) {
+  const box = document.getElementById('rankReveal');
+  if (!box) return;
+  box.hidden = false;
+  const info = HQ.rankInfo(after);
+  const up = HQ.rankUp(before, after);
+  const promo = document.getElementById('rankPromo');
+  const status = document.getElementById('rankStatus');
+  if (up) {
+    box.classList.add('ranked-up');
+    promo.hidden = false;
+    promo.innerHTML = '<span class="rank-quote">' + up.line_en + '</span><span class="rank-by">Maître Horace</span>';
+  } else {
+    box.classList.remove('ranked-up');
+    promo.hidden = true;
+  }
+  status.textContent = info.isMax
+    ? 'Rank: ' + info.name
+    : 'Rank: ' + info.name + ' · ' + info.toNext.toLocaleString('en-US') + ' rubies to ' + info.next;
 }
 
 function showEmailCapture() {

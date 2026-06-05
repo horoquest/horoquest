@@ -58,10 +58,52 @@ window.HQ = (function () {
       '<circle cx="16" cy="16" r="3.3" fill="#ffffff"/>' +
     '</svg>';
 
+  // Rangs (brique 2) : seuils de rubis cumules. Initie a Spiral Breguet ; Gardien du Temps = 20 poincons (Phase 2).
+  var RANKS = [
+    { name: 'Initié', min: 0,
+      line: '« Bienvenue dans l\'Ordre du Spiral. Votre quête commence. »',
+      line_en: '"Welcome to the Order of the Spiral. Your quest begins."' },
+    { name: 'Remontoir', min: 150,
+      line: '« On vous a remonté. Sentez l\'énergie qui monte ? Vous voilà Remontoir. »',
+      line_en: '"You\'ve been wound. Feel the energy rising? You are now Remontoir."' },
+    { name: 'Rouage', min: 450,
+      line: '« Vous tournez juste, à présent. Un rouage de l\'Ordre, et pas le moindre. »',
+      line_en: '"You\'re running true now. A cog in the Order, and not the least of them."' },
+    { name: 'Échappement', min: 1000,
+      line: '« Tic. Tac. C\'est vous qui donnez le tempo, désormais. Échappement. »',
+      line_en: '"Tick. Tock. You set the tempo from here on. Échappement."' },
+    { name: 'Balancier', min: 2000,
+      line: '« Vous tenez la cadence sans trembler. Un vrai Balancier. »',
+      line_en: '"You hold the cadence without a tremor. A true Balancier."' },
+    { name: 'Spiral Breguet', min: 4000,
+      line: '« Le spiral, mon ami : le cœur même de l\'Ordre. Peu y parviennent. Vous voici Spiral Breguet. »',
+      line_en: '"The hairspring, my friend: the very heart of the Order. Few reach it. You are now Spiral Breguet."' }
+  ];
+  function rankIndexFor(total) {
+    var idx = 0;
+    for (var i = 0; i < RANKS.length; i++) { if (total >= RANKS[i].min) idx = i; }
+    return idx;
+  }
+  function rankInfo(total) {
+    var i = rankIndexFor(total);
+    var next = RANKS[i + 1] || null;
+    return {
+      index: i, name: RANKS[i].name, min: RANKS[i].min,
+      next: next ? next.name : null, nextMin: next ? next.min : null,
+      toNext: next ? (next.min - total) : 0, isMax: !next
+    };
+  }
+  // renvoie le rang atteint si on vient de monter, sinon null
+  function rankUp(oldTotal, newTotal) {
+    var a = rankIndexFor(oldTotal), b = rankIndexFor(newTotal);
+    return b > a ? RANKS[b] : null;
+  }
+
   return {
     getRubis: getRubis, addRubis: addRubis,
     diffBonus: diffBonus, computeRubis: computeRubis,
     getMastery: getMastery, recordMastery: recordMastery,
-    poinconTarget: poinconTarget, gem: GEM
+    poinconTarget: poinconTarget, gem: GEM,
+    ranks: RANKS, rankInfo: rankInfo, rankUp: rankUp
   };
 })();

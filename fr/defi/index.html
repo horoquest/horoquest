@@ -43,6 +43,13 @@
 .rubis-gem.sparkle { animation: rubisPop .7s cubic-bezier(.2,.8,.2,1); }
 @keyframes rubisPop { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
 .rubis-total { display: block; font-size: 14px; color: var(--ink-soft); margin-top: 5px; }
+.rank-reveal { margin: -2px 0 18px; }
+.rank-status { font-size: 13px; color: var(--ink-soft); }
+.rank-promo { margin: 0 auto 12px; max-width: 420px; padding: 12px 16px; border-left: 2px solid var(--accent); background: var(--bg-soft); text-align: left; }
+.rank-promo .rank-quote { display: block; font-style: italic; font-size: 16px; line-height: 1.5; color: var(--ink); }
+.rank-promo .rank-by { display: block; margin-top: 6px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.ranked-up .rank-promo { animation: rankIn .5s ease both; }
+@keyframes rankIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 </style>
 </head>
 <body class="quiz-page">
@@ -91,6 +98,10 @@
             +<span id="rubisGain">0</span> rubis
           </span>
           <span class="rubis-total" id="rubisTotalLine"></span>
+        </div>
+        <div class="rank-reveal" id="rankReveal" hidden>
+          <div class="rank-promo" id="rankPromo" hidden></div>
+          <div class="rank-status" id="rankStatus"></div>
         </div>
         <div class="daily-streak" id="dailyStreak"></div>
         <div class="result-avg" id="resultAvg"></div>
@@ -185,7 +196,7 @@ async function init() {
   // Déjà joué aujourd'hui : on affiche le résultat verrouillé
   if (store.today && store.today.date === todayStr) {
     results = store.today.results;
-    renderResult(store.today.score, store.streak || 1, store.best || 1, true, store.today.rubis);
+    renderResult(store.today.score, store.streak || 1, store.best || 1, true, store.today.rubis, HQ.getRubis(), HQ.getRubis());
     return;
   }
   try {
@@ -313,13 +324,14 @@ function finish() {
 
   // Rubis : attribues une seule fois (ici), pas au re-affichage du resultat verrouille
   const correctQs = questions.filter((q, i) => results[i]);
+  const rubisBefore = HQ.getRubis();
   const rubisGain = HQ.computeRubis(correctQs, DAILY_COUNT);
-  HQ.addRubis(rubisGain);
+  const rubisTotal = HQ.addRubis(rubisGain);
   correctQs.forEach(q => { (q.theme_slugs || []).forEach(sl => HQ.recordMastery(sl, [q.id])); });
 
   writeStore({ ...store, lastPlayed: todayStr, streak, best, today: { date: todayStr, results, score, rubis: rubisGain } });
   saveScore(score);
-  renderResult(score, streak, best, false, rubisGain);
+  renderResult(score, streak, best, false, rubisGain, rubisBefore, rubisTotal);
 }
 
 function renderGrid() {
@@ -330,7 +342,7 @@ function shareGrid() {
   return results.map(r => r ? '■' : '□').join('');
 }
 
-function renderResult(score, streak, best, alreadyPlayed, rubisGain) {
+function renderResult(score, streak, best, alreadyPlayed, rubisGain, rubisBefore, rubisTotal) {
   document.getElementById('loading').hidden = true;
   document.getElementById('quizContent').hidden = true;
   document.getElementById('quizEnd').hidden = false;
@@ -347,7 +359,10 @@ function renderResult(score, streak, best, alreadyPlayed, rubisGain) {
                 pct >= 0.4 ? 'Pas mal' : 'Reviens demain pour te rattraper';
   document.getElementById('scoreLabel').textContent = label;
 
-  if (typeof rubisGain === 'number') revealRubis(rubisGain, HQ.getRubis());
+  if (typeof rubisGain === 'number') {
+    revealRubis(rubisGain, rubisTotal);
+    revealRank(rubisBefore, rubisTotal);
+  }
 
   const streakEl = document.getElementById('dailyStreak');
   if (streak > 1) {
@@ -447,6 +462,27 @@ function revealRubis(gain, total) {
   })(performance.now());
   const gem = box.querySelector('.rubis-gem');
   if (gem) { gem.innerHTML = HQ.gem; gem.classList.remove('sparkle'); void gem.offsetWidth; gem.classList.add('sparkle'); }
+}
+
+function revealRank(before, after) {
+  const box = document.getElementById('rankReveal');
+  if (!box) return;
+  box.hidden = false;
+  const info = HQ.rankInfo(after);
+  const up = HQ.rankUp(before, after);
+  const promo = document.getElementById('rankPromo');
+  const status = document.getElementById('rankStatus');
+  if (up) {
+    box.classList.add('ranked-up');
+    promo.hidden = false;
+    promo.innerHTML = '<span class="rank-quote">' + up.line + '</span><span class="rank-by">Maître Horace</span>';
+  } else {
+    box.classList.remove('ranked-up');
+    promo.hidden = true;
+  }
+  status.textContent = info.isMax
+    ? 'Rang : ' + info.name
+    : 'Rang : ' + info.name + ' · encore ' + info.toNext.toLocaleString('fr-FR') + ' rubis avant ' + info.next;
 }
 
 function showEmailCapture() {
