@@ -36,6 +36,13 @@
 #quizEnd .result-actions,
 #quizEnd .result-buttons { justify-content: center; }
 #quizEnd .result-actions { margin-bottom: 0; }
+.rubis-reveal { margin: 2px 0 18px; }
+.rubis-gain { display: inline-flex; align-items: center; gap: 9px; font-size: 22px; font-weight: 700; color: var(--ink); font-feature-settings: "tnum" 1; }
+.rubis-gem { width: 24px; height: 24px; flex: none; display: inline-block; line-height: 0; transform-origin: center; }
+.rubis-gem svg { width: 100%; height: 100%; display: block; }
+.rubis-gem.sparkle { animation: rubisPop .7s cubic-bezier(.2,.8,.2,1); }
+@keyframes rubisPop { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
+.rubis-total { display: block; font-size: 14px; color: var(--ink-soft); margin-top: 5px; }
 </style>
 </head>
 <body class="quiz-page">
@@ -78,6 +85,13 @@
         <div class="daily-grid" id="dailyGrid"></div>
         <div class="score"><span id="finalScore">0</span><span class="max">/5</span></div>
         <div class="score-label" id="scoreLabel"></div>
+        <div class="rubis-reveal" id="rubisReveal" hidden>
+          <span class="rubis-gain">
+            <span class="rubis-gem" aria-hidden="true"></span>
+            +<span id="rubisGain">0</span> rubis
+          </span>
+          <span class="rubis-total" id="rubisTotalLine"></span>
+        </div>
         <div class="daily-streak" id="dailyStreak"></div>
         <div class="result-avg" id="resultAvg"></div>
         <div class="result-actions">
@@ -112,6 +126,7 @@
   </div>
 </main>
 
+<script src="../../assets/quest.js?v=1"></script>
 <script>
 const SUPABASE_URL = 'https://bqnawfnkukcbqkujsskr.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxbmF3Zm5rdWtjYnFrdWpzc2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1ODQ5NDAsImV4cCI6MjA4NzE2MDk0MH0.VeSr_1gEnsn3P0_cmQBcOkJNDpUe1rbIAD8E7nSbxQM';
@@ -170,11 +185,11 @@ async function init() {
   // Déjà joué aujourd'hui : on affiche le résultat verrouillé
   if (store.today && store.today.date === todayStr) {
     results = store.today.results;
-    renderResult(store.today.score, store.streak || 1, store.best || 1, true);
+    renderResult(store.today.score, store.streak || 1, store.best || 1, true, store.today.rubis);
     return;
   }
   try {
-    const url = `${SUPABASE_URL}/rest/v1/questions?select=id,text,explanation,difficulty,image_url,answers(id,text,is_correct)&order=id&limit=1000`;
+    const url = `${SUPABASE_URL}/rest/v1/questions?select=id,text,explanation,difficulty,image_url,theme_slugs,answers(id,text,is_correct)&order=id&limit=1000`;
     const res = await fetch(url, { headers });
     let data = await res.json();
     if (!Array.isArray(data)) throw new Error('Invalid response');
@@ -296,9 +311,15 @@ function finish() {
   const streak = (store.lastPlayed === yesterday) ? (store.streak || 0) + 1 : 1;
   const best = Math.max(store.best || 0, streak);
 
-  writeStore({ ...store, lastPlayed: todayStr, streak, best, today: { date: todayStr, results, score } });
+  // Rubis : attribues une seule fois (ici), pas au re-affichage du resultat verrouille
+  const correctQs = questions.filter((q, i) => results[i]);
+  const rubisGain = HQ.computeRubis(correctQs, DAILY_COUNT);
+  HQ.addRubis(rubisGain);
+  correctQs.forEach(q => { (q.theme_slugs || []).forEach(sl => HQ.recordMastery(sl, [q.id])); });
+
+  writeStore({ ...store, lastPlayed: todayStr, streak, best, today: { date: todayStr, results, score, rubis: rubisGain } });
   saveScore(score);
-  renderResult(score, streak, best, false);
+  renderResult(score, streak, best, false, rubisGain);
 }
 
 function renderGrid() {
@@ -309,7 +330,7 @@ function shareGrid() {
   return results.map(r => r ? '■' : '□').join('');
 }
 
-function renderResult(score, streak, best, alreadyPlayed) {
+function renderResult(score, streak, best, alreadyPlayed, rubisGain) {
   document.getElementById('loading').hidden = true;
   document.getElementById('quizContent').hidden = true;
   document.getElementById('quizEnd').hidden = false;
@@ -325,6 +346,8 @@ function renderResult(score, streak, best, alreadyPlayed) {
                 pct >= 0.6 ? 'Bien joué' :
                 pct >= 0.4 ? 'Pas mal' : 'Reviens demain pour te rattraper';
   document.getElementById('scoreLabel').textContent = label;
+
+  if (typeof rubisGain === 'number') revealRubis(rubisGain, HQ.getRubis());
 
   const streakEl = document.getElementById('dailyStreak');
   if (streak > 1) {
@@ -405,6 +428,25 @@ function startCountdown() {
   }
   tick();
   setInterval(tick, 1000);
+}
+
+function revealRubis(gain, total) {
+  const box = document.getElementById('rubisReveal');
+  if (!box) return;
+  box.hidden = false;
+  const totalLine = document.getElementById('rubisTotalLine');
+  if (totalLine) totalLine.textContent = 'Total ' + total.toLocaleString('fr-FR') + ' rubis';
+  const gainEl = document.getElementById('rubisGain');
+  const dur = 800, t0 = performance.now();
+  (function tick(now) {
+    const p = Math.min(1, (now - t0) / dur);
+    const eased = 1 - Math.pow(1 - p, 3);
+    gainEl.textContent = Math.round(eased * gain);
+    if (p < 1) requestAnimationFrame(tick);
+    else gainEl.textContent = gain;
+  })(performance.now());
+  const gem = box.querySelector('.rubis-gem');
+  if (gem) { gem.innerHTML = HQ.gem; gem.classList.remove('sparkle'); void gem.offsetWidth; gem.classList.add('sparkle'); }
 }
 
 function showEmailCapture() {

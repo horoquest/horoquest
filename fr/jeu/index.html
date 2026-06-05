@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiz | HOROQUEST</title>
 <link rel="stylesheet" href="../../assets/styles.css?v=2">
+<style>
+  .rubis-reveal { margin: 0 0 24px; }
+  .rubis-gain { display: inline-flex; align-items: center; gap: 9px; font-size: 22px; font-weight: 700; color: var(--ink); font-feature-settings: "tnum" 1; }
+  .rubis-gem { width: 24px; height: 24px; flex: none; display: inline-block; line-height: 0; transform-origin: center; }
+  .rubis-gem svg { width: 100%; height: 100%; display: block; }
+  .rubis-gem.sparkle { animation: rubisPop .7s cubic-bezier(.2,.8,.2,1); }
+  @keyframes rubisPop { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
+  .rubis-total { display: block; font-size: 14px; color: var(--ink-soft); margin-top: 5px; }
+</style>
 </head>
 <body class="quiz-page">
 
@@ -44,6 +53,13 @@
           <div class="result-label">Ton score</div>
           <div class="score"><span id="finalScore">0</span><span class="max">/10</span></div>
           <div class="score-label" id="scoreLabel"></div>
+          <div class="rubis-reveal" id="rubisReveal" hidden>
+            <span class="rubis-gain">
+              <span class="rubis-gem" aria-hidden="true"></span>
+              +<span id="rubisGain">0</span> rubis
+            </span>
+            <span class="rubis-total" id="rubisTotalLine"></span>
+          </div>
           <div class="result-avg" id="resultAvg"></div>
           <div class="result-actions">
             <button class="btn btn-ghost result-share" id="shareBtn">
@@ -84,6 +100,7 @@
   </div>
 </main>
 
+<script src="../../assets/quest.js?v=1"></script>
 <script>
 const SUPABASE_URL = 'https://bqnawfnkukcbqkujsskr.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxbmF3Zm5rdWtjYnFrdWpzc2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1ODQ5NDAsImV4cCI6MjA4NzE2MDk0MH0.VeSr_1gEnsn3P0_cmQBcOkJNDpUe1rbIAD8E7nSbxQM';
@@ -99,6 +116,7 @@ const slug = params.get('slug') || 'rolex';
 let questions = [];
 let current = 0;
 let score = 0;
+let correctQuestions = [];
 let themeName = '';
 let themeImage = '';
 let nextTheme = null;
@@ -207,6 +225,7 @@ function handleAnswer(btn) {
     btn.classList.add('correct');
     correctBtn = btn;
     score++;
+    correctQuestions.push(questions[current]);
   } else {
     btn.classList.add('incorrect');
     buttons.forEach(b => {
@@ -271,6 +290,12 @@ function showResult() {
                 pct >= 0.3 ? 'Pas mal pour un début' : 'Tout reste à découvrir';
   document.getElementById('scoreLabel').textContent = label;
 
+  // Rubis (Phase 1) : calcul, cumul, et enregistrement de la maitrise pour les poincons
+  const rubisGain = HQ.computeRubis(correctQuestions, questions.length);
+  const rubisTotal = HQ.addRubis(rubisGain);
+  HQ.recordMastery(slug, correctQuestions.map(q => q.id));
+  revealRubis(rubisGain, rubisTotal);
+
   saveScore();
 
   if (themeImage) {
@@ -329,6 +354,25 @@ function showResult() {
         (document.getElementById('shareBtn').textContent = 'Copié !');
     }
   });
+}
+
+function revealRubis(gain, total) {
+  const box = document.getElementById('rubisReveal');
+  if (!box) return;
+  box.hidden = false;
+  const totalLine = document.getElementById('rubisTotalLine');
+  if (totalLine) totalLine.textContent = 'Total ' + total.toLocaleString('fr-FR') + ' rubis';
+  const gainEl = document.getElementById('rubisGain');
+  const dur = 800, t0 = performance.now();
+  (function tick(now) {
+    const p = Math.min(1, (now - t0) / dur);
+    const eased = 1 - Math.pow(1 - p, 3);
+    gainEl.textContent = Math.round(eased * gain);
+    if (p < 1) requestAnimationFrame(tick);
+    else gainEl.textContent = gain;
+  })(performance.now());
+  const gem = box.querySelector('.rubis-gem');
+  if (gem) { gem.innerHTML = HQ.gem; gem.classList.remove('sparkle'); void gem.offsetWidth; gem.classList.add('sparkle'); }
 }
 
 function showEmailCapture() {
