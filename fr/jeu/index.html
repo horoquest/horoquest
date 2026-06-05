@@ -69,7 +69,11 @@
           </div>
           <div class="rank-reveal" id="rankReveal" hidden>
             <div class="rank-promo" id="rankPromo" hidden></div>
-            <div class="rank-status" id="rankStatus"></div>
+            <div class="rank-gauge">
+              <div class="rank-gauge-head"><span class="rank-now" id="rankNow"></span><span class="rank-next" id="rankNext"></span></div>
+              <div class="rank-bar"><span class="rank-bar-fill" id="rankBarFill"></span></div>
+              <div class="rank-foot" id="rankFoot"></div>
+            </div>
           </div>
           <div class="result-avg" id="resultAvg"></div>
           <div class="result-actions">
@@ -111,7 +115,7 @@
   </div>
 </main>
 
-<script src="../../assets/quest.js?v=1"></script>
+<script src="../../assets/quest.js?v=2"></script>
 <script>
 const SUPABASE_URL = 'https://bqnawfnkukcbqkujsskr.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxbmF3Zm5rdWtjYnFrdWpzc2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1ODQ5NDAsImV4cCI6MjA4NzE2MDk0MH0.VeSr_1gEnsn3P0_cmQBcOkJNDpUe1rbIAD8E7nSbxQM';
@@ -395,7 +399,6 @@ function revealRank(before, after) {
   const info = HQ.rankInfo(after);
   const up = HQ.rankUp(before, after);
   const promo = document.getElementById('rankPromo');
-  const status = document.getElementById('rankStatus');
   if (up) {
     box.classList.add('ranked-up');
     promo.hidden = false;
@@ -404,9 +407,19 @@ function revealRank(before, after) {
     box.classList.remove('ranked-up');
     promo.hidden = true;
   }
-  status.textContent = info.isMax
-    ? 'Rang : ' + info.name
-    : 'Rang : ' + info.name + ' · encore ' + info.toNext.toLocaleString('fr-FR') + ' rubis avant ' + info.next;
+  document.getElementById('rankNow').textContent = info.name;
+  const fill = document.getElementById('rankBarFill');
+  let pct;
+  if (info.isMax) {
+    document.getElementById('rankNext').textContent = 'Gardien du Temps';
+    document.getElementById('rankFoot').textContent = 'Rang maximal · les 20 poinçons mènent à Gardien du Temps';
+    pct = 100;
+  } else {
+    document.getElementById('rankNext').textContent = info.next;
+    document.getElementById('rankFoot').textContent = 'encore ' + info.toNext.toLocaleString('fr-FR') + ' rubis avant ' + info.next;
+    pct = Math.max(5, Math.round((after - info.min) / (info.nextMin - info.min) * 100));
+  }
+  requestAnimationFrame(function () { requestAnimationFrame(function () { fill.style.width = pct + '%'; }); });
 }
 
 function showEmailCapture() {

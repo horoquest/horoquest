@@ -27,7 +27,7 @@ window.HQ = (function () {
     let r = 0;
     (correctQs || []).forEach(function (q) { r += 10 + diffBonus(q && q.difficulty); });
     if (total > 0 && correctQs && correctQs.length === total) r += 50; // sans-faute
-    return r;
+    return Math.round(r / 10); // bareme compact : on divise par 10
   }
 
   function getMastery() {
@@ -63,19 +63,19 @@ window.HQ = (function () {
     { name: 'Initié', min: 0,
       line: '« Bienvenue dans l\'Ordre du Spiral. Votre quête commence. »',
       line_en: '"Welcome to the Order of the Spiral. Your quest begins."' },
-    { name: 'Remontoir', min: 150,
+    { name: 'Remontoir', min: 15,
       line: '« On vous a remonté. Sentez l\'énergie qui monte ? Vous voilà Remontoir. »',
       line_en: '"You\'ve been wound. Feel the energy rising? You are now Remontoir."' },
-    { name: 'Rouage', min: 450,
+    { name: 'Rouage', min: 45,
       line: '« Vous tournez juste, à présent. Un rouage de l\'Ordre, et pas le moindre. »',
       line_en: '"You\'re running true now. A cog in the Order, and not the least of them."' },
-    { name: 'Échappement', min: 1000,
+    { name: 'Échappement', min: 100,
       line: '« Tic. Tac. C\'est vous qui donnez le tempo, désormais. Échappement. »',
       line_en: '"Tick. Tock. You set the tempo from here on. Échappement."' },
-    { name: 'Balancier', min: 2000,
+    { name: 'Balancier', min: 200,
       line: '« Vous tenez la cadence sans trembler. Un vrai Balancier. »',
       line_en: '"You hold the cadence without a tremor. A true Balancier."' },
-    { name: 'Spiral Breguet', min: 4000,
+    { name: 'Spiral Breguet', min: 400,
       line: '« Le spiral, mon ami : le cœur même de l\'Ordre. Peu y parviennent. Vous voici Spiral Breguet. »',
       line_en: '"The hairspring, my friend: the very heart of the Order. Few reach it. You are now Spiral Breguet."' }
   ];
@@ -98,6 +98,28 @@ window.HQ = (function () {
     var a = rankIndexFor(oldTotal), b = rankIndexFor(newTotal);
     return b > a ? RANKS[b] : null;
   }
+
+  // Migration : ancien bareme (x10) divise une fois pour passer aux nombres compacts
+  try {
+    if (localStorage.getItem('hq_scale') !== 'v2') {
+      var _cur = parseInt(localStorage.getItem('hq_rubis') || '0', 10) || 0;
+      if (_cur > 0) localStorage.setItem('hq_rubis', String(Math.round(_cur / 10)));
+      localStorage.setItem('hq_scale', 'v2');
+    }
+  } catch (e) {}
+
+  // Styles de la jauge de rang, injectes une fois
+  try {
+    var _s = document.createElement('style');
+    _s.textContent =
+      '.rank-gauge-head{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;}' +
+      '.rank-now{font-weight:700;color:var(--ink);}' +
+      '.rank-next{color:var(--ink-soft);font-size:12px;}' +
+      '.rank-bar{height:6px;background:var(--border);overflow:hidden;margin:7px 0 6px;}' +
+      '.rank-bar-fill{display:block;height:100%;background:var(--accent);width:0;transition:width .9s cubic-bezier(.2,.8,.2,1);}' +
+      '.rank-foot{font-size:12px;color:var(--ink-soft);}';
+    (document.head || document.documentElement).appendChild(_s);
+  } catch (e) {}
 
   return {
     getRubis: getRubis, addRubis: addRubis,
