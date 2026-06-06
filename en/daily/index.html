@@ -137,7 +137,7 @@
   </div>
 </main>
 
-<script src="../../assets/quest.js?v=2"></script>
+<script src="../../assets/quest.js?v=3"></script>
 <script>
 const SUPABASE_URL = 'https://bqnawfnkukcbqkujsskr.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxbmF3Zm5rdWtjYnFrdWpzc2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1ODQ5NDAsImV4cCI6MjA4NzE2MDk0MH0.VeSr_1gEnsn3P0_cmQBcOkJNDpUe1rbIAD8E7nSbxQM';
@@ -478,16 +478,16 @@ function revealRank(before, after) {
     box.classList.remove('ranked-up');
     promo.hidden = true;
   }
-  document.getElementById('rankNow').textContent = info.name;
+  document.getElementById('rankNow').textContent = info.name_en;
   const fill = document.getElementById('rankBarFill');
   let pct;
   if (info.isMax) {
-    document.getElementById('rankNext').textContent = 'Gardien du Temps';
-    document.getElementById('rankFoot').textContent = 'Top rank · the 20 hallmarks lead to Gardien du Temps';
+    document.getElementById('rankNext').textContent = 'Keeper of Time';
+    document.getElementById('rankFoot').textContent = 'Top rank · the 20 hallmarks lead to Keeper of Time';
     pct = 100;
   } else {
-    document.getElementById('rankNext').textContent = info.next;
-    document.getElementById('rankFoot').textContent = info.toNext.toLocaleString('en-US') + ' rubies to ' + info.next;
+    document.getElementById('rankNext').textContent = info.next_en;
+    document.getElementById('rankFoot').textContent = info.toNext.toLocaleString('en-US') + ' rubies to ' + info.next_en;
     pct = Math.max(5, Math.round((after - info.min) / (info.nextMin - info.min) * 100));
   }
   requestAnimationFrame(function () { requestAnimationFrame(function () { fill.style.width = pct + '%'; }); });

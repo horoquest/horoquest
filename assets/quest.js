@@ -60,24 +60,24 @@ window.HQ = (function () {
 
   // Rangs (brique 2) : seuils de rubis cumules. Initie a Spiral Breguet ; Gardien du Temps = 20 poincons (Phase 2).
   var RANKS = [
-    { name: 'Initié', min: 0,
+    { name: 'Initié', name_en: 'Initiate', min: 0,
       line: '« Bienvenue dans l\'Ordre du Spiral. Votre quête commence. »',
       line_en: '"Welcome to the Order of the Spiral. Your quest begins."' },
-    { name: 'Remontoir', min: 15,
+    { name: 'Remontoir', name_en: 'Mainspring', min: 15,
       line: '« On vous a remonté. Sentez l\'énergie qui monte ? Vous voilà Remontoir. »',
-      line_en: '"You\'ve been wound. Feel the energy rising? You are now Remontoir."' },
-    { name: 'Rouage', min: 45,
+      line_en: '"You\'ve been wound. Feel the energy rising? You are now the Mainspring."' },
+    { name: 'Rouage', name_en: 'Gear Train', min: 45,
       line: '« Vous tournez juste, à présent. Un rouage de l\'Ordre, et pas le moindre. »',
-      line_en: '"You\'re running true now. A cog in the Order, and not the least of them."' },
-    { name: 'Échappement', min: 100,
+      line_en: '"You\'re running true now. A wheel in the Order\'s train, and not the least of them."' },
+    { name: 'Échappement', name_en: 'Escapement', min: 100,
       line: '« Tic. Tac. C\'est vous qui donnez le tempo, désormais. Échappement. »',
-      line_en: '"Tick. Tock. You set the tempo from here on. Échappement."' },
-    { name: 'Balancier', min: 200,
+      line_en: '"Tick. Tock. You set the tempo from here on. Escapement."' },
+    { name: 'Balancier', name_en: 'Balance Wheel', min: 200,
       line: '« Vous tenez la cadence sans trembler. Un vrai Balancier. »',
-      line_en: '"You hold the cadence without a tremor. A true Balancier."' },
-    { name: 'Spiral Breguet', min: 400,
+      line_en: '"You hold the cadence without a tremor. A true Balance Wheel."' },
+    { name: 'Spiral Breguet', name_en: 'Breguet Hairspring', min: 400,
       line: '« Le spiral, mon ami : le cœur même de l\'Ordre. Peu y parviennent. Vous voici Spiral Breguet. »',
-      line_en: '"The hairspring, my friend: the very heart of the Order. Few reach it. You are now Spiral Breguet."' }
+      line_en: '"The hairspring, my friend: the very heart of the Order. Few reach it. You are now the Breguet Hairspring."' }
   ];
   function rankIndexFor(total) {
     var idx = 0;
@@ -88,8 +88,8 @@ window.HQ = (function () {
     var i = rankIndexFor(total);
     var next = RANKS[i + 1] || null;
     return {
-      index: i, name: RANKS[i].name, min: RANKS[i].min,
-      next: next ? next.name : null, nextMin: next ? next.min : null,
+      index: i, name: RANKS[i].name, name_en: RANKS[i].name_en, min: RANKS[i].min,
+      next: next ? next.name : null, next_en: next ? next.name_en : null, nextMin: next ? next.min : null,
       toNext: next ? (next.min - total) : 0, isMax: !next
     };
   }
