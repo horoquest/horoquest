@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ma carte de membre | HOROQUEST</title>
+<link rel="stylesheet" href="../../assets/styles.css?v=2">
+<style>
+  .card-wrap { max-width: 640px; margin: 0 auto; padding: 8px 0 64px; }
+  .card-horace-img { display: block; width: 118px; height: 118px; border-radius: 50%; object-fit: cover; margin: 0 auto 16px; box-shadow: var(--shadow-md); }
+  .card-kicker { text-transform: uppercase; letter-spacing: .24em; font-size: 12px; color: var(--accent); font-weight: 600; text-align: center; margin: 0; }
+  .card-title { font-size: clamp(28px, 6vw, 40px); text-align: center; margin: 6px 0 4px; }
+  .card-horace { text-align: center; font-style: italic; color: var(--ink-soft); margin: 0 auto 30px; max-width: 470px; line-height: 1.5; }
+  .card-rank { text-align: center; margin: 0 0 26px; }
+  .card-rank-name { font-size: 30px; font-weight: 700; margin: 0 0 14px; }
+  .card-gauge { max-width: 360px; margin: 0 auto; }
+  .card-stats { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin: 0 0 40px; }
+  .card-stat { flex: 1 1 200px; max-width: 280px; border: 1px solid var(--border); background: var(--card); padding: 16px 18px; text-align: center; }
+  .card-stat .label { font-size: 11.5px; text-transform: uppercase; letter-spacing: .14em; color: var(--ink-soft); margin-bottom: 9px; }
+  .card-stat .value { font-size: 28px; font-weight: 700; display: inline-flex; align-items: center; gap: 9px; justify-content: center; font-feature-settings: "tnum" 1; }
+  .card-stat .unit { font-size: 14px; font-weight: 400; color: var(--ink-soft); }
+  .card-gem { width: 26px; height: 26px; display: inline-block; line-height: 0; }
+  .card-gem svg { width: 100%; height: 100%; display: block; }
+  .poincons-head { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 16px; border-top: 1px solid var(--border); padding-top: 22px; }
+  .poincons-head h2 { font-size: 18px; margin: 0; font-weight: 700; }
+  .poincons-head .count { font-size: 14px; color: var(--accent); font-weight: 600; }
+  .poincons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 12px; }
+  .poincon-cell { border: 1px solid var(--border); background: var(--card); padding: 14px 6px 11px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 7px; }
+  .poincon-svg { width: 42px; height: 42px; }
+  .poincon-name { font-size: 12px; line-height: 1.25; color: var(--ink); }
+  .poincon-prog { font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; }
+  .poincon-disc { fill: none; stroke: var(--border-strong); stroke-width: 2; }
+  .poincon-key { fill: none; stroke: var(--border-strong); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .poincon-earned .poincon-disc { fill: var(--accent); stroke: var(--accent); }
+  .poincon-earned .poincon-key { stroke: #fff; }
+  .poincon-earned .poincon-prog { color: var(--accent); font-weight: 700; }
+  .poincon-progress .poincon-key { stroke: var(--accent); }
+  .poincon-progress .poincon-prog { color: var(--ink-soft); }
+  .poincon-ring { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; transform: rotate(-90deg); transform-origin: center; }
+  .poincon-locked { opacity: .55; }
+  .poincon-locked .poincon-prog { color: var(--ink-soft); }
+  .card-share { display: flex; justify-content: center; margin: 36px 0 0; }
+  .card-empty { grid-column: 1 / -1; text-align: center; color: var(--ink-soft); padding: 20px 0; }
+</style>
+</head>
+<body class="quiz-page">
+
+<header class="quiz-header">
+  <div class="container">
+    <a class="quiz-back" href="/">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>Accueil</span>
+    </a>
+    <a class="quiz-close" href="/" aria-label="Fermer">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+    </a>
+  </div>
+</header>
+
+<main class="quiz-main">
+  <div class="container">
+    <div class="card-wrap">
+      <img class="card-horace-img" src="../../assets/horace-512.png" alt="Maître Horace" width="118" height="118">
+      <p class="card-kicker">L'Ordre du Spiral</p>
+      <h1 class="card-title">Ma carte de membre</h1>
+      <p class="card-horace" id="cardHorace"></p>
+
+      <div class="card-rank">
+        <div class="card-rank-name" id="rankName">Initié</div>
+        <div class="card-gauge">
+          <div class="rank-gauge-head"><span class="rank-now" id="rankNow"></span><span class="rank-next" id="rankNext"></span></div>
+          <div class="rank-bar"><span class="rank-bar-fill" id="rankBarFill"></span></div>
+          <div class="rank-foot" id="rankFoot"></div>
+        </div>
+      </div>
+
+      <div class="card-stats">
+        <div class="card-stat">
+          <div class="label">Rubis</div>
+          <div class="value"><span class="card-gem" id="cardGem"></span><span id="rubisTotal">0</span></div>
+        </div>
+        <div class="card-stat">
+          <div class="label">Réserve de marche</div>
+          <div class="value"><span id="streakValue">0</span><span class="unit" id="streakUnit">jour</span></div>
+        </div>
+      </div>
+
+      <div class="poincons">
+        <div class="poincons-head">
+          <h2>Poinçons</h2>
+          <span class="count" id="poinconCount">0 / 20 gravés</span>
+        </div>
+        <div class="poincons-grid" id="poinconsGrid">
+          <div class="card-empty" id="poinconLoading">Chargement des collections…</div>
+        </div>
+      </div>
+
+      <div class="card-share">
+        <button class="btn btn-primary" id="shareCardBtn">Partager ma carte</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="../../assets/quest.js?v=3"></script>
+<script>
+const SUPABASE_URL = 'https://bqnawfnkukcbqkujsskr.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxbmF3Zm5rdWtjYnFrdWpzc2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1ODQ5NDAsImV4cCI6MjA4NzE2MDk0MH0.VeSr_1gEnsn3P0_cmQBcOkJNDpUe1rbIAD8E7nSbxQM';
+const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
+
+const total = HQ.getRubis();
+const info = HQ.rankInfo(total);
+const mastery = HQ.getMastery();
+let daily = {}; try { daily = JSON.parse(localStorage.getItem('hq_daily')) || {}; } catch (e) {}
+const streak = daily.streak || 0;
+let earnedCount = 0;
+
+document.getElementById('cardHorace').textContent = total > 0
+  ? '« Voici votre place dans l\'Ordre. Elle ne cesse de grandir. »'
+  : '« Votre carte est encore vierge. Un quiz, et tout commence. »';
+
+document.getElementById('rankName').textContent = info.name;
+document.getElementById('cardGem').innerHTML = HQ.gem;
+document.getElementById('rubisTotal').textContent = total.toLocaleString('fr-FR');
+document.getElementById('streakValue').textContent = streak;
+document.getElementById('streakUnit').textContent = streak > 1 ? 'jours' : 'jour';
+
+document.getElementById('rankNow').textContent = info.name;
+(function gauge() {
+  const fill = document.getElementById('rankBarFill');
+  let pct;
+  if (info.isMax) {
+    document.getElementById('rankNext').textContent = 'Gardien du Temps';
+    document.getElementById('rankFoot').textContent = 'Rang maximal · les 20 poinçons mènent à Gardien du Temps';
+    pct = 100;
+  } else {
+    document.getElementById('rankNext').textContent = info.next;
+    document.getElementById('rankFoot').textContent = 'encore ' + info.toNext.toLocaleString('fr-FR') + ' rubis avant ' + info.next;
+    pct = Math.max(4, Math.round((total - info.min) / (info.nextMin - info.min) * 100));
+  }
+  requestAnimationFrame(function () { requestAnimationFrame(function () { fill.style.width = pct + '%'; }); });
+})();
+
+const KEY = '<g class="poincon-key">' +
+  '<circle cx="20" cy="10" r="2.4"/>' +
+  '<circle cx="17.1" cy="13.7" r="2.4"/>' +
+  '<circle cx="22.9" cy="13.7" r="2.4"/>' +
+  '<path d="M20 15.6 L20 26"/>' +
+  '<path d="M17.4 21.5 L22.6 21.5"/>' +
+  '<rect x="17.2" y="26" width="5.6" height="4.6"/>' +
+'</g>';
+const RING_C = 2 * Math.PI * 17;
+
+function poinconSvg(state, pct) {
+  let ring = '';
+  if (state === 'progress') {
+    const dash = Math.max(0, Math.min(1, pct)) * RING_C;
+    ring = '<circle class="poincon-ring" cx="20" cy="20" r="17" stroke-dasharray="' + dash.toFixed(1) + ' ' + RING_C.toFixed(1) + '"/>';
+  }
+  return '<svg class="poincon-svg" viewBox="0 0 40 40" aria-hidden="true">' +
+    '<circle class="poincon-disc" cx="20" cy="20" r="17"/>' + ring + KEY + '</svg>';
+}
+
+async function loadPoincons() {
+  try {
+    const tRes = await fetch(`${SUPABASE_URL}/rest/v1/themes?select=name,slug,sort_order&is_active=eq.true&order=sort_order`, { headers });
+    const themes = await tRes.json();
+    const qRes = await fetch(`${SUPABASE_URL}/rest/v1/questions?select=theme_slugs&limit=2000`, { headers });
+    const qs = await qRes.json();
+    const counts = {};
+    (qs || []).forEach(function (q) { (q.theme_slugs || []).forEach(function (s) { counts[s] = (counts[s] || 0) + 1; }); });
+
+    let totalCols = 0;
+    const cells = [];
+    (themes || []).forEach(function (t) {
+      const pool = counts[t.slug] || 0;
+      if (pool === 0) return;
+      totalCols++;
+      const target = HQ.poinconTarget(pool);
+      const got = (mastery[t.slug] || []).length;
+      let state, prog;
+      if (got >= target) { state = 'earned'; earnedCount++; prog = 'gravé'; }
+      else if (got > 0) { state = 'progress'; prog = got + ' / ' + target; }
+      else { state = 'locked'; prog = 'à découvrir'; }
+      cells.push('<div class="poincon-cell poincon-' + state + '">' +
+        poinconSvg(state, target > 0 ? got / target : 0) +
+        '<span class="poincon-name">' + t.name + '</span>' +
+        '<span class="poincon-prog">' + prog + '</span></div>');
+    });
+    document.getElementById('poinconsGrid').innerHTML = cells.join('');
+    document.getElementById('poinconCount').textContent = earnedCount + ' / ' + totalCols + ' gravés';
+  } catch (e) {
+    document.getElementById('poinconsGrid').innerHTML = '<div class="card-empty">Collections indisponibles pour le moment.</div>';
+  }
+}
+loadPoincons();
+
+document.getElementById('shareCardBtn').addEventListener('click', async function () {
+  const txt = 'Ma carte HOROQUEST · ' + info.name + ' · ' + total + ' rubis · ' + earnedCount + ' poinçons · série ' + streak;
+  if (navigator.share) {
+    try { await navigator.share({ title: 'HOROQUEST', text: txt, url: 'https://horoquest.app/' }); } catch (e) {}
+  } else {
+    try {
+      await navigator.clipboard.writeText(txt + ' https://horoquest.app/');
+      const b = document.getElementById('shareCardBtn'); const o = b.textContent;
+      b.textContent = 'Copié !'; setTimeout(function () { b.textContent = o; }, 1600);
+    } catch (e) {}
+  }
+});
+</script>
+</body>
+</html>
