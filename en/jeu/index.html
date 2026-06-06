@@ -15,8 +15,8 @@
   .rubis-total { display: block; font-size: 14px; color: var(--ink-soft); margin-top: 5px; }
   .rank-reveal { margin: -4px 0 22px; }
   .rank-status { font-size: 13px; color: var(--ink-soft); }
-  .rank-promo { position: relative; margin: 0 0 12px; padding: 12px 14px 12px 66px; border-left: 2px solid var(--accent); background: var(--bg-soft); min-height: 44px; }
-  .rank-promo::before { content: ''; position: absolute; left: 14px; top: 12px; width: 40px; height: 40px; border-radius: 50%; background: url('../../assets/horace-512.png') center / cover; box-shadow: var(--shadow-sm); }
+  .rank-promo { margin: 0 0 14px; padding: 16px; border-left: 2px solid var(--accent); background: var(--bg-soft); text-align: center; }
+  .rank-promo::before { content: ''; display: block; width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 10px; background: url('../../assets/horace-512.png') center / cover; box-shadow: var(--shadow-sm); }
   .rank-promo .rank-quote { display: block; font-style: italic; font-size: 16px; line-height: 1.5; color: var(--ink); }
   .rank-promo .rank-by { display: block; margin-top: 6px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
   .ranked-up .rank-promo { animation: rankIn .5s ease both; }
@@ -75,7 +75,7 @@
               <div class="rank-bar"><span class="rank-bar-fill" id="rankBarFill"></span></div>
               <div class="rank-foot" id="rankFoot"></div>
             </div>
-            <a class="hq-card-link" href="/en/card/" style="display:inline-block;margin-top:12px;font-size:14px;color:var(--accent);">View my member card</a>
+            <a class="btn btn-ghost hq-card-link" href="/en/card/" style="margin-top:14px;">View my member card</a>
           </div>
           <div class="result-avg" id="resultAvg"></div>
           <div class="result-actions">
