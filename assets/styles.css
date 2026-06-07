@@ -235,7 +235,7 @@ img, svg { display: block; max-width: 100%; }
 }
 .hero-grid {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
+  grid-template-columns: 1fr 360px;
   gap: 56px;
   align-items: center;
 }
@@ -273,6 +273,9 @@ img, svg { display: block; max-width: 100%; }
 }
 .hero-illu {
   aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: 320px;
+  justify-self: center;
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--bg-soft);
@@ -403,10 +406,13 @@ img, svg { display: block; max-width: 100%; }
   text-transform: uppercase;
 }
 .coll-title {
-  font-size: 19px;
+  font-family: var(--font-body);
+  font-size: 18px;
   font-weight: 500;
+  text-transform: uppercase;
+  text-align: center;
   margin: 0 0 6px;
-  letter-spacing: -0.005em;
+  letter-spacing: 0.05em;
   text-wrap: balance;
 }
 .coll-meta {
@@ -439,7 +445,7 @@ img, svg { display: block; max-width: 100%; }
   transition: transform var(--t), box-shadow var(--t);
 }
 .hero-daily:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-.hero-daily-moon { width: 183px; height: 183px; margin-bottom: 26px; }
+.hero-daily-moon { width: 150px; height: 150px; margin-bottom: 18px; }
 .hero-daily-moon .moon-disc {
   transform-box: view-box;
   transform-origin: 60px 68px;
@@ -449,9 +455,10 @@ img, svg { display: block; max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .hero-daily-moon .moon-disc { animation: none; }
 }
-.hero-daily-foot { padding: 0 28px; }
-.hero-daily-foot strong { display: block; font-size: 22px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 4px; }
-.hero-daily-foot span { font-size: 14px; opacity: .85; }
+.hero-daily-foot { padding: 0 24px; display: flex; flex-direction: column; align-items: center; }
+.daily-cta { display: inline-block; background: #f5ead0; color: #971f14; font-weight: 600; font-size: 15px; letter-spacing: 0.02em; padding: 12px 22px; margin-bottom: 12px; transition: background var(--t); }
+.hero-daily:hover .daily-cta { background: #fff; }
+.daily-state { font-size: 13px; opacity: .85; }
 .daily-card-label {
   position: absolute;
   top: 16px; left: 16px;
