@@ -39,9 +39,9 @@
 
 <header class="quiz-header">
   <div class="container">
-    <a class="quiz-back" id="backLink" href="../collections/">
+    <a class="quiz-back" href="/">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="15 18 9 12 15 6"/></svg>
-      <span id="backName">Collection</span>
+      <span>Accueil</span>
     </a>
     <a class="quiz-close" href="/" aria-label="Fermer">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
@@ -158,8 +158,6 @@ async function init() {
     themeName = theme.name;
     themeImage = theme.image_url || '';
     document.title = 'Quiz ' + themeName + ' | HOROQUEST';
-    document.getElementById('backName').textContent = themeName;
-    document.getElementById('backLink').href = '../collections/?slug=' + theme.slug;
     document.getElementById('resultEyebrow').textContent = 'Quiz terminé · ' + themeName;
 
     const nRes = await fetch(`${SUPABASE_URL}/rest/v1/themes?select=name,slug,image_url&is_active=eq.true&sort_order=gt.${theme.sort_order}&order=sort_order&limit=1`, { headers });
