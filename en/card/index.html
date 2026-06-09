@@ -16,22 +16,43 @@
 <meta property="og:image" content="https://horoquest.app/assets/horace-512.png">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="../../assets/styles.css?v=11">
+<link rel="stylesheet" href="../../assets/styles.css?v=12">
 <style>
   .card-wrap { max-width: 640px; margin: 0 auto; padding: 8px 0 64px; }
   .card-horace-img { display: block; width: 118px; height: 118px; border-radius: 50%; object-fit: cover; margin: 0 auto 16px; box-shadow: var(--shadow-md); }
   .card-kicker { text-transform: uppercase; letter-spacing: .24em; font-size: 12px; color: var(--accent); font-weight: 600; text-align: center; margin: 0; }
   .card-title { font-size: clamp(28px, 6vw, 40px); text-align: center; margin: 6px 0 4px; }
   .card-horace { text-align: center; font-style: italic; color: var(--ink-soft); margin: 0 auto 30px; max-width: 470px; line-height: 1.5; }
-  .card-rank { text-align: center; margin: 0 0 26px; }
+  .member-card {
+    position: relative;
+    background:
+      repeating-radial-gradient(circle at 50% 135%, rgba(192, 57, 43, .035) 0 1px, transparent 1px 8px),
+      var(--card);
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-sm);
+    padding: 30px 26px 24px;
+    margin: 0 0 18px;
+  }
+  .member-card::before {
+    content: '';
+    position: absolute;
+    inset: 7px;
+    border: 1px solid var(--border);
+    pointer-events: none;
+  }
+  .card-brand { text-align: center; font-size: 12px; letter-spacing: .26em; text-transform: uppercase; color: var(--ink); margin: 0 0 22px; }
+  .brand-dot { display: inline-block; width: 5px; height: 5px; background: var(--accent); margin: 0 0 2px 5px; }
+  .card-rank { text-align: center; margin: 0 0 22px; }
   .card-rank-name { font-size: 30px; font-weight: 700; margin: 0 0 14px; }
   .card-gauge { max-width: 360px; margin: 0 auto; }
-  .card-stats { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin: 0 0 40px; }
-  .card-stat { flex: 1 1 200px; max-width: 280px; border: 1px solid var(--border); background: var(--card); padding: 16px 18px; text-align: center; }
-  .card-stat .label { font-size: 11.5px; text-transform: uppercase; letter-spacing: .14em; color: var(--ink-soft); margin-bottom: 9px; }
-  .card-stat .value { font-size: 28px; font-weight: 700; display: inline-flex; align-items: center; gap: 9px; justify-content: center; font-feature-settings: "tnum" 1; }
-  .card-stat .unit { font-size: 14px; font-weight: 400; color: var(--ink-soft); }
-  .card-gem { width: 26px; height: 26px; display: inline-block; line-height: 0; }
+  .card-gauge .rank-now { visibility: hidden; }
+  .card-stats { display: flex; justify-content: center; margin: 0; border-top: 1px solid var(--border); padding-top: 18px; }
+  .card-stat { flex: 1 1 0; padding: 0 10px; text-align: center; min-width: 0; display: flex; flex-direction: column; }
+  .card-stat + .card-stat { border-left: 1px solid var(--border); }
+  .card-stat .label { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--ink-soft); margin-bottom: 8px; flex: 1; }
+  .card-stat .value { font-size: 24px; font-weight: 700; display: inline-flex; align-items: center; gap: 7px; justify-content: center; font-feature-settings: "tnum" 1; }
+  .card-stat .unit { font-size: 13px; font-weight: 400; color: var(--ink-soft); }
+  .card-gem { width: 21px; height: 21px; display: inline-block; line-height: 0; }
   .card-gem svg { width: 100%; height: 100%; display: block; }
   .poincons-head { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 16px; border-top: 1px solid var(--border); padding-top: 22px; }
   .poincons-head h2 { font-size: 18px; margin: 0; font-weight: 700; }
@@ -51,7 +72,7 @@
   .poincon-progress .poincon-prog { color: var(--ink-soft); }
   .poincon-locked { opacity: .55; }
   .poincon-locked .poincon-prog { color: var(--ink-soft); }
-  .card-share { display: flex; justify-content: center; margin: 36px 0 0; }
+  .card-share { display: flex; justify-content: center; margin: 0 0 38px; }
   .card-empty { grid-column: 1 / -1; text-align: center; color: var(--ink-soft); padding: 20px 0; }
 </style>
 </head>
@@ -77,24 +98,34 @@
       <h1 class="card-title">My member card</h1>
       <p class="card-horace" id="cardHorace"></p>
 
-      <div class="card-rank">
-        <div class="card-rank-name" id="rankName">Initiate</div>
-        <div class="card-gauge">
-          <div class="rank-gauge-head"><span class="rank-now" id="rankNow"></span><span class="rank-next" id="rankNext"></span></div>
-          <div class="rank-bar"><span class="rank-bar-fill" id="rankBarFill"></span></div>
-          <div class="rank-foot" id="rankFoot"></div>
+      <div class="member-card">
+        <div class="card-brand">HOROQUEST<span class="brand-dot"></span></div>
+        <div class="card-rank">
+          <div class="card-rank-name" id="rankName">Initiate</div>
+          <div class="card-gauge">
+            <div class="rank-gauge-head"><span class="rank-now" id="rankNow"></span><span class="rank-next" id="rankNext"></span></div>
+            <div class="rank-bar"><span class="rank-bar-fill" id="rankBarFill"></span></div>
+            <div class="rank-foot" id="rankFoot"></div>
+          </div>
+        </div>
+        <div class="card-stats">
+          <div class="card-stat">
+            <div class="label">Rubies</div>
+            <div class="value"><span class="card-gem" id="cardGem"></span><span id="rubisTotal">0</span></div>
+          </div>
+          <div class="card-stat">
+            <div class="label">Power reserve</div>
+            <div class="value"><span id="streakValue">0</span><span class="unit" id="streakUnit">day</span></div>
+          </div>
+          <div class="card-stat">
+            <div class="label">Hallmarks</div>
+            <div class="value"><span id="poinconStat">0</span><span class="unit" id="poinconStatMax">/ 20</span></div>
+          </div>
         </div>
       </div>
 
-      <div class="card-stats">
-        <div class="card-stat">
-          <div class="label">Rubies</div>
-          <div class="value"><span class="card-gem" id="cardGem"></span><span id="rubisTotal">0</span></div>
-        </div>
-        <div class="card-stat">
-          <div class="label">Power reserve</div>
-          <div class="value"><span id="streakValue">0</span><span class="unit" id="streakUnit">day</span></div>
-        </div>
+      <div class="card-share">
+        <button class="btn btn-primary" id="shareCardBtn">Share my card</button>
       </div>
 
       <div class="poincons">
@@ -105,10 +136,6 @@
         <div class="poincons-grid" id="poinconsGrid">
           <div class="card-empty" id="poinconLoading">Loading collections…</div>
         </div>
-      </div>
-
-      <div class="card-share">
-        <button class="btn btn-primary" id="shareCardBtn">Share my card</button>
       </div>
     </div>
   </div>
@@ -201,6 +228,8 @@ async function loadPoincons() {
     });
     document.getElementById('poinconsGrid').innerHTML = cells.join('');
     document.getElementById('poinconCount').textContent = earnedCount + ' / ' + totalCols + ' earned';
+    document.getElementById('poinconStat').textContent = earnedCount;
+    document.getElementById('poinconStatMax').textContent = '/ ' + totalCols;
   } catch (e) {
     document.getElementById('poinconsGrid').innerHTML = '<div class="card-empty">Collections unavailable right now.</div>';
   }

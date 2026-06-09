@@ -580,9 +580,10 @@ img, svg { display: block; max-width: 100%; }
 }
 .footer-top {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1fr;
-  gap: 40px;
-  padding-bottom: 36px;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  text-align: center;
+  padding-bottom: 32px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 24px;
 }
@@ -946,6 +947,7 @@ img, svg { display: block; max-width: 100%; }
   margin-bottom: 4px;
 }
 .score {
+  font-family: var(--font-display);
   font-size: clamp(80px, 12vw, 140px);
   font-weight: 700;
   line-height: 1;
@@ -1111,7 +1113,6 @@ img, svg { display: block; max-width: 100%; }
   .coll-grid { grid-template-columns: repeat(2, 1fr); }
   .coll-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
   .hero-grid { grid-template-columns: 1fr; gap: 32px; }
-  .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
   .featured-content { padding: 32px; }
 }
 @media (max-width: 767px) {
