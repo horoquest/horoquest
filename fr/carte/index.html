@@ -16,7 +16,7 @@
 <meta property="og:image" content="https://horoquest.app/assets/horace-512.png">
 <meta property="og:locale" content="fr_FR">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="../../assets/styles.css?v=10">
+<link rel="stylesheet" href="../../assets/styles.css?v=11">
 <style>
   .card-wrap { max-width: 640px; margin: 0 auto; padding: 8px 0 64px; }
   .card-horace-img { display: block; width: 118px; height: 118px; border-radius: 50%; object-fit: cover; margin: 0 auto 16px; box-shadow: var(--shadow-md); }
@@ -208,7 +208,7 @@ async function loadPoincons() {
 loadPoincons();
 
 document.getElementById('shareCardBtn').addEventListener('click', async function () {
-  const txt = 'Ma carte HOROQUEST · ' + info.name + ' · ' + total + ' rubis · ' + earnedCount + ' poinçons · série ' + streak;
+  const txt = 'Ma carte HOROQUEST · ' + info.name + ' · ' + total + ' rubis · ' + earnedCount + ' poinçons · réserve de marche ' + streak;
   if (navigator.share) {
     try { await navigator.share({ title: 'HOROQUEST', text: txt, url: 'https://horoquest.app/' }); } catch (e) {}
   } else {

@@ -16,7 +16,7 @@
 <meta property="og:image" content="https://horoquest.app/assets/horace-512.png">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="../../assets/styles.css?v=10">
+<link rel="stylesheet" href="../../assets/styles.css?v=11">
 <style>
 /* --- Daily challenge: specific styles --- */
 .daily-eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
@@ -44,14 +44,14 @@
 #quizEnd .result-actions,
 #quizEnd .result-buttons { justify-content: center; }
 #quizEnd .result-actions { margin-bottom: 0; }
-.rubis-reveal { margin: 2px 0 18px; }
+.rubis-reveal { margin: 0 0 18px; }
 .rubis-gain { display: inline-flex; align-items: center; gap: 9px; font-size: 22px; font-weight: 700; color: var(--ink); font-feature-settings: "tnum" 1; }
 .rubis-gem { width: 24px; height: 24px; flex: none; display: inline-block; line-height: 0; transform-origin: center; }
 .rubis-gem svg { width: 100%; height: 100%; display: block; }
 .rubis-gem.sparkle { animation: rubisPop .7s cubic-bezier(.2,.8,.2,1); }
 @keyframes rubisPop { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
 .rubis-total { display: block; font-size: 14px; color: var(--ink-soft); margin-top: 5px; }
-.rank-reveal { margin: -2px 0 18px; }
+.rank-reveal { margin: 0 0 12px; }
 .rank-status { font-size: 13px; color: var(--ink-soft); }
 .rank-promo { margin: 0 auto 14px; max-width: 420px; padding: 16px; border-left: 2px solid var(--accent); background: var(--bg-soft); text-align: center; }
 .rank-promo::before { content: ''; display: block; width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 10px; background: url('../../assets/horace-512.png') center / cover; box-shadow: var(--shadow-sm); }
@@ -101,24 +101,27 @@
         <div class="daily-grid" id="dailyGrid"></div>
         <div class="score"><span id="finalScore">0</span><span class="max">/5</span></div>
         <div class="score-label" id="scoreLabel"></div>
-        <div class="rubis-reveal" id="rubisReveal" hidden>
-          <span class="rubis-gain">
-            <span class="rubis-gem" aria-hidden="true"></span>
-            +<span id="rubisGain">0</span> rubies
-          </span>
-          <span class="rubis-total" id="rubisTotalLine"></span>
-        </div>
-        <div class="rank-reveal" id="rankReveal" hidden>
-          <div class="rank-promo" id="rankPromo" hidden></div>
-          <div class="rank-gauge">
-            <div class="rank-gauge-head"><span class="rank-now" id="rankNow"></span><span class="rank-next" id="rankNext"></span></div>
-            <div class="rank-bar"><span class="rank-bar-fill" id="rankBarFill"></span></div>
-            <div class="rank-foot" id="rankFoot"></div>
-          </div>
-          <a class="btn btn-ghost hq-card-link" href="/en/card/" style="margin-top:14px;">View my member card</a>
-        </div>
-        <div class="daily-streak" id="dailyStreak"></div>
         <div class="result-avg" id="resultAvg"></div>
+        <div class="ordre-block">
+          <div class="ordre-kicker">The Order of the Spiral</div>
+          <div class="rubis-reveal" id="rubisReveal" hidden>
+            <span class="rubis-gain">
+              <span class="rubis-gem" aria-hidden="true"></span>
+              +<span id="rubisGain">0</span> rubies
+            </span>
+            <span class="rubis-total" id="rubisTotalLine"></span>
+          </div>
+          <div class="rank-reveal" id="rankReveal" hidden>
+            <div class="rank-promo" id="rankPromo" hidden></div>
+            <div class="rank-gauge">
+              <div class="rank-gauge-head"><span class="rank-now" id="rankNow"></span><span class="rank-next" id="rankNext"></span></div>
+              <div class="rank-bar"><span class="rank-bar-fill" id="rankBarFill"></span></div>
+              <div class="rank-foot" id="rankFoot"></div>
+            </div>
+          </div>
+          <div class="daily-streak" id="dailyStreak"></div>
+          <a class="btn btn-ghost hq-card-link" href="/en/card/" style="margin-top:16px;">View my member card</a>
+        </div>
         <div class="result-actions">
           <button class="btn btn-primary result-share" id="shareBtn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
@@ -381,7 +384,7 @@ function renderResult(score, streak, best, alreadyPlayed, rubisGain, rubisBefore
 
   const streakEl = document.getElementById('dailyStreak');
   if (streak > 1) {
-    streakEl.innerHTML = `Streak of <strong>${streak} days</strong>` + (best > streak ? ` · best ${best}` : '');
+    streakEl.innerHTML = `Power reserve: <strong>${streak} days</strong>` + (best > streak ? ` · best ${best}` : '');
   } else {
     streakEl.innerHTML = `Come back tomorrow to start a streak`;
   }
@@ -394,7 +397,7 @@ function renderResult(score, streak, best, alreadyPlayed, rubisGain, rubisBefore
   showEmailCapture();
 
   document.getElementById('shareBtn').onclick = async () => {
-    const text = `HOROQUEST · Daily Challenge ${dateLabel}\n${shareGrid()}\n${score}/${DAILY_COUNT} · Streak ${streak}\nhttps://horoquest.app/en/daily/`;
+    const text = `HOROQUEST · Daily Challenge ${dateLabel}\n${shareGrid()}\n${score}/${DAILY_COUNT} · Power reserve ${streak}\nhttps://horoquest.app/en/daily/`;
     if (navigator.share) {
       try { await navigator.share({ title: 'HOROQUEST', text }); } catch(e) {}
     } else {

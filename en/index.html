@@ -16,7 +16,7 @@
 <meta property="og:image" content="https://horoquest.app/assets/horace-512.png">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="../assets/styles.css?v=10">
+<link rel="stylesheet" href="../assets/styles.css?v=11">
 <style>
   /* Master Horace band (home) */
   .horace-band { background: var(--bg-soft); color: var(--ink); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -242,7 +242,7 @@
     const stateEl = document.getElementById('heroDailyState');
     if (stateEl) {
       stateEl.textContent = playedToday ? 'Played today · come back tomorrow'
-        : (streak > 0 ? 'Streak of ' + streak + ' day' + (streak > 1 ? 's' : '') + ' going'
+        : (streak > 0 ? 'Power reserve: ' + streak + ' day' + (streak > 1 ? 's' : '')
         : 'Five fresh questions every day');
     }
     const chip = document.getElementById('heroStreakChip');

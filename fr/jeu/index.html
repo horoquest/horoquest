@@ -16,16 +16,16 @@
 <meta property="og:image" content="https://horoquest.app/assets/horace-512.png">
 <meta property="og:locale" content="fr_FR">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="../../assets/styles.css?v=10">
+<link rel="stylesheet" href="../../assets/styles.css?v=11">
 <style>
-  .rubis-reveal { margin: 0 0 24px; }
+  .rubis-reveal { margin: 0 0 18px; }
   .rubis-gain { display: inline-flex; align-items: center; gap: 9px; font-size: 22px; font-weight: 700; color: var(--ink); font-feature-settings: "tnum" 1; }
   .rubis-gem { width: 24px; height: 24px; flex: none; display: inline-block; line-height: 0; transform-origin: center; }
   .rubis-gem svg { width: 100%; height: 100%; display: block; }
   .rubis-gem.sparkle { animation: rubisPop .7s cubic-bezier(.2,.8,.2,1); }
   @keyframes rubisPop { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
   .rubis-total { display: block; font-size: 14px; color: var(--ink-soft); margin-top: 5px; }
-  .rank-reveal { margin: -4px 0 22px; }
+  .rank-reveal { margin: 0; }
   .rank-status { font-size: 13px; color: var(--ink-soft); }
   .rank-promo { margin: 0 0 14px; padding: 16px; border-left: 2px solid var(--accent); background: var(--bg-soft); text-align: center; }
   .rank-promo::before { content: ''; display: block; width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 10px; background: url('../../assets/horace-512.png') center / cover; box-shadow: var(--shadow-sm); }
@@ -70,35 +70,35 @@
         <div class="result-image" id="resultImage"></div>
         <div class="result-body">
           <div class="result-eyebrow" id="resultEyebrow">Quiz terminé</div>
-          <div class="result-label">Ton score</div>
+          <div class="result-label">Votre score</div>
           <div class="score"><span id="finalScore">0</span><span class="max">/10</span></div>
           <div class="score-label" id="scoreLabel"></div>
-          <div class="rubis-reveal" id="rubisReveal" hidden>
-            <span class="rubis-gain">
-              <span class="rubis-gem" aria-hidden="true"></span>
-              +<span id="rubisGain">0</span> rubis
-            </span>
-            <span class="rubis-total" id="rubisTotalLine"></span>
-          </div>
-          <div class="rank-reveal" id="rankReveal" hidden>
-            <div class="rank-promo" id="rankPromo" hidden></div>
-            <div class="rank-gauge">
-              <div class="rank-gauge-head"><span class="rank-now" id="rankNow"></span><span class="rank-next" id="rankNext"></span></div>
-              <div class="rank-bar"><span class="rank-bar-fill" id="rankBarFill"></span></div>
-              <div class="rank-foot" id="rankFoot"></div>
-            </div>
-            <a class="btn btn-ghost hq-card-link" href="/fr/carte/" style="margin-top:14px;">Voir ma carte de membre</a>
-          </div>
           <div class="result-avg" id="resultAvg"></div>
+          <div class="ordre-block">
+            <div class="ordre-kicker">L'Ordre du Spiral</div>
+            <div class="rubis-reveal" id="rubisReveal" hidden>
+              <span class="rubis-gain">
+                <span class="rubis-gem" aria-hidden="true"></span>
+                +<span id="rubisGain">0</span> rubis
+              </span>
+              <span class="rubis-total" id="rubisTotalLine"></span>
+            </div>
+            <div class="rank-reveal" id="rankReveal" hidden>
+              <div class="rank-promo" id="rankPromo" hidden></div>
+              <div class="rank-gauge">
+                <div class="rank-gauge-head"><span class="rank-now" id="rankNow"></span><span class="rank-next" id="rankNext"></span></div>
+                <div class="rank-bar"><span class="rank-bar-fill" id="rankBarFill"></span></div>
+                <div class="rank-foot" id="rankFoot"></div>
+              </div>
+            </div>
+            <a class="btn btn-ghost hq-card-link" href="/fr/carte/" style="margin-top:16px;">Voir ma carte de membre</a>
+          </div>
           <div class="result-actions">
-            <button class="btn btn-ghost result-share" id="shareBtn">
+            <button class="btn btn-primary result-share" id="shareBtn">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
               Partager mon résultat
             </button>
-          </div>
-          <div class="result-buttons">
-            <button class="btn btn-primary" onclick="location.reload()">Rejouer</button>
-            <a href="/" class="btn btn-ghost">Retour aux collections</a>
+            <button class="btn btn-ghost" onclick="location.reload()">Rejouer</button>
           </div>
         </div>
       </div>
@@ -115,14 +115,14 @@
       <div class="email-capture" id="emailCapture" hidden>
         <div class="email-capture-inner">
           <div class="email-capture-text">
-            <strong>Un nouveau quiz dans ta boîte mail</strong>
-            <p>Rejoins les passionnés qui reçoivent un quiz et une anecdote horlogère. Pas de spam.</p>
+            <strong>Un nouveau quiz dans votre boîte mail</strong>
+            <p>Rejoignez les passionnés qui reçoivent un quiz et une anecdote horlogère. Pas de spam.</p>
           </div>
           <form class="email-capture-form" id="emailForm" novalidate>
-            <input type="email" id="emailInput" name="email" placeholder="ton@email.com" required autocomplete="email">
+            <input type="email" id="emailInput" name="email" placeholder="votre@email.com" required autocomplete="email">
             <button type="submit" class="btn btn-primary" id="emailSubmit">Je m'inscris</button>
           </form>
-          <div class="email-capture-note" id="emailNote">En t'inscrivant, tu acceptes de recevoir nos emails. <a href="/privacy.html" style="color:inherit;text-decoration:underline;">Confidentialité</a>.</div>
+          <div class="email-capture-note" id="emailNote">En vous inscrivant, vous acceptez de recevoir nos emails. <a href="/privacy.html" style="color:inherit;text-decoration:underline;">Confidentialité</a>.</div>
         </div>
       </div>
     </div>
@@ -272,7 +272,7 @@ function handleAnswer(btn) {
       const wrongText = btn.querySelector('span:not(.letter)').textContent;
       const wrongDiv = document.createElement('div');
       wrongDiv.className = 'answer-wrong-recall';
-      wrongDiv.innerHTML = '<span class="wrong-label">Ta réponse</span>' + wrongText;
+      wrongDiv.innerHTML = '<span class="wrong-label">Votre réponse</span>' + wrongText;
       correctBtn.insertBefore(wrongDiv, correctBtn.querySelector('.letter').nextSibling);
     }
     if (q.explanation) {
@@ -451,7 +451,7 @@ if (emailForm) {
     const btn = document.getElementById('emailSubmit');
     const note = document.getElementById('emailNote');
     const email = input.value.trim();
-    if (!email || !email.includes('@')) { note.textContent = 'Entre une adresse valide.'; return; }
+    if (!email || !email.includes('@')) { note.textContent = 'Entrez une adresse valide.'; return; }
     btn.disabled = true;
     btn.textContent = 'Envoi…';
     try {
@@ -462,11 +462,11 @@ if (emailForm) {
       await fetch(`https://assets.mailerlite.com/jsonp/${ML_ACCOUNT}/forms/${ML_FORM}/subscribe`, { method: 'POST', body: data });
       localStorage.setItem('hq_sub', '1');
       document.querySelector('#emailCapture .email-capture-inner').innerHTML =
-        '<div class="email-capture-success">C\'est fait, tu es inscrit. Surveille ta boîte mail.</div>';
+        '<div class="email-capture-success">C\'est fait, vous êtes inscrit. Surveillez votre boîte mail.</div>';
     } catch (err) {
       btn.disabled = false;
       btn.textContent = 'Je m\'inscris';
-      note.textContent = 'Une erreur est survenue, réessaie.';
+      note.textContent = 'Une erreur est survenue, réessayez.';
     }
   });
 }

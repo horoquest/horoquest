@@ -963,7 +963,22 @@ img, svg { display: block; max-width: 100%; }
 .result-avg {
   font-size: 14px;
   color: var(--ink-soft);
-  margin: 0 0 32px;
+  margin: 0 0 24px;
+}
+/* Bloc Ordre du Spiral (pages resultat) */
+.ordre-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin: 0 0 28px;
+}
+.ordre-kicker {
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 14px;
 }
 .result-actions {
   display: flex;
