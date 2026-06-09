@@ -4,7 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiz | HOROQUEST</title>
-<link rel="stylesheet" href="../../assets/styles.css?v=9">
+<meta name="description" content="Ten questions to test your watch culture, with an explanation for every answer.">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="HOROQUEST">
+<meta property="og:title" content="Quiz | HOROQUEST">
+<meta property="og:description" content="Ten questions to test your watch culture, with an explanation for every answer.">
+<meta property="og:url" content="https://horoquest.app/en/jeu/">
+<meta property="og:image" content="https://horoquest.app/assets/horace-512.png">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../../assets/styles.css?v=10">
 <style>
   .rubis-reveal { margin: 0 0 24px; }
   .rubis-gain { display: inline-flex; align-items: center; gap: 9px; font-size: 22px; font-weight: 700; color: var(--ink); font-feature-settings: "tnum" 1; }
@@ -358,7 +370,7 @@ function showResult() {
       if (Array.isArray(scores) && scores.length > 0) {
         const avg = scores.reduce((sum, s) => sum + (s.correct_count / s.total_questions) * 100, 0) / scores.length;
         document.getElementById('resultAvg').textContent =
-          `Average success rate: ${avg.toFixed(1)}% across ${scores.length} player${scores.length > 1 ? 's' : ''}.`;
+          `Average success rate: ${avg.toFixed(1)}% across ${scores.length} enthusiast${scores.length > 1 ? 's' : ''}.`;
       }
     } catch(e) {}
   }
